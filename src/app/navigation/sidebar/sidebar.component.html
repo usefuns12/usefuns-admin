@@ -1,0 +1,66 @@
+<mat-sidenav-container class="sidebar-container min-vh-100">
+  <mat-sidenav
+    class="sidebar"
+    [ngClass]="sidebarCollapsedWidth()"
+    mode="side"
+    opened
+  >
+    <header class="header">
+      @if (!collapsed()) {
+      <img src="logos/UseFunsLogo2.png" class="img-fluid" alt="" />
+      } @else {
+      <img src="logos/app_icon_fg.png" class="img-fluid" alt="" />
+      }
+    </header>
+    <div class="menu-container">
+      <mat-nav-list>
+        <ng-container *ngFor="let item of menuItems">
+          <a mat-list-item (click)="toggleNestedMenu(item)">
+            <fa-icon
+              matListItemIcon
+              [icon]="
+                item.icon === 'headset'
+                  ? ['fas', item.icon]
+                  : ['far', item.icon]
+              "
+            ></fa-icon>
+            <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
+            <span matListItemMeta *ngIf="item.subItems?.length && !collapsed()">
+              @if (!nestedMenuOpen()) {
+              <fa-icon matListItemIcon icon="chevron-down"></fa-icon>
+              } @else {
+              <fa-icon matListItemIcon icon="chevron-up"></fa-icon>
+              }
+            </span>
+          </a>
+          @if (item.subItems?.length && nestedMenuOpen() && !collapsed()) {
+          <div class="submenu-items" @expandSubMenu>
+            <a *ngFor="let subItem of item.subItems" mat-list-item>
+              <fa-icon
+                matListItemIcon
+                [icon]="
+                  subItem.icon === 'crop-simple'
+                    ? ['fas', subItem.icon]
+                    : ['far', subItem.icon]
+                "
+              ></fa-icon>
+              <span matListItemTitle *ngIf="!collapsed()">{{
+                subItem.label
+              }}</span>
+            </a>
+          </div>
+          }
+        </ng-container>
+      </mat-nav-list>
+    </div>
+    <footer class="footer"></footer>
+  </mat-sidenav>
+  <mat-sidenav-content [ngClass]="sidebarCollapsedWidth()">
+    <mat-toolbar class="mat-elevation-z3">
+      <button class="btn btn-light" (click)="collapsed.set(!collapsed())">
+        <fa-icon icon="bars"></fa-icon>
+      </button>
+    </mat-toolbar>
+    Content
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,1 +1,112 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./assets/themes/variables.scss";
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@supports (scrollbar-width: thin) {
+  * {
+      scrollbar-width: thin;
+      scrollbar-color: #444 transparent
+  }
+}
+
+mat-sidenav.sidebar {
+  width: 250px;
+  background: linear-gradient(to left, $primary, $secondary);
+  border-radius: 0;
+  transition: width 200ms ease-in-out;
+
+  &.collapsed {
+    width: 65px;
+
+    .mat-drawer-inner-container {
+      overflow: hidden;
+    }
+
+    .header img {
+      height: auto;
+      transform: scale(2.5);
+    }
+
+    a.mat-mdc-list-item {
+      padding-right: 0px;
+      justify-content: center;
+
+      .mdc-list-item__content {
+        flex: 0;
+      }
+    }
+  }
+
+  .mat-drawer-inner-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header, .footer {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    max-height: 64px;
+    overflow: hidden;
+
+    img {
+      height: 48px;
+    }
+  }
+
+  .header {
+    border-bottom: 1px solid $white;
+  }
+
+  .footer {
+    border-top: 1px solid $white;
+  }
+
+  .menu-container {
+    height: 100%;
+    max-height: 100%;
+    display: block;
+    position: relative;
+
+    mat-nav-list {
+      fa-icon.mat-mdc-list-item-icon {
+        font-size: unset;
+        color: $white;
+
+        svg {
+          font-size: 24px;
+        }
+      }
+
+      .mat-mdc-list-item-title {
+        color: $white;
+      }
+
+      a .mat-mdc-list-item-meta.mdc-list-item__end {
+        margin-right: 0;
+
+        fa-icon svg {
+          font-size: 14pt;
+        }
+      }
+
+      .submenu-items fa-icon {
+        margin-left: 34px;
+      }
+    }
+  }
+}
+
+mat-sidenav-content {
+  transition: margin 200ms ease-in-out;
+}
+
+mat-sidenav-content.collapsed {
+  margin-left: 65px !important;
+}
+
+mat-toolbar.mat-toolbar {
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  height: 64px;
+}
