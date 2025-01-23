@@ -1,0 +1,64 @@
+<div class="users-list">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>List of users</h4>
+    <div class="input-group">
+      <fa-icon class="input-group-text" icon="magnifying-glass"></fa-icon>
+      <input type="search" class="form-control" placeholder="Search UId">
+    </div>
+  </div>
+  <table class="table table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">UId</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Diamonds</th>
+        <th scope="col">Beans</th>
+        <th scope="col">User Type</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="!isLoading; else showLoader">
+        <tr *ngFor="let user of users; index as i">
+          <th scope="row">{{i + 1}}</th>
+          <td>{{user.name}}</td>
+          <td>{{user.userId}}</td>
+          <td class="text-capitalize">{{user.gender}}</td>
+          <td>{{user.diamonds}}</td>
+          <td>{{user.beans}}</td>
+          <td>Usefuns</td>
+          <td class="status">
+            <p class="d-flex align-items-center">
+              <fa-icon icon="circle" [ngClass]="user.isActiveUser ? 'text-success' : 'text-danger'" class="pe-2 "></fa-icon>
+              {{user.isActiveUser ? 'Active' : 'Banned'}}
+            </p>
+          </td>
+          <td>
+            <div class="action-btns d-flex">
+              <fa-icon [icon]="['far', 'eye']" class="text-primary flex-grow-1" matTooltip="View" (click)="navigateUser(user._id)"></fa-icon>
+              <fa-icon [icon]="['far', 'pen-to-square']" class="flex-grow-1 edit-icon" matTooltip="Edit"></fa-icon>
+              <fa-icon icon="ban" class="flex-grow-1 text-danger" matTooltip="Ban"></fa-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+
+      <ng-template #showLoader>
+        <tr>
+          <th><ngx-skeleton-loader></ngx-skeleton-loader></th>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>

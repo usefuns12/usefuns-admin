@@ -1,0 +1,145 @@
+<form [formGroup]="userForm">
+  <mat-tab-group>
+    <mat-tab label="Basic info">
+      <ng-template matTabContent>
+        <div class="container-fluid basic-info">
+          <div class="row mb-4">
+            <div class="col-4">
+              <div class="card shadow py-4">
+                <img [src]="userDetails?.profileImage" alt="profile" class="img-fluid">
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="card shadow p-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Name</label>
+                  <input type="text" class="form-control" formControlName="name">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Unique Id</label>
+                  <input type="text" class="form-control" formControlName="userId">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Email</label>
+                  <input type="text" class="form-control" formControlName="email">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Mobile</label>
+                  <input type="text" class="form-control" formControlName="mobile">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Gender</label>
+                  <div>
+                    <div class="form-check form-check-inline">
+                      <input id="gender1" type="radio" class="form-check-input" value="male" formControlName="gender">
+                      <label for="gender1" class="form-check-label">Male</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input id="gender2" type="radio" class="form-check-input" value="female" formControlName="gender">
+                      <label for="gender2" class="form-check-label">Female</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Biography</label>
+                  <input type="text" class="form-control" formControlName="bio">
+                </div>
+              </div>
+            </div>
+        </div>
+
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Room info">
+      <ng-template matTabContent>
+        <div class="container-fluid room-info">
+          <div class="row mb-4">
+            <div class="col-4">
+              <div class="card shadow py-4">
+                <img [src]="userDetails?.roomDetails?.roomImage" alt="profile" class="img-fluid">
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="card shadow p-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Name</label>
+                  <input type="text" class="form-control" formControlName="roomName">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Announcement</label>
+                  <input type="text" class="form-control" formControlName="announcement">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Room hosting time</label>
+                  <input type="text" class="form-control" formControlName="hostingTime">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Game & Rewards">
+      <ng-template matTabContent>
+        <div class="container-fluid">
+          <div class="row mb-4">
+            <div class="col-6">
+              <div class="card shadow p-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Level</label>
+                  <input type="text" class="form-control" formControlName="level">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">User type</label>
+                  <input type="text" class="form-control" formControlName="userRole">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Beans</label>
+                  <input type="text" class="form-control" formControlName="beans">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Diamonds</label>
+                  <input type="text" class="form-control" formControlName="diamonds">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Status</label>
+                  <div>
+                    <div class="form-check form-check-inline">
+                      <input id="status1" type="radio" class="form-check-input" value="true" formControlName="isActiveUser">
+                      <label for="status1" class="form-check-label">Active</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input id="status2" type="radio" class="form-check-input" value="false" formControlName="isActiveUser">
+                      <label for="status2" class="form-check-label">Banned</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Social connections">
+      <ng-template matTabContent>
+        <div class="container-fluid">
+          <div class="row mb-4">
+            <div class="col-4">
+              <div class="card shadow p-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Followers</label>
+                  <input type="text" class="form-control" formControlName="followers">
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Following</label>
+                  <input type="text" class="form-control" formControlName="following">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</form>

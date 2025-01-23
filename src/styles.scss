@@ -10,6 +10,105 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
+.btn:focus, .btn-active {
+  outline: none;
+  box-shadow: none;
+}
+
+input:focus {
+  outline: none!important;
+  box-shadow: none!important;
+}
+
+input[type="search"]::-webkit-search-decoration:hover,
+input[type="search"]::-webkit-search-cancel-button:hover {
+    cursor:pointer;
+}
+
+.card {
+  border-radius: 16px;
+}
+
+.sidebar mat-nav-list a.active {
+  background-color: #880776a6;
+}
+
+.skeleton-loader.progress-dark[_ngcontent-ng-c1464183443]:before {
+  animation-duration: 1s !important;
+}
+
+/*************** Login Page ***************/
+.container-fluid {
+
+  &.login {
+    background: linear-gradient(to left, $primary, $secondary);
+  }
+
+  .card-container
+  {
+    width: 50%;
+    max-width: 680px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .card {
+      background-color: #aa180e8e;
+      color: $white;
+      border-radius: 16px;
+
+      .card-header {
+        background-color: #aa180e6b;
+        font-size: 14pt;
+        border-radius: 16px 16px 0 0;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card-container {
+      width: 100%;
+    }
+  }
+
+  .logo img {
+    height: 250px;
+  }
+}
+
+mat-sidenav-container.sidebar-container {
+  background-color: $light;
+}
+
+mat-drawer-container.active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+
+  mat-drawer {
+    width: 80%;
+
+    .header-content, mat-tab-header {
+      position: sticky;
+      z-index: 10;
+      background-color: $light-grey;
+    }
+
+    .header-content {
+      top: 0;
+    }
+
+    mat-tab-header {
+      top: 90.4px;
+      padding-bottom: 1.5rem;
+    }
+  }
+}
+
 mat-sidenav.sidebar {
   width: 250px;
   background: linear-gradient(to left, $primary, $secondary);
@@ -109,4 +208,68 @@ mat-sidenav-content.collapsed {
 mat-toolbar.mat-toolbar {
   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
   height: 64px;
+}
+
+/*************** Users Page ***************/
+.users-list {
+  h4 {
+    margin: 0;
+    color: var(--bs-secondary-color);
+  }
+
+  .input-group {
+    width: 50%;
+
+    .input-group-text {
+      border-radius: 16px 0 0 16px;
+      padding-right: 0;
+    }
+
+    input {
+      border-left: 0;
+      border-radius: 0 16px 16px 0;
+    }
+
+    input:focus {
+      border-color: var(--bs-border-color);
+    }
+
+    .input-group-text, input {
+      background-color: $light;
+    }
+  }
+
+  table {
+    td.status {
+      p fa-icon {
+        font-size: 8pt;
+      }
+    }
+
+    td .action-btns {
+      font-size: 14pt;
+
+      fa-icon svg {
+        cursor: pointer;
+      }
+
+      fa-icon.edit-icon {
+        color: rgba(136, 7, 118, 1);
+      }
+    }
+  }
+}
+
+mat-divider {
+  border-top-color: #c4c6d0!important;
+}
+
+.basic-info, .room-info {
+  img {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 }

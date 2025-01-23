@@ -7,19 +7,27 @@
   >
     <header class="header">
       @if (!collapsed()) {
-      <img src="logos/UseFunsLogo2.png" class="img-fluid" alt="" />
+      <img src="logos/UseFunsLogo2.png" class="img-fluid" alt="usefuns" />
       } @else {
-      <img src="logos/app_icon_fg.png" class="img-fluid" alt="" />
+      <img src="logos/app_icon_fg.png" class="img-fluid" alt="usefuns" />
       }
     </header>
     <div class="menu-container">
       <mat-nav-list>
         <ng-container *ngFor="let item of menuItems">
-          <a mat-list-item (click)="toggleNestedMenu(item)">
+          <a
+            *ngIf="item.label !== 'Logout'"
+            mat-list-item
+            [matTooltip]="item.label"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="toggleNestedMenu(item)"
+          >
             <fa-icon
               matListItemIcon
               [icon]="
-                item.icon === 'headset'
+                item.icon === 'headset' ||
+                item.icon === 'arrow-right-from-bracket'
                   ? ['fas', item.icon]
                   : ['far', item.icon]
               "
@@ -32,6 +40,25 @@
               <fa-icon matListItemIcon icon="chevron-up"></fa-icon>
               }
             </span>
+          </a>
+          <a
+            *ngIf="item.label === 'Logout'"
+            mat-list-item
+            [matTooltip]="item.label"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="logout()"
+          >
+            <fa-icon
+              matListItemIcon
+              [icon]="
+                item.icon === 'headset' ||
+                item.icon === 'arrow-right-from-bracket'
+                  ? ['fas', item.icon]
+                  : ['far', item.icon]
+              "
+            ></fa-icon>
+            <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
           </a>
           @if (item.subItems?.length && nestedMenuOpen() && !collapsed()) {
           <div class="submenu-items" @expandSubMenu>
@@ -56,11 +83,42 @@
     <footer class="footer"></footer>
   </mat-sidenav>
   <mat-sidenav-content [ngClass]="sidebarCollapsedWidth()">
-    <mat-toolbar class="mat-elevation-z3">
+    <mat-toolbar>
       <button class="btn btn-light" (click)="collapsed.set(!collapsed())">
         <fa-icon icon="bars"></fa-icon>
       </button>
     </mat-toolbar>
-    Content
+    <div class="container py-4">
+      <router-outlet />
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<mat-drawer-container [class.active]="isDrawerOpen()">
+  <mat-drawer
+    #drawer
+    mode="over"
+    position="end"
+    [opened]="isDrawerOpen()"
+    (closed)="closeDrawer()"
+  >
+    <ng-container *ngIf="drawerContent">
+      <div class="container pb-4">
+        <div class="header-content pt-4 pb-3">
+          <div class="d-flex align-items-center gap-5 mb-3">
+            <button
+              type="button"
+              class="btn-close shadow-none"
+              (click)="drawer.close()"
+            ></button>
+            <h3 class="m-0">User details</h3>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <ng-container
+          *ngComponentOutlet="drawerContent; injector: dataInjector"
+        ></ng-container>
+      </div>
+    </ng-container>
+  </mat-drawer>
+</mat-drawer-container>
