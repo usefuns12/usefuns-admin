@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ isActiveUser ? "Ban user" : "Unban user" }}</h2>
+<mat-dialog-content>
+  <p>
+    Are you sure you want to {{ isActiveUser ? "ban" : "unban" }}
+    {{ name }} with UID: {{ uid }} ?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    class="btn btn-danger me-3"
+    (click)="closeDialog()"
+    [disabled]="loader()"
+  >
+    Cancel
+  </button>
+  <button class="btn btn-primary" (click)="updateUser()" [disabled]="loader()">
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { {{ isActiveUser ? "Ban" : "Unban" }} }
+  </button>
+</mat-dialog-actions>

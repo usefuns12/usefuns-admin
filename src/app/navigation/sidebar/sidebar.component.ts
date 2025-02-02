@@ -102,7 +102,7 @@ export class SidebarComponent {
   openDrawer(component: any, userId: string) {
     this.drawerContent = component;
     this.dataInjector = Injector.create({
-      providers: [{ provide: USER_ID_TOKEN, useValue: userId }],
+      providers: [{ provide: USER_ID_TOKEN, useValue: { userId, mode: 'view' }}],
     });
     this.isDrawerOpen.set(true);
   }

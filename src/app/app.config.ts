@@ -1,10 +1,16 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
+  faCircleCheck,
+  faClock,
   faComment,
   faEye,
   faGem,
@@ -31,6 +37,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './services/http-interceptors/token.interceptor';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { JwtModule } from '@auth0/angular-jwt';
+import { provideToastr } from 'ngx-toastr';
 
 const setupFontAwesome = (library: FaIconLibrary) => {
   library.addIcons(
@@ -48,7 +55,9 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faCircle,
     faEye,
     faPenToSquare,
-    faBan
+    faBan,
+    faClock,
+    faCircleCheck
   );
 };
 
@@ -78,5 +87,9 @@ export const appConfig: ApplicationConfig = {
       },
     },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: tooltipConfig },
+    provideToastr({
+      positionClass: 'toast-bottom-center',
+      timeOut: 3000,
+    }),
   ],
 };

@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./assets/themes/variables.scss";
+@import "@ng-select/ng-select/themes/default.theme.css";
+@import 'ngx-toastr/toastr';
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -8,6 +10,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       scrollbar-width: thin;
       scrollbar-color: #444 transparent
   }
+}
+
+.btn-indigo {
+  color: $white;
+  background-color: $indigo;
+}
+
+.btn-indigo:hover {
+  color: $white;
+  background-color: #880777;
 }
 
 .btn:focus, .btn-active {
@@ -20,6 +32,16 @@ input:focus {
   box-shadow: none!important;
 }
 
+.form-check {
+  input, label {
+    cursor: pointer;
+  }
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+  box-shadow: none;
+}
+
 input[type="search"]::-webkit-search-decoration:hover,
 input[type="search"]::-webkit-search-cancel-button:hover {
     cursor:pointer;
@@ -30,7 +52,7 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 }
 
 .sidebar mat-nav-list a.active {
-  background-color: #880776a6;
+  background-color: $indigo;
 }
 
 .skeleton-loader.progress-dark[_ngcontent-ng-c1464183443]:before {
@@ -38,20 +60,17 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 }
 
 /*************** Login Page ***************/
-.container-fluid {
+.login {
 
-  &.login {
-    background: linear-gradient(to left, $primary, $secondary);
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to left, $primary, $secondary);
 
   .card-container
   {
     width: 50%;
     max-width: 680px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 
     .card {
       background-color: #aa180e8e;
@@ -79,6 +98,7 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 
 mat-sidenav-container.sidebar-container {
   background-color: $light;
+  overflow: initial;
 }
 
 mat-drawer-container.active {
@@ -92,24 +112,99 @@ mat-drawer-container.active {
   mat-drawer {
     width: 80%;
 
-    .header-content, mat-tab-header {
+    .header-content {
+      top: 0;
       position: sticky;
       z-index: 10;
       background-color: $light-grey;
     }
+  }
+}
 
-    .header-content {
-      top: 0;
-    }
+mat-tab-group.user-forms {
+  mat-tab-header {
+    position: sticky;
+    z-index: 10;
+    background-color: $light-grey;
+    top: 90.4px;
+    padding-bottom: 1.5rem;
+  }
+
+  .mdc-tab--active .mdc-tab__text-label,
+  .mat-mdc-tab.mdc-tab--active:focus .mdc-tab__text-label,
+  .mat-mdc-tab.mdc-tab--active:hover .mdc-tab__text-label {
+    color: $indigo;
+  }
+
+  .mat-mdc-tab .mdc-tab-indicator__content--underline,
+  .mat-mdc-tab.mdc-tab--active:focus .mdc-tab-indicator__content--underline,
+  .mat-mdc-tab.mdc-tab--active:hover .mdc-tab-indicator__content--underline {
+    border-color: $indigo;
+  }
+
+  mat-tab-group.user-items {
+    flex-direction: row;
 
     mat-tab-header {
-      top: 90.4px;
-      padding-bottom: 1.5rem;
+      align-self: flex-start;
+      top: 245.6px;
+    }
+
+    .mat-mdc-tab-labels {
+      flex-direction: column;
+    }
+
+    .mat-mdc-tab-body-wrapper {
+      flex: 1 1 auto;
+    }
+
+    .mat-mdc-tab-label-container {
+      border-bottom: none;
+      border-right-style: solid;
+      border-right-width: var(--mat-tab-header-divider-height, 1px);
+      border-right-color: var(--mat-tab-header-divider-color, var(--mat-sys-surface-variant));
+    }
+
+    img {
+      width: 150px;
+    }
+
+    .title {
+      font-weight: 500;
+    }
+
+    .time-left {
+      color: $indigo
     }
   }
 }
 
+mat-tab-group.user-forms.user-items-active > {
+  .mat-mdc-tab-body-wrapper {
+      overflow: initial;
+
+      .mat-mdc-tab-body.mat-mdc-tab-body-active {
+        overflow: initial;
+
+        .mat-mdc-tab-body-content {
+          overflow: initial;
+      }
+    }
+  }
+}
+
+.user-edit mat-tab-group.user-forms {
+  mat-tab-header {
+    top: 172.8px;
+  }
+
+  .mat-mdc-tab-body-wrapper {
+    background-color: $light-grey;
+  }
+}
+
 mat-sidenav.sidebar {
+  position: fixed;
   width: 250px;
   background: linear-gradient(to left, $primary, $secondary);
   border-radius: 0;
@@ -117,10 +212,6 @@ mat-sidenav.sidebar {
 
   &.collapsed {
     width: 65px;
-
-    .mat-drawer-inner-container {
-      overflow: hidden;
-    }
 
     .header img {
       height: auto;
@@ -140,6 +231,7 @@ mat-sidenav.sidebar {
   .mat-drawer-inner-container {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .header, .footer {
@@ -167,6 +259,7 @@ mat-sidenav.sidebar {
     max-height: 100%;
     display: block;
     position: relative;
+    overflow-y: auto;
 
     mat-nav-list {
       fa-icon.mat-mdc-list-item-icon {
@@ -197,8 +290,16 @@ mat-sidenav.sidebar {
   }
 }
 
-mat-sidenav-content {
+mat-sidenav-content.mat-drawer-content {
   transition: margin 200ms ease-in-out;
+  overflow: initial;
+
+  .sidenav-content .header-content {
+    position: sticky;
+    top: 64px;
+    z-index: 10;
+    background-color: $light;
+  }
 }
 
 mat-sidenav-content.collapsed {
@@ -208,6 +309,9 @@ mat-sidenav-content.collapsed {
 mat-toolbar.mat-toolbar {
   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
   height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 /*************** Users Page ***************/

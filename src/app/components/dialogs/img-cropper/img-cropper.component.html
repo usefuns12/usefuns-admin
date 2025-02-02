@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Crop image</h2>
+<mat-dialog-content>
+  <image-cropper
+    [imageBase64]="imageChangedEvent"
+    [maintainAspectRatio]="true"
+    [aspectRatio]="1 / 1"
+    format="png"
+    (imageCropped)="imageCropped($event)"
+  >
+  </image-cropper>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn btn-danger me-3" (click)="closeDialog()">Cancel</button>
+  <button class="btn btn-primary" (click)="cropAndSave()">
+    Crop
+  </button>
+</mat-dialog-actions>

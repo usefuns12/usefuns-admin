@@ -8,7 +8,14 @@ export class ApiEndpoints  {
 
   public static users = {
     GET_USERS: VersionConstant.v1 + '/user/getAll/limitedData',
-    GET_USER_DETAILS: VersionConstant.v1 + '/user/getById'
+    GET_USER_DETAILS: VersionConstant.v1 + '/user/getById',
+    UPDATE_USER: VersionConstant.v1 + '/admin/user/update'
+  };
+
+  public static rooms = {
+    GET_ROOMS: VersionConstant.v1 + '/user/getAll/limitedData',
+    GET_ROOM_DETAILS: VersionConstant.v1 + '/user/getById',
+    UPDATE_ROOM: VersionConstant.v1 + '/room/update'
   };
 
   public static dashboard = {

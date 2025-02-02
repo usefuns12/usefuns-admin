@@ -12,5 +12,6 @@ export const SIDEBAR_ROUTES: Routes = [
       import('../../components/user-list/user.routes').then(
         (m) => m.USER_ROUTES
       ),
+    data: { breadcrumb: 'Users' }
   },
 ];

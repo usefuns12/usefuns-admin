@@ -1,1 +1,19 @@
-<p>user-edit works!</p>
+<div class="user-edit">
+  <div class="header-content pt-4 pb-3">
+    <app-breadcrumb></app-breadcrumb>
+    <div class="d-flex justify-content-between align-items-center">
+      <h4>Edit user</h4>
+      <button class="btn btn-primary" (click)="saveUser()" [disabled]="apiService.loader()">
+        @if (apiService.loader()) {
+        <span class="spinner-border"></span>
+        } @if (!apiService.loader()) { Save }
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="userFormComponent">
+    <ng-container
+      *ngComponentOutlet="userFormComponent; injector: dataInjector"
+    ></ng-container>
+  </ng-container>
+</div>

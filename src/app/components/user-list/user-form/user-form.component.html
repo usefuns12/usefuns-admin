@@ -1,82 +1,308 @@
 <form [formGroup]="userForm">
-  <mat-tab-group>
+  <mat-tab-group
+    animationDuration="0"
+    class="user-forms"
+    [ngClass]="currentIndex() === 2 ? 'user-items-active' : ''"
+    (selectedIndexChange)="setIndex($event)"
+  >
     <mat-tab label="Basic info">
       <ng-template matTabContent>
         <div class="container-fluid basic-info">
           <div class="row mb-4">
             <div class="col-4">
               <div class="card shadow py-4">
-                <img [src]="userDetails?.profileImage" alt="profile" class="img-fluid">
+                <img
+                  [src]="userDetails?.profileImage"
+                  alt="profile"
+                  class="img-fluid"
+                />
+              </div>
+              <div
+                *ngIf="mode === 'edit'"
+                class="d-flex justify-content-evenly align-items-center mt-5"
+              >
+                @if (!profileChanged()) {
+                <button
+                  class="btn btn-indigo"
+                  type="button"
+                  (click)="openImageDialog('profile')"
+                >
+                  Change profile
+                </button>
+                } @if (profileChanged()) {
+                <button
+                  class="btn btn-danger"
+                  (click)="restoreImage('profile')"
+                  [disabled]="loader()"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-primary"
+                  (click)="updateProfile('profile')"
+                  [disabled]="loader()"
+                >
+                  <span *ngIf="loader()" class="spinner-border"></span>
+                  <span *ngIf="!loader()">Save</span>
+                </button>
+                }
               </div>
             </div>
             <div class="col-8">
               <div class="card shadow p-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Name</label>
-                  <input type="text" class="form-control" formControlName="name">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="name"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Unique Id</label>
-                  <input type="text" class="form-control" formControlName="userId">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="userId"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Email</label>
-                  <input type="text" class="form-control" formControlName="email">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="email"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Country</label>
+                  <ng-select
+                    formControlName="countryCode"
+                    placeholder="Select a country"
+                    searchable="true"
+                    clearable="false"
+                  >
+                    <ng-container *ngFor="let country of countries">
+                      <ng-option [value]="country.cca2">
+                        {{ country.flag }} | {{ country.name.common }}
+                      </ng-option>
+                    </ng-container>
+                  </ng-select>
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Mobile</label>
-                  <input type="text" class="form-control" formControlName="mobile">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="mobile"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Gender</label>
                   <div>
                     <div class="form-check form-check-inline">
-                      <input id="gender1" type="radio" class="form-check-input" value="male" formControlName="gender">
+                      <input
+                        id="gender1"
+                        type="radio"
+                        class="form-check-input"
+                        value="male"
+                        formControlName="gender"
+                      />
                       <label for="gender1" class="form-check-label">Male</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input id="gender2" type="radio" class="form-check-input" value="female" formControlName="gender">
-                      <label for="gender2" class="form-check-label">Female</label>
+                      <input
+                        id="gender2"
+                        type="radio"
+                        class="form-check-input"
+                        value="female"
+                        formControlName="gender"
+                      />
+                      <label for="gender2" class="form-check-label"
+                        >Female</label
+                      >
                     </div>
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Biography</label>
-                  <input type="text" class="form-control" formControlName="bio">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="bio"
+                  />
                 </div>
               </div>
             </div>
-        </div>
-
+          </div>
         </div>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Room info">
+    <mat-tab *ngIf="userDetails?.roomDetails" label="Room info">
       <ng-template matTabContent>
         <div class="container-fluid room-info">
           <div class="row mb-4">
             <div class="col-4">
               <div class="card shadow py-4">
-                <img [src]="userDetails?.roomDetails?.roomImage" alt="profile" class="img-fluid">
+                <img
+                  [src]="userDetails?.roomDetails?.roomImage"
+                  alt="profile"
+                  class="img-fluid"
+                />
+              </div>
+              <div
+                *ngIf="mode === 'edit'"
+                class="d-flex justify-content-evenly align-items-center mt-5"
+              >
+                @if (!roomChanged()) {
+                <button
+                  class="btn btn-indigo"
+                  type="button"
+                  (click)="openImageDialog('room')"
+                >
+                  Change room profile
+                </button>
+                } @if (roomChanged()) {
+                <button
+                  class="btn btn-danger"
+                  (click)="restoreImage('room')"
+                  [disabled]="loader()"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-primary"
+                  (click)="updateProfile('room')"
+                  [disabled]="loader()"
+                >
+                  <span *ngIf="loader()" class="spinner-border"></span>
+                  <span *ngIf="!loader()">Save</span>
+                </button>
+                }
               </div>
             </div>
             <div class="col-8">
               <div class="card shadow p-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Name</label>
-                  <input type="text" class="form-control" formControlName="roomName">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="roomName"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Announcement</label>
-                  <input type="text" class="form-control" formControlName="announcement">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="announcement"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Room hosting time</label>
-                  <input type="text" class="form-control" formControlName="hostingTime">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="hostingTime"
+                  />
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Items">
+      <ng-template matTabContent>
+        <div class="container-fluid">
+          <mat-tab-group id="userItemsTab" class="user-items">
+            <mat-tab label="Frames">
+              <ng-template matTabContent>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="col-md-3 col-sm-6 col-12 mb-3"
+                      *ngFor="let frame of userDetails.frames"
+                    >
+                      <div class="card p-2 shadow">
+                        <img
+                          [src]="frame.thumbnail"
+                          alt=""
+                          class="img-fluid mx-auto"
+                        />
+                        <div class="p-1 text-center">
+                          <p class="m-0 title">{{ frame.name }}</p>
+                          <p class="m-0 time-left">
+                            <fa-icon [icon]="['far', 'clock']"></fa-icon>
+                            {{ frame.validTill | timeLeft }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
+            <mat-tab label="Chat bubbles">
+              <ng-template matTabContent>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="col-md-3 col-sm-6 col-12 mb-3"
+                      *ngFor="let bubble of userDetails.chatBubbles"
+                    >
+                      <div class="card p-2 shadow">
+                        <img
+                          [src]="bubble.resource"
+                          alt=""
+                          class="img-fluid mx-auto"
+                        />
+                        <div class="p-1 text-center">
+                          <p class="m-0 title">{{ bubble.name }}</p>
+                          <p class="m-0 time-left">
+                            <fa-icon [icon]="['far', 'clock']"></fa-icon>
+                            {{ bubble.validTill | timeLeft }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
+            <mat-tab label="Themes">
+              <ng-template matTabContent>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="col-md-3 col-sm-6 col-12 mb-3"
+                      *ngFor="let theme of userDetails.themes"
+                    >
+                      <div class="card p-2 shadow">
+                        <img
+                          [src]="theme.resource"
+                          alt=""
+                          class="img-fluid mx-auto"
+                        />
+                        <div class="p-1 text-center">
+                          <p class="m-0 title">{{ theme.name }}</p>
+                          <p class="m-0 time-left">
+                            <fa-icon [icon]="['far', 'clock']"></fa-icon>
+                            {{ theme.validTill | timeLeft }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
+            <mat-tab label="Vehicles"></mat-tab>
+            <mat-tab label="Relations"></mat-tab>
+            <mat-tab label="Special ID"></mat-tab>
+            <mat-tab label="Room accessories"></mat-tab>
+          </mat-tab-group>
         </div>
       </ng-template>
     </mat-tab>
@@ -88,30 +314,62 @@
               <div class="card shadow p-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Level</label>
-                  <input type="text" class="form-control" formControlName="level">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="level"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">User type</label>
-                  <input type="text" class="form-control" formControlName="userRole">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="userRole"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Beans</label>
-                  <input type="text" class="form-control" formControlName="beans">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="beans"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Diamonds</label>
-                  <input type="text" class="form-control" formControlName="diamonds">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="diamonds"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Status</label>
                   <div>
                     <div class="form-check form-check-inline">
-                      <input id="status1" type="radio" class="form-check-input" value="true" formControlName="isActiveUser">
-                      <label for="status1" class="form-check-label">Active</label>
+                      <input
+                        id="status1"
+                        type="radio"
+                        class="form-check-input"
+                        [value]="true"
+                        formControlName="isActiveUser"
+                      />
+                      <label for="status1" class="form-check-label"
+                        >Active</label
+                      >
                     </div>
                     <div class="form-check form-check-inline">
-                      <input id="status2" type="radio" class="form-check-input" value="false" formControlName="isActiveUser">
-                      <label for="status2" class="form-check-label">Banned</label>
+                      <input
+                        id="status2"
+                        type="radio"
+                        class="form-check-input"
+                        [value]="false"
+                        formControlName="isActiveUser"
+                      />
+                      <label for="status2" class="form-check-label"
+                        >Banned</label
+                      >
                     </div>
                   </div>
                 </div>
@@ -129,11 +387,29 @@
               <div class="card shadow p-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Followers</label>
-                  <input type="text" class="form-control" formControlName="followers">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="followers"
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Following</label>
-                  <input type="text" class="form-control" formControlName="following">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="following"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">Restrict Comment</label>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      formControlName="isCommentRestricted"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
