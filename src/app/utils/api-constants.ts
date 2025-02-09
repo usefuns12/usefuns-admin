@@ -9,7 +9,8 @@ export class ApiEndpoints  {
   public static users = {
     GET_USERS: VersionConstant.v1 + '/user/getAll/limitedData',
     GET_USER_DETAILS: VersionConstant.v1 + '/user/getById',
-    UPDATE_USER: VersionConstant.v1 + '/admin/user/update'
+    UPDATE_USER: VersionConstant.v1 + '/admin/user/update',
+    SEARCH_USER: VersionConstant.v1 + '/user/search'
   };
 
   public static rooms = {
@@ -18,8 +19,11 @@ export class ApiEndpoints  {
     UPDATE_ROOM: VersionConstant.v1 + '/room/update'
   };
 
-  public static dashboard = {
-    GET_DASHBOARD: VersionConstant.v1 + '/admin/getDashboardData',
+  public static shop = {
+    GET_ITEMS: VersionConstant.v1 + '/shop/getItems',
+    ADD_ITEM: VersionConstant.v1 + '/shop/addItem',
+    UPDATE_ITEM: VersionConstant.v1 + '/shop/updateItem',
+    DELETE_ITEM: VersionConstant.v1 + '/shop/deleteItem',
   };
 
   public static csv = {

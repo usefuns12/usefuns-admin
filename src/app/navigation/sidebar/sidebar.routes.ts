@@ -14,4 +14,12 @@ export const SIDEBAR_ROUTES: Routes = [
       ),
     data: { breadcrumb: 'Users' }
   },
+  {
+    path: 'shop',
+    loadChildren: () =>
+      import('../../components/shop/shop.routes').then(
+        (m) => m.SHOP_ROUTES
+      ),
+    data: { breadcrumb: 'Shop' }
+  },
 ];

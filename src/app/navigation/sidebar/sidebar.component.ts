@@ -1,4 +1,11 @@
-import { Component, computed, Injector, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  Injector,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -7,7 +14,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
-import { USER_ID_TOKEN } from '../../components/user-list/user.token';
+import { ITEM_TOKEN, USER_ID_TOKEN } from '../../utils/injector-tokens.token';
+import { UserFormComponent } from '../../components/user-list/user-form/user-form.component';
+import { ItemFormComponent } from '../../components/shop/item-form/item-form.component';
+import { Subscription } from 'rxjs';
+import { ShopItemService } from '../../services/shop-item.service';
 
 export type MenuItem = {
   icon: string;
@@ -42,23 +53,23 @@ export type MenuItem = {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [
     {
       icon: 'user',
       label: 'Users',
       route: 'users',
     },
-    {
+    /* {
       icon: 'headset',
       label: 'Rooms',
       route: 'rooms',
-    },
+    }, */
     {
       icon: 'gem',
       label: 'Shop Items',
       route: 'shop',
-      subItems: [
+      /* subItems: [
         {
           icon: 'crop-simple',
           label: 'Frames',
@@ -74,7 +85,7 @@ export class SidebarComponent {
           label: 'Themes',
           route: '',
         },
-      ],
+      ], */
     },
     {
       icon: 'arrow-right-from-bracket',
@@ -88,8 +99,19 @@ export class SidebarComponent {
   drawerContent: any = null;
   dataInjector: any = null;
   sidebarCollapsedWidth = computed(() => (this.collapsed() ? 'collapsed' : ''));
+  drawerTitle: string;
+  drawerSubscription: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private shopItemService: ShopItemService
+  ) {}
+
+  ngOnInit(): void {
+    this.drawerSubscription = this.shopItemService.drawer$.subscribe(() =>
+      this.toggleDrawer()
+    );
+  }
 
   toggleNestedMenu(item: MenuItem) {
     if (!item.subItems?.length) {
@@ -99,11 +121,22 @@ export class SidebarComponent {
     this.nestedMenuOpen.set(!this.nestedMenuOpen());
   }
 
-  openDrawer(component: any, userId: string) {
+  openDrawer(title: string, component: any, Id: any) {
+    this.drawerTitle = title;
     this.drawerContent = component;
-    this.dataInjector = Injector.create({
-      providers: [{ provide: USER_ID_TOKEN, useValue: { userId, mode: 'view' }}],
-    });
+    const providers: any[] = [];
+    if (component === UserFormComponent) {
+      providers.push({
+        provide: USER_ID_TOKEN,
+        useValue: { userId: Id, mode: 'view' },
+      });
+    } else if (component === ItemFormComponent) {
+      providers.push({
+        provide: ITEM_TOKEN,
+        useValue: { item: Id, mode: Id ? 'edit' : 'add' },
+      });
+    }
+    this.dataInjector = Injector.create({ providers });
     this.isDrawerOpen.set(true);
   }
 
@@ -113,8 +146,16 @@ export class SidebarComponent {
     this.isDrawerOpen.set(false);
   }
 
+  toggleDrawer() {
+    document.getElementById('drawer-close-btn')?.click();
+  }
+
   logout() {
     localStorage.clear();
     this.router.navigate(['auth']);
+  }
+
+  ngOnDestroy(): void {
+    this.drawerSubscription.unsubscribe();
   }
 }

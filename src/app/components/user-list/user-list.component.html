@@ -1,9 +1,17 @@
 <div class="users-list">
-  <div class="header-content d-flex justify-content-between align-items-center pt-4 pb-3">
+  <div
+    class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+  >
     <h4>List of users</h4>
     <div class="input-group">
       <fa-icon class="input-group-text" icon="magnifying-glass"></fa-icon>
-      <input type="search" class="form-control" placeholder="Search UId" />
+      <input
+        type="search"
+        class="form-control"
+        placeholder="Search UId"
+        [formControl]="searchControl"
+        (search)="resetSearch($event)"
+      />
     </div>
   </div>
   <table class="table table-responsive">
@@ -22,7 +30,7 @@
     </thead>
     <tbody>
       <ng-container *ngIf="!isLoading; else showLoader">
-        <tr *ngFor="let user of users; index as i">
+        <tr *ngFor="let user of filteredUsers; index as i">
           <th scope="row">{{ i + 1 }}</th>
           <td>{{ user.name }}</td>
           <td>{{ user.userId }}</td>
@@ -54,13 +62,15 @@
                 matTooltip="Edit"
                 (click)="navigateUser(user._id)"
               ></fa-icon>
-              <fa-icon *ngIf="user.isActiveUser"
+              <fa-icon
+                *ngIf="user.isActiveUser"
                 icon="ban"
                 class="flex-grow-1 text-danger"
                 matTooltip="Ban"
                 (click)="banUser(user)"
               ></fa-icon>
-              <fa-icon *ngIf="!user.isActiveUser"
+              <fa-icon
+                *ngIf="!user.isActiveUser"
                 [icon]="['far', 'circle-check']"
                 class="flex-grow-1 text-success"
                 matTooltip="Unban"

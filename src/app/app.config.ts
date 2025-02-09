@@ -16,6 +16,7 @@ import {
   faGem,
   faImage,
   faPenToSquare,
+  faTrashCan,
   faUser,
 } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -28,6 +29,7 @@ import {
   faCropSimple,
   faHeadset,
   faMagnifyingGlass,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   MatTooltipDefaultOptions,
@@ -57,7 +59,9 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faPenToSquare,
     faBan,
     faClock,
-    faCircleCheck
+    faCircleCheck,
+    faXmark,
+    faTrashCan
   );
 };
 

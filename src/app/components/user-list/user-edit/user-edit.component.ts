@@ -2,7 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';
 import { UserFormComponent } from '../user-form/user-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { USER_ID_TOKEN } from '../user.token';
+import { USER_ID_TOKEN } from '../../../utils/injector-tokens.token';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/user.service';
 

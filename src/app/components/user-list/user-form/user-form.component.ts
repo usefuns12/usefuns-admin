@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { UserService } from '../../../services/user.service';
-import { USER_ID_TOKEN } from '../user.token';
+import { USER_ID_TOKEN } from '../../../utils/injector-tokens.token';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

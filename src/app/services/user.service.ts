@@ -33,4 +33,8 @@ export class UserService {
   updateUserRoom = (roomId: string, roomPost: FormData): Observable<any> => {
     return this.http.put(`${environment.baseUrl}/${ApiEndpoints.rooms.UPDATE_ROOM}/${roomId}`, roomPost);
   }
+
+  searchUsers = (term: string): Observable<any> => {
+    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`);
+  }
 }

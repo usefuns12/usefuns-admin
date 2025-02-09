@@ -27,7 +27,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   box-shadow: none;
 }
 
-input:focus {
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input:focus, select:focus{
   outline: none!important;
   box-shadow: none!important;
 }
@@ -45,6 +57,18 @@ input:focus {
 input[type="search"]::-webkit-search-decoration:hover,
 input[type="search"]::-webkit-search-cancel-button:hover {
     cursor:pointer;
+}
+
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
+  background-color: $indigo !important;
+}
+
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__checkmark {
+  color: $white !important;
+}
+
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
+  color: $white !important;
 }
 
 .card {
@@ -294,11 +318,15 @@ mat-sidenav-content.mat-drawer-content {
   transition: margin 200ms ease-in-out;
   overflow: initial;
 
-  .sidenav-content .header-content {
+  .sidenav-content .header-content, .shop-items-chips {
     position: sticky;
     top: 64px;
     z-index: 10;
     background-color: $light;
+  }
+
+  .shop-items-chips {
+    top: 141.6px;
   }
 }
 
@@ -342,7 +370,9 @@ mat-toolbar.mat-toolbar {
       background-color: $light;
     }
   }
+}
 
+.users-list, .shop-list {
   table {
     td.status {
       p fa-icon {

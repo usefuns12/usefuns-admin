@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
@@ -10,6 +10,16 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { BanUserDialogComponent } from './ban-user-dialog/ban-user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -17,14 +27,18 @@ import { ToastrService } from 'ngx-toastr';
     FontAwesomeModule,
     MatTooltip,
     CommonModule,
+    ReactiveFormsModule,
     NgxSkeletonLoaderModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
   users: any[] = [];
+  filteredUsers: any[] = [];
   isLoading: boolean;
+  searchControl = new FormControl();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -33,7 +47,24 @@ export class UserListComponent implements OnInit {
     private apiService: UserService,
     private dialog: MatDialog,
     private toastrService: ToastrService
-  ) {}
+  ) {
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300), // Waits for 300ms after typing stops
+        distinctUntilChanged(),
+        tap((term) => {
+          if (term.length === 0) {
+            this.filteredUsers = [...this.users];
+          }
+        }),
+        filter((term) => term.length > 2), // Avoids duplicate consecutive values
+        switchMap((term) => this.apiService.searchUsers(term)),
+        takeUntil(this.destroy$) // Unsubscribes when component is destroyed
+      )
+      .subscribe((result) => {
+        this.filteredUsers = result.data;
+      });
+  }
 
   ngOnInit(): void {
     this.getUsers();
@@ -44,6 +75,7 @@ export class UserListComponent implements OnInit {
     this.apiService.getUsers().subscribe(
       (resp) => {
         this.users = resp.data;
+        this.filteredUsers = [...this.users];
         this.isLoading = false;
       },
       (error) => {
@@ -53,7 +85,7 @@ export class UserListComponent implements OnInit {
   }
 
   openDrawer(userId: string) {
-    this.sidebar.openDrawer(UserFormComponent, userId);
+    this.sidebar.openDrawer('User details', UserFormComponent, userId);
   }
 
   navigateUser(userId: string) {
@@ -69,19 +101,35 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(BanUserDialogComponent, {
       width: '50%',
       disableClose: true,
-      data: { userId: user._id, uid: user.userId, name: user.name, isActiveUser: user.isActiveUser },
+      data: {
+        userId: user._id,
+        uid: user.userId,
+        name: user.name,
+        isActiveUser: user.isActiveUser,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        if(result.success) {
+        if (result.success) {
           this.toastrService.success(result.message);
           this.getUsers();
-        }
-        else {
+        } else {
           this.toastrService.error(result.message);
         }
       }
     });
+  }
+
+  resetSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.value) {
+      this.filteredUsers = [...this.users];
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

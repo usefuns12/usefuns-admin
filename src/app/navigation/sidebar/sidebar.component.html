@@ -108,10 +108,11 @@
           <div class="d-flex align-items-center gap-5 mb-3">
             <button
               type="button"
+              id="drawer-close-btn"
               class="btn-close shadow-none"
               (click)="drawer.close()"
             ></button>
-            <h3 class="m-0">User details</h3>
+            <h3 class="m-0">{{drawerTitle}}</h3>
           </div>
           <mat-divider></mat-divider>
         </div>
