@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
 import { ToastrService } from 'ngx-toastr';
+import { Downloader, Parser, Player } from 'svga.lite';
 
 @Component({
   selector: 'app-item-form',
@@ -37,6 +38,7 @@ export class ItemFormComponent implements OnInit {
     { name: 'Vehicle', value: 'vehicle' },
   ];
   resource: string;
+  isResourceSVGA = false;
   thumbnail: string;
   private resourceBlob: Blob | null;
   private thumbnailBlob: Blob | null;
@@ -93,6 +95,10 @@ export class ItemFormComponent implements OnInit {
     });
 
     this.resource = this.item.resource;
+    this.isResourceSVGA = this.resource.endsWith('.svga');
+    if (this.isResourceSVGA) {
+      this.showSVGA(this.resource);
+    }
     if (this.item.thumbnail) {
       this.thumbnail = this.item.thumbnail;
     }
@@ -109,11 +115,35 @@ export class ItemFormComponent implements OnInit {
   openImageDialog(type: string) {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = 'image/png, image/jpeg, image/jpg, image/gif';
+    fileInput.accept =
+      'image/png, image/jpeg, image/jpg, image/svg+xml, image/gif, image/svga';
+
+    fileInput.multiple = false;
     fileInput.onchange = ($event) => {
       const target = $event.target as HTMLInputElement;
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
+        const fileType = file.type;
+        const fileName = file.name.toLowerCase();
+        const isSvga = fileName.endsWith('.svga');
+        if (type === 'thumbnail' && (fileType === 'image/gif' || isSvga)) {
+          this.toastr.error(
+            'Invalid file type! Only PNG, JPEG, JPG, and SVG are allowed for thumbnails.'
+          );
+          return;
+        }
+
+        if (fileType === 'image/gif' || isSvga) {
+          this.resource = URL.createObjectURL(file);
+          if (isSvga) {
+            this.isResourceSVGA = true;
+            this.showSVGA(this.resource);
+          }
+          this.resourceBlob = file;
+          this.resourceChanged.set(true);
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
           const base64Image = reader.result as string;
@@ -125,8 +155,11 @@ export class ItemFormComponent implements OnInit {
 
           dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-              console.log(result.croppedImage);
               if (result.imgType === 'resource') {
+                this.isResourceSVGA = false;
+                document
+                  .getElementsByClassName('canvas-container')?.[0]
+                  .firstChild?.remove();
                 this.resource = result.croppedImage.objectUrl;
                 this.resourceBlob = result.croppedImage.blob;
                 this.resourceChanged.set(true);
@@ -146,9 +179,39 @@ export class ItemFormComponent implements OnInit {
     fileInput.click();
   }
 
+  async showSVGA(resourceUrl: string) {
+    const canvasContainer =
+      document.getElementsByClassName('canvas-container')?.[0];
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('style', 'width: 150px; margin-bottom: 16px');
+    canvasContainer.append(canvas);
+    const downloader = new Downloader();
+    const parser = new Parser();
+    const player = new Player(canvas);
+    const fileData = await downloader.get(resourceUrl);
+    const svgaData = await parser.do(fileData);
+    player.set({
+      loop: true,
+      cacheFrames: false,
+      intersectionObserverRender: false,
+    });
+
+    await player.mount(svgaData);
+    player.start();
+  }
+
   restoreImage(type: string) {
     if (type === 'resource') {
       this.resource = this.item?.resource;
+      document
+        .getElementsByClassName('canvas-container')?.[0]
+        .firstChild?.remove();
+      if (this.item?.isSVGA) {
+        this.isResourceSVGA = true;
+        this.showSVGA(this.resource);
+      } else {
+        this.isResourceSVGA = false;
+      }
       this.resetResourceFlags();
     } else {
       this.thumbnail = this.item?.thumbnail;
@@ -179,8 +242,10 @@ export class ItemFormComponent implements OnInit {
       formData.append(`priceAndValidity[${index}][validity]`, item.validity);
     });
 
-    if (this.resource) {
+    if (this.resource && !this.isResourceSVGA) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
+    } else {
+      formData.append('resource', this.resourceBlob as Blob);
     }
 
     if (this.thumbnail) {

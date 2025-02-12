@@ -3,11 +3,12 @@
     <div class="card shadow p-4 mb-4">
       <h4>Resource</h4>
       <img
-        *ngIf="resource"
+        *ngIf="!isResourceSVGA && resource"
         [src]="resource"
         alt="profile"
         class="img-fluid mx-auto my-3"
       />
+      <div class="canvas-container mx-auto"></div>
       @if (!resourceChanged()) {
       <button
         *ngIf="mode === 'add'"

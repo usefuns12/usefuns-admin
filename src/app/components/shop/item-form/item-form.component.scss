@@ -10,6 +10,10 @@
   color: #ff3333;
 }
 
-img {
+.canvas-container canvas {
+  width: 150px !important;
+}
+
+img, canvas {
   width: 150px;
 }

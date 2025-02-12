@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ToastrService } from 'ngx-toastr';
@@ -8,9 +17,10 @@ import { ShopItemService } from '../../services/shop-item.service';
 import { ItemFormComponent } from './item-form/item-form.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatChipListboxChange, MatChipsModule} from '@angular/material/chips';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { Subscription } from 'rxjs';
 import { RemoveItemDialogComponent } from './remove-item-dialog/remove-item-dialog.component';
+import { Downloader, Parser, Player } from 'svga.lite';
 
 @Component({
   selector: 'app-shop',
@@ -19,12 +29,12 @@ import { RemoveItemDialogComponent } from './remove-item-dialog/remove-item-dial
     NgxSkeletonLoaderModule,
     FontAwesomeModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
 })
-export class ShopComponent implements OnInit, OnDestroy {
+export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   items: any[] = [];
   filteredItems: any[] = [];
   isLoading: boolean;
@@ -39,6 +49,7 @@ export class ShopComponent implements OnInit, OnDestroy {
     { name: 'Theme', value: 'theme' },
     { name: 'Vehicle', value: 'vehicle' },
   ];
+  @ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
 
   constructor(
     private sidebar: SidebarComponent,
@@ -54,7 +65,11 @@ export class ShopComponent implements OnInit, OnDestroy {
   }
 
   openDrawer(item: string | null = null) {
-    this.sidebar.openDrawer(item ? 'Edit item' : 'Add new item', ItemFormComponent, item);
+    this.sidebar.openDrawer(
+      item ? 'Edit item' : 'Add new item',
+      ItemFormComponent,
+      item
+    );
   }
 
   getItems() {
@@ -62,13 +77,48 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.apiService.getItems().subscribe(
       (resp) => {
         this.items = resp.data;
-        this.filteredItems = this.items.filter(item => item.itemType === 'chatBubble');
+        this.items = this.items.map((item) => ({
+          ...item,
+          isSVGA: item.resource.endsWith('.svga'),
+        }));
+        this.filteredItems = this.items.filter(
+          (item) => item.itemType === 'chatBubble'
+        );
         this.isLoading = false;
       },
       (err) => {
         this.isLoading = false;
       }
     );
+  }
+
+  ngAfterViewInit(): void {
+    this.svgaCanvases.changes.subscribe((canvases: QueryList<ElementRef>) => {
+      if (canvases.length > 0) {
+        const svgaItems = this.filteredItems.filter((item) => item.isSVGA);
+        canvases.forEach((canvas, index) => {
+          this.initSVGA(canvas.nativeElement, svgaItems[index].resource);
+        });
+      }
+    });
+  }
+
+  async initSVGA(canvas: HTMLCanvasElement, resourceUrl: string) {
+    canvas.setAttribute('style', 'width: 100px;');
+    const downloader = new Downloader();
+    const parser = new Parser();
+    const player = new Player(canvas);
+    const fileData = await downloader.get(resourceUrl);
+    const svgaData = await parser.do(fileData);
+
+    player.set({
+      loop: true,
+      cacheFrames: true,
+      intersectionObserverRender: false,
+    });
+
+    await player.mount(svgaData);
+    player.start();
   }
 
   removeItem(item: any) {
@@ -93,7 +143,13 @@ export class ShopComponent implements OnInit, OnDestroy {
   }
 
   onChipSelectionChange(event: MatChipListboxChange) {
-    this.filteredItems = this.items.filter(item => item.itemType === event.value);
+    this.filteredItems = this.items.filter(
+      (item) => item.itemType === event.value
+    );
+  }
+
+  openFullImage(src: string) {
+    window.open(src, '_blank');
   }
 
   ngOnDestroy(): void {

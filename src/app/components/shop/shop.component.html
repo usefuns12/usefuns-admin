@@ -27,11 +27,16 @@
           <th>{{ i + 1 }}</th>
           <td>{{ item.name }}</td>
           <td>
-            <img [src]="item.resource" alt="resource" />
+            <div class="img-container">
+              <img *ngIf="!item.isSVGA" [src]="item.resource" alt="resource" />
+              <canvas *ngIf="item.isSVGA" #svgaCanvas></canvas>
+            </div>
           </td>
           <td>
             <ng-container *ngIf="item.thumbnail; else noThumbnail">
-              <img [src]="item.thumbnail" alt="thumbnail" />
+              <div class="img-container" (click)="openFullImage(item.thumbnail)">
+                <img [src]="item.thumbnail" alt="thumbnail" />
+              </div>
             </ng-container>
             <ng-template #noThumbnail>-</ng-template>
           </td>
