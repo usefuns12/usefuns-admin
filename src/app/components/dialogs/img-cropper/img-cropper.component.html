@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <image-cropper
     [imageBase64]="imageChangedEvent"
-    [maintainAspectRatio]="true"
+    [maintainAspectRatio]="false"
     [aspectRatio]="1 / 1"
     format="png"
     (imageCropped)="imageCropped($event)"
