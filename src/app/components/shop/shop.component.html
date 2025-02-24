@@ -17,6 +17,7 @@
         <th scope="col">Name</th>
         <th scope="col">Resource</th>
         <th scope="col">Thumbnail</th>
+        <th scope="col">Country</th>
         <th scope="col">Price & Validity</th>
         <th scope="col">Action</th>
       </tr>
@@ -40,6 +41,7 @@
             </ng-container>
             <ng-template #noThumbnail>-</ng-template>
           </td>
+          <td>{{ item.countryCode ? item.countryCode : '-' }}</td>
           <td>
             <ng-container *ngFor="let itemMeta of item.priceAndValidity">
               <span>Price: </span>{{ itemMeta.price }}, <span>Validity: </span
@@ -69,6 +71,7 @@
       <ng-template #showLoader>
         <tr>
           <th><ngx-skeleton-loader></ngx-skeleton-loader></th>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
           <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
           <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
           <td><ngx-skeleton-loader></ngx-skeleton-loader></td>

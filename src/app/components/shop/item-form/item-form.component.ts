@@ -61,7 +61,7 @@ export class ItemFormComponent implements OnInit {
     this.item = itemToken.item;
     this.itemForm = this.fb.group({
       name: new FormControl(null, [Validators.required]),
-      countryCode: new FormControl('IN', [Validators.required]),
+      countryCode: new FormControl(null),
       itemType: new FormControl('select'),
       priceAndValidity: this.fb.array([]),
       isOfficial: new FormControl(false),
