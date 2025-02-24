@@ -15,10 +15,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
 import { ToastrService } from 'ngx-toastr';
 import { Downloader, Parser, Player } from 'svga.lite';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CountryService } from '../../../services/country.service';
 
 @Component({
   selector: 'app-item-form',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, NgSelectModule],
   templateUrl: './item-form.component.html',
   styleUrl: './item-form.component.scss',
 })
@@ -26,6 +28,7 @@ export class ItemFormComponent implements OnInit {
   itemForm: FormGroup;
   item: any;
   mode: string;
+  countries: any[] = [];
   itemTypeOptions = [
     { name: 'Select type', value: 'select' },
     { name: 'Chat Bubble', value: 'chatBubble' },
@@ -51,12 +54,14 @@ export class ItemFormComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ShopItemService,
     private dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private countryService: CountryService
   ) {
     this.mode = itemToken.mode;
     this.item = itemToken.item;
     this.itemForm = this.fb.group({
       name: new FormControl(null, [Validators.required]),
+      countryCode: new FormControl('IN', [Validators.required]),
       itemType: new FormControl('select'),
       priceAndValidity: this.fb.array([]),
       isOfficial: new FormControl(false),
@@ -65,6 +70,10 @@ export class ItemFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.countryService.getCountries().subscribe((data) => {
+      this.countries = data;
+    });
+
     if (this.mode === 'edit') {
       this.patchFormValues();
     }
@@ -91,6 +100,7 @@ export class ItemFormComponent implements OnInit {
     this.itemForm.patchValue({
       name: this.item.name,
       itemType: this.item.itemType,
+      countryCode: this.item.countryCode,
       isOfficial: this.item.isOfficial,
     });
 

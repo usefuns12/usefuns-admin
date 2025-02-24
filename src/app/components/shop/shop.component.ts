@@ -39,6 +39,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredItems: any[] = [];
   isLoading: boolean;
   shopItemSubscription: Subscription;
+  selectedCurrentItem: string;
   itemTypeOptions = [
     { name: 'Chat Bubble', value: 'chatBubble' },
     { name: 'Extra Seat', value: 'extraSeat' },
@@ -82,7 +83,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
           isSVGA: item.resource.endsWith('.svga'),
         }));
         this.filteredItems = this.items.filter(
-          (item) => item.itemType === 'chatBubble'
+          (item) => item.itemType ===  (this.selectedCurrentItem ? this.selectedCurrentItem : 'chatBubble')
         );
         this.isLoading = false;
       },
@@ -143,8 +144,9 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onChipSelectionChange(event: MatChipListboxChange) {
+    this.selectedCurrentItem = event.value;
     this.filteredItems = this.items.filter(
-      (item) => item.itemType === event.value
+      (item) => item.itemType === this.selectedCurrentItem
     );
   }
 

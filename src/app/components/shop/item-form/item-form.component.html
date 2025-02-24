@@ -141,6 +141,21 @@
             Select item type
           </p>
         </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Country</label>
+          <ng-select
+            formControlName="countryCode"
+            placeholder="Select a country"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let country of countries">
+              <ng-option [value]="country.cca2">
+                {{ country.flag }} | {{ country.name.common }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
+        </div>
         <div formArrayName="priceAndValidity">
           <div
             class="d-flex justify-content-between align-items-center gap-2 mb-3"
