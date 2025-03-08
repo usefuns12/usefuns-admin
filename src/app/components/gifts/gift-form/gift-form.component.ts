@@ -78,13 +78,12 @@ export class GiftFormComponent {
     });
   }
 
-
   patchFormValues() {
     this.giftForm.patchValue({
       name: this.gift.name,
       categoryId: this.gift.category._id,
       countryCode: this.gift.countryCode,
-      diamonds: this.gift.diamonds
+      diamonds: this.gift.diamonds,
     });
 
     this.resource = this.gift.resource;
@@ -222,8 +221,9 @@ export class GiftFormComponent {
     formData.append('name', postData.name);
     formData.append('categoryId', postData.categoryId);
     formData.append('diamonds', postData.diamonds);
-    formData.append('countryCode', postData.countryCode);
-
+    if (postData.countryCode) {
+      formData.append('countryCode', postData.countryCode);
+    }
 
     if (this.resource && !this.isResourceSVGA) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');

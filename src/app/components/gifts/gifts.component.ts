@@ -39,16 +39,6 @@ export class GiftsComponent {
   isLoading: boolean;
   giftSubscription: Subscription;
   selectedCurrentItem: string;
-  itemTypeOptions = [
-    { name: 'Chat Bubble', value: 'chatBubble' },
-    { name: 'Extra Seat', value: 'extraSeat' },
-    { name: 'Frame', value: 'frame' },
-    { name: 'Lock Room', value: 'lockRoom' },
-    { name: 'Relationship', value: 'relationship' },
-    { name: 'Special Id', value: 'specialId' },
-    { name: 'Theme', value: 'theme' },
-    { name: 'Vehicle', value: 'vehicle' },
-  ];
   @ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
 
   constructor(

@@ -21,7 +21,12 @@ import { DrawerService } from '../../../services/drawer.service';
 
 @Component({
   selector: 'app-item-form',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, NgSelectModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    NgSelectModule,
+  ],
   templateUrl: './item-form.component.html',
   styleUrl: './item-form.component.scss',
 })
@@ -253,6 +258,10 @@ export class ItemFormComponent implements OnInit {
       formData.append(`priceAndValidity[${index}][price]`, item.price);
       formData.append(`priceAndValidity[${index}][validity]`, item.validity);
     });
+
+    if (postData.countryCode) {
+      formData.append('countryCode', postData.countryCode);
+    }
 
     if (this.resource && !this.isResourceSVGA) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
