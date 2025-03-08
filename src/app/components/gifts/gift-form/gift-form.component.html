@@ -1,0 +1,188 @@
+<div class="row mb-4">
+  <div class="col-4">
+    <div class="card shadow p-4 mb-4">
+      <h4>Resource</h4>
+      <img
+        *ngIf="!isResourceSVGA && resource"
+        [src]="resource"
+        alt="profile"
+        class="img-fluid mx-auto my-3"
+      />
+      <div class="canvas-container mx-auto"></div>
+      @if (!resourceChanged()) {
+      <button
+        *ngIf="mode === 'add'"
+        type="button"
+        class="btn btn-indigo"
+        (click)="openImageDialog('resource')"
+        [disabled]="isLoading"
+      >
+        Select resource
+      </button>
+      }
+      <div
+        *ngIf="mode === 'edit'"
+        class="d-flex justify-content-evenly align-items-center mt-5"
+      >
+        @if (!resourceChanged()) {
+        <button
+          class="btn btn-indigo"
+          type="button"
+          (click)="openImageDialog('resource')"
+        >
+          Change resource
+        </button>
+        }
+      </div>
+      @if (resourceChanged()) {
+      <div class="text-center">
+        <button
+          class="btn btn-danger"
+          (click)="restoreImage('resource')"
+          [disabled]="isLoading"
+        >
+          Cancel
+        </button>
+      </div>
+      }
+    </div>
+
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="mode === 'add' ? addGift() : updateGift()"
+        [disabled]="giftForm.invalid || !resource || isLoading"
+      >
+        <span *ngIf="isLoading" class="spinner-border"></span>
+        <span *ngIf="!isLoading">Submit</span>
+      </button>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card shadow p-4 mb-4">
+      <h4>Thumbnail</h4>
+      <img
+        *ngIf="thumbnail"
+        [src]="thumbnail"
+        alt="profile"
+        class="img-fluid mx-auto my-3"
+      />
+      @if (!thumbnailChanged()) {
+      <button
+        *ngIf="mode === 'add'"
+        type="button"
+        class="btn btn-indigo"
+        (click)="openImageDialog('thumbnail')"
+        [disabled]="isLoading"
+      >
+        Select thumbnail
+      </button>
+      }
+      <div
+        *ngIf="mode === 'edit'"
+        class="d-flex justify-content-evenly align-items-center mt-5"
+      >
+        @if (!thumbnailChanged()) {
+        <button
+          class="btn btn-indigo"
+          type="button"
+          (click)="openImageDialog('thumbnail')"
+        >
+          Change thumbnail
+        </button>
+        }
+      </div>
+
+      @if (thumbnailChanged()) {
+      <div class="text-center">
+        <button
+          class="btn btn-danger"
+          (click)="restoreImage('thumbnail')"
+          [disabled]="isLoading"
+        >
+          Cancel
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="col-4">
+    <form [formGroup]="giftForm">
+      <div class="card shadow p-4">
+        <div class="mb-3">
+          <label for="" class="form-label">Name</label>
+          <input type="text" class="form-control" formControlName="name" />
+          <p
+            *ngIf="
+              (giftForm.get('name')?.touched || giftForm.get('name')?.dirty) &&
+              giftForm.get('name')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Name is required
+          </p>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Category</label>
+          <ng-select
+            formControlName="categoryId"
+            placeholder="Select a category"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let cat of categories">
+              <ng-option [value]="cat._id">
+                {{ cat.name }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
+          <p
+            *ngIf="
+              (giftForm.get('categoryId')?.touched ||
+                giftForm.get('categoryId')?.dirty) &&
+              giftForm.get('categoryId')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Select category
+          </p>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Country</label>
+          <ng-select
+            formControlName="countryCode"
+            placeholder="Select a country"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let country of countries">
+              <ng-option [value]="country.cca2">
+                {{ country.flag }} | {{ country.name.common }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
+        </div>
+
+        <div class="mb-3">
+          <label for="" class="form-label">Diamonds</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="diamonds"
+          />
+          <p
+            *ngIf="
+              (giftForm.get('diamonds')?.touched ||
+                giftForm.get('diamonds')?.dirty) &&
+              giftForm.get('diamonds')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Diamonds is required
+          </p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

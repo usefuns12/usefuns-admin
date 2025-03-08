@@ -12,17 +12,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ToastrService } from 'ngx-toastr';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
-import { ShopItemService } from '../../services/shop-item.service';
-import { ItemFormComponent } from './item-form/item-form.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { Subscription } from 'rxjs';
-import { RemoveItemDialogComponent } from './remove-item-dialog/remove-item-dialog.component';
 import { Downloader, Parser, Player } from 'svga.lite';
+import { GiftFormComponent } from './gift-form/gift-form.component';
+import { GiftDialogComponent } from './gift-dialog/gift-dialog.component';
+import { GiftService } from '../../services/gift.service';
 
 @Component({
-  selector: 'app-shop',
+  selector: 'app-gifts',
   imports: [
     CommonModule,
     NgxSkeletonLoaderModule,
@@ -30,14 +30,14 @@ import { Downloader, Parser, Player } from 'svga.lite';
     MatTooltipModule,
     MatChipsModule,
   ],
-  templateUrl: './shop.component.html',
-  styleUrl: './shop.component.scss',
+  templateUrl: './gifts.component.html',
+  styleUrl: './gifts.component.scss',
 })
-export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
-  items: any[] = [];
-  filteredItems: any[] = [];
+export class GiftsComponent {
+  gifts: any[] = [];
+  filteredGifts: any[] = [];
   isLoading: boolean;
-  shopItemSubscription: Subscription;
+  giftSubscription: Subscription;
   selectedCurrentItem: string;
   itemTypeOptions = [
     { name: 'Chat Bubble', value: 'chatBubble' },
@@ -53,36 +53,37 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private sidebar: SidebarComponent,
-    private apiService: ShopItemService,
+    private apiService: GiftService,
     private dialog: MatDialog,
     private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.shopItemSubscription = this.apiService.shopItem$.subscribe(() =>
-      this.getItems()
+    this.giftSubscription = this.apiService.gift$.subscribe(() =>
+      this.getGifts()
     );
   }
 
   openDrawer(item: string | null = null) {
     this.sidebar.openDrawer(
-      item ? 'Edit item' : 'Add new item',
-      ItemFormComponent,
+      item ? 'Edit gift' : 'Add new gift',
+      GiftFormComponent,
       item
     );
   }
 
-  getItems() {
+  getGifts() {
     this.isLoading = true;
-    this.apiService.getItems().subscribe(
+    this.apiService.getGifts().subscribe(
       (resp) => {
-        this.items = resp.data;
-        this.items = this.items.map((item) => ({
+        this.gifts = resp.data;
+        this.gifts = this.gifts.map((item) => ({
           ...item,
           isSVGA: item.resource.endsWith('.svga'),
         }));
-        this.filteredItems = this.items.filter(
-          (item) => item.itemType ===  (this.selectedCurrentItem ? this.selectedCurrentItem : 'chatBubble')
+        this.filteredGifts = this.gifts.filter(
+          (gift) =>
+            true
         );
         this.isLoading = false;
       },
@@ -95,7 +96,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.svgaCanvases.changes.subscribe((canvases: QueryList<ElementRef>) => {
       if (canvases.length > 0) {
-        const svgaItems = this.filteredItems.filter((item) => item.isSVGA);
+        const svgaItems = this.filteredGifts.filter((gift) => gift.isSVGA);
         canvases.forEach((canvas, index) => {
           this.initSVGA(canvas.nativeElement, svgaItems[index].resource);
         });
@@ -121,14 +122,19 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     player.start();
   }
 
-  removeItem(item: any) {
-    const dialogRef = this.dialog.open(RemoveItemDialogComponent, {
+  openDialog(mode: string, gift: any = null) {
+    let data: any = {};
+    if (mode === 'removeGift') {
+      data = {
+        giftId: gift._id,
+        name: gift.name,
+      };
+    }
+    data.mode = mode;
+    const dialogRef = this.dialog.open(GiftDialogComponent, {
       width: '50%',
       disableClose: true,
-      data: {
-        itemId: item._id,
-        name: item.name,
-      },
+      data: data,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -144,8 +150,8 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onChipSelectionChange(event: MatChipListboxChange) {
     this.selectedCurrentItem = event.value;
-    this.filteredItems = this.items.filter(
-      (item) => item.itemType === this.selectedCurrentItem
+    this.filteredGifts = this.gifts.filter(
+      (gift) => gift.itemType === this.selectedCurrentItem
     );
   }
 
@@ -154,6 +160,6 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.shopItemSubscription.unsubscribe();
+    this.giftSubscription.unsubscribe();
   }
 }

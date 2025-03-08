@@ -1,6 +1,5 @@
 import { Component, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { BanUserDialogComponent } from '../../user-list/ban-user-dialog/ban-user-dialog.component';
 import { ShopItemService } from '../../../services/shop-item.service';
 
 @Component({
@@ -15,7 +14,7 @@ export class RemoveItemDialogComponent {
   loader = signal(false);
 
   constructor(
-    public dialogRef: MatDialogRef<BanUserDialogComponent>,
+    public dialogRef: MatDialogRef<RemoveItemDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ShopItemService
   ) {

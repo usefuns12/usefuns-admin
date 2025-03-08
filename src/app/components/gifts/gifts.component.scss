@@ -1,0 +1,18 @@
+.img-container {
+  overflow: hidden;
+  display: inline-block;
+}
+
+img {
+  width: 100px;
+  transition: transform 0.3s ease-in-out;
+}
+
+img:hover {
+  cursor: pointer;
+  transform: scale(1.5);
+}
+
+span {
+  color: #6c757d;
+}

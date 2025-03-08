@@ -26,6 +26,17 @@ export class ApiEndpoints  {
     DELETE_ITEM: VersionConstant.v1 + '/shop/deleteItem',
   };
 
+  public static gift = {
+    GET_CATEGORIES: VersionConstant.v1 + '/gift/getCategories',
+    ADD_CATEGORY: VersionConstant.v1 + '/gift/addCategory',
+    UPDATE_CATEGORY: VersionConstant.v1 + '/gift/updateCategory',
+    DELETE_CATEGORY: VersionConstant.v1 + '/gift/deleteCategory',
+    GET_GIFTS: VersionConstant.v1 + '/gift/getGifts',
+    ADD_GIFT: VersionConstant.v1 + '/gift/addGift',
+    UPDATE_GIFT: VersionConstant.v1 + '/gift/updateGift',
+    DELETE_GIFT: VersionConstant.v1 + '/gift/deleteGift',
+  };
+
   public static csv = {
     UPLOAD_CSV: VersionConstant.v1 + '/admin/uploadCsv',
   };

@@ -27,6 +27,7 @@ import {
   faChevronUp,
   faCircle,
   faCropSimple,
+  faGift,
   faHeadset,
   faMagnifyingGlass,
   faXmark,
@@ -61,7 +62,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faClock,
     faCircleCheck,
     faXmark,
-    faTrashCan
+    faTrashCan,
+    faGift
   );
 };
 

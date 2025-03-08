@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
-import { ShopItemService } from '../../../services/shop-item.service';
 import {
   FormArray,
   FormBuilder,
@@ -9,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ITEM_TOKEN } from '../../../utils/injector-tokens.token';
+import { GIFT_TOKEN } from '../../../utils/injector-tokens.token';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
@@ -17,30 +16,26 @@ import { ToastrService } from 'ngx-toastr';
 import { Downloader, Parser, Player } from 'svga.lite';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CountryService } from '../../../services/country.service';
+import { GiftService } from '../../../services/gift.service';
 import { DrawerService } from '../../../services/drawer.service';
 
 @Component({
-  selector: 'app-item-form',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, NgSelectModule],
-  templateUrl: './item-form.component.html',
-  styleUrl: './item-form.component.scss',
+  selector: 'app-gift-form',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    NgSelectModule,
+  ],
+  templateUrl: './gift-form.component.html',
+  styleUrl: './gift-form.component.scss',
 })
-export class ItemFormComponent implements OnInit {
-  itemForm: FormGroup;
-  item: any;
+export class GiftFormComponent {
+  giftForm: FormGroup;
+  gift: any;
   mode: string;
   countries: any[] = [];
-  itemTypeOptions = [
-    { name: 'Select type', value: 'select' },
-    { name: 'Chat Bubble', value: 'chatBubble' },
-    { name: 'Extra Seat', value: 'extraSeat' },
-    { name: 'Frame', value: 'frame' },
-    { name: 'Lock Room', value: 'lockRoom' },
-    { name: 'Relationship', value: 'relationship' },
-    { name: 'Special Id', value: 'specialId' },
-    { name: 'Theme', value: 'theme' },
-    { name: 'Vehicle', value: 'vehicle' },
-  ];
+  categories: any[] = [];
   resource: string;
   isResourceSVGA = false;
   thumbnail: string;
@@ -51,24 +46,22 @@ export class ItemFormComponent implements OnInit {
   isLoading: boolean = false;
 
   constructor(
-    @Inject(ITEM_TOKEN) itemToken: any,
+    @Inject(GIFT_TOKEN) giftToken: any,
     private fb: FormBuilder,
-    private apiService: ShopItemService,
+    private apiService: GiftService,
     private drawerService: DrawerService,
     private dialog: MatDialog,
     private toastr: ToastrService,
     private countryService: CountryService
   ) {
-    this.mode = itemToken.mode;
-    this.item = itemToken.item;
-    this.itemForm = this.fb.group({
+    this.mode = giftToken.mode;
+    this.gift = giftToken.gift;
+    this.giftForm = this.fb.group({
       name: new FormControl(null, [Validators.required]),
       countryCode: new FormControl(null),
-      itemType: new FormControl('select'),
-      priceAndValidity: this.fb.array([]),
-      isOfficial: new FormControl(false),
+      categoryId: new FormControl(null, [Validators.required]),
+      diamonds: new FormControl(null, [Validators.required]),
     });
-    this.addItemPricing();
   }
 
   ngOnInit(): void {
@@ -76,52 +69,32 @@ export class ItemFormComponent implements OnInit {
       this.countries = data;
     });
 
-    if (this.mode === 'edit') {
-      this.patchFormValues();
-    }
+    this.apiService.getCategories().subscribe((resp) => {
+      this.categories = resp.data;
+
+      if (this.mode === 'edit') {
+        this.patchFormValues();
+      }
+    });
   }
 
-  get itemPricing(): FormArray {
-    return this.itemForm.get('priceAndValidity') as FormArray;
-  }
-
-  addItemPricing() {
-    this.itemPricing.push(
-      this.fb.group({
-        price: new FormControl(null, [Validators.required]),
-        validity: new FormControl(null, [Validators.required]),
-      })
-    );
-  }
-
-  removePricing(index: number) {
-    this.itemPricing.removeAt(index);
-  }
 
   patchFormValues() {
-    this.itemForm.patchValue({
-      name: this.item.name,
-      itemType: this.item.itemType,
-      countryCode: this.item.countryCode,
-      isOfficial: this.item.isOfficial,
+    this.giftForm.patchValue({
+      name: this.gift.name,
+      categoryId: this.gift.category._id,
+      countryCode: this.gift.countryCode,
+      diamonds: this.gift.diamonds
     });
 
-    this.resource = this.item.resource;
+    this.resource = this.gift.resource;
     this.isResourceSVGA = this.resource.endsWith('.svga');
     if (this.isResourceSVGA) {
       this.showSVGA(this.resource);
     }
-    if (this.item.thumbnail) {
-      this.thumbnail = this.item.thumbnail;
+    if (this.gift.thumbnail) {
+      this.thumbnail = this.gift.thumbnail;
     }
-
-    this.itemPricing.clear();
-    this.item.priceAndValidity.forEach((itemPrice: any, index: number) => {
-      this.addItemPricing();
-      this.itemPricing
-        .at(index)
-        .patchValue({ price: itemPrice.price, validity: itemPrice.validity });
-    });
   }
 
   openImageDialog(type: string) {
@@ -214,11 +187,11 @@ export class ItemFormComponent implements OnInit {
 
   restoreImage(type: string) {
     if (type === 'resource') {
-      this.resource = this.item?.resource;
+      this.resource = this.gift?.resource;
       document
         .getElementsByClassName('canvas-container')?.[0]
         .firstChild?.remove();
-      if (this.item?.isSVGA) {
+      if (this.gift?.isSVGA) {
         this.isResourceSVGA = true;
         this.showSVGA(this.resource);
       } else {
@@ -226,7 +199,7 @@ export class ItemFormComponent implements OnInit {
       }
       this.resetResourceFlags();
     } else {
-      this.thumbnail = this.item?.thumbnail;
+      this.thumbnail = this.gift?.thumbnail;
       this.resetThumbnailFlags();
     }
   }
@@ -241,18 +214,16 @@ export class ItemFormComponent implements OnInit {
     this.thumbnailChanged.set(false);
   }
 
-  addItem() {
+  addGift() {
     this.isLoading = true;
-    const postData = this.itemForm.value;
+    const postData = this.giftForm.value;
     const formData = new FormData();
 
     formData.append('name', postData.name);
-    formData.append('itemType', postData.itemType);
-    formData.append('isOfficial', postData.isOfficial);
-    postData.priceAndValidity.forEach((item: any, index: number) => {
-      formData.append(`priceAndValidity[${index}][price]`, item.price);
-      formData.append(`priceAndValidity[${index}][validity]`, item.validity);
-    });
+    formData.append('categoryId', postData.categoryId);
+    formData.append('diamonds', postData.diamonds);
+    formData.append('countryCode', postData.countryCode);
+
 
     if (this.resource && !this.isResourceSVGA) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
@@ -264,11 +235,11 @@ export class ItemFormComponent implements OnInit {
       formData.append('thumbnail', this.thumbnailBlob as Blob, 'thumbnail');
     }
 
-    this.apiService.addtem(formData).subscribe(
+    this.apiService.addGift(formData).subscribe(
       (resp) => {
         this.isLoading = false;
         this.drawerService.updateDrawer();
-        this.apiService.updateShopItems();
+        this.apiService.updateGifts();
         this.toastr.success(resp.message);
       },
       (err) => {
@@ -281,10 +252,10 @@ export class ItemFormComponent implements OnInit {
 
   getModifiedValues(): any {
     const modifiedValues: any = {};
-    const currentValues = this.itemForm.value;
+    const currentValues = this.giftForm.value;
 
     Object.keys(currentValues).forEach((key) => {
-      if (currentValues[key] !== this.item[key]) {
+      if (currentValues[key] !== this.gift[key]) {
         modifiedValues[key] = currentValues[key];
       }
     });
@@ -292,7 +263,7 @@ export class ItemFormComponent implements OnInit {
     return modifiedValues;
   }
 
-  updateItem() {
+  updateGift() {
     this.isLoading = true;
     const modifiedValues = this.getModifiedValues();
     const formData = new FormData();
@@ -302,12 +273,6 @@ export class ItemFormComponent implements OnInit {
         formData.append(key, modifiedValues[key]);
       });
     }
-    formData.delete('priceAndValidity');
-
-    modifiedValues.priceAndValidity.forEach((item: any, index: number) => {
-      formData.append(`priceAndValidity[${index}][price]`, item.price);
-      formData.append(`priceAndValidity[${index}][validity]`, item.validity);
-    });
 
     if (this.resourceBlob) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
@@ -317,12 +282,12 @@ export class ItemFormComponent implements OnInit {
       formData.append('thumbnail', this.thumbnailBlob as Blob, 'thumbnail');
     }
 
-    formData.append('_id', this.item._id);
-    this.apiService.updatetItem(formData).subscribe(
+    formData.append('_id', this.gift._id);
+    this.apiService.updateGift(formData).subscribe(
       (resp) => {
         this.isLoading = false;
         this.drawerService.updateDrawer();
-        this.apiService.updateShopItems();
+        this.apiService.updateGifts();
         this.toastr.success(resp.message);
       },
       (err) => {

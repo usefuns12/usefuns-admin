@@ -1,0 +1,91 @@
+<div class="shop-list">
+  <div
+    class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+  >
+    <h4>List of Gifts</h4>
+    <div class="btn-actions d-flex gap-2">
+      <button class="btn btn-primary" (click)="openDialog('show')">Show all categories</button>
+      <button class="btn btn-primary" (click)="openDialog('add')">Add category</button>
+      <button class="btn btn-primary" (click)="openDrawer()">Add gift</button>
+    </div>
+  </div>
+  <!-- <mat-chip-listbox class="shop-items-chips pb-3" aria-label="Shop items" value="chatBubble" (change)="onChipSelectionChange($event)">
+    <mat-chip-option *ngFor="let item of itemTypeOptions" [value]="item.value">{{
+      item.name
+    }}</mat-chip-option>
+  </mat-chip-listbox> -->
+  <table class="table table-responsive" *ngIf="filteredGifts.length; else noItems">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Category</th>
+        <th scope="col">Resource</th>
+        <th scope="col">Thumbnail</th>
+        <th scope="col">Country</th>
+        <th scope="col">Diamonds</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="!isLoading; else showLoader">
+        <tr *ngFor="let gift of filteredGifts; index as i">
+          <th>{{ i + 1 }}</th>
+          <td>{{ gift.name }}</td>
+          <td>{{ gift.category.name }}</td>
+          <td>
+            <div class="img-container">
+              <img *ngIf="!gift.isSVGA" [src]="gift.resource" alt="resource" />
+              <canvas *ngIf="gift.isSVGA" #svgaCanvas></canvas>
+            </div>
+          </td>
+          <td>
+            <ng-container *ngIf="gift.thumbnail; else noThumbnail">
+              <div class="img-container" (click)="openFullImage(gift.thumbnail)">
+                <img [src]="gift.thumbnail" alt="thumbnail" />
+              </div>
+            </ng-container>
+            <ng-template #noThumbnail>-</ng-template>
+          </td>
+          <td>{{ gift.countryCode ? gift.countryCode : '-' }}</td>
+          <td>{{ gift.diamonds }}</td>
+          <td>
+            <div class="action-btns d-flex">
+              <fa-icon
+                [icon]="['far', 'pen-to-square']"
+                class="flex-grow-1 edit-icon"
+                matTooltip="Edit"
+                (click)="openDrawer(gift)"
+              ></fa-icon>
+              <fa-icon
+                [icon]="['far', 'trash-can']"
+                class="flex-grow-1 text-danger"
+                matTooltip="Remove"
+                (click)="openDialog('removeGift', gift)"
+              ></fa-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+
+      <ng-template #showLoader>
+        <tr>
+          <th><ngx-skeleton-loader></ngx-skeleton-loader></th>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+  <ng-template #noItems>
+    <div class="alert alert-danger">
+      <p class="m-0">No gifts present.</p>
+    </div>
+  </ng-template>
+
+</div>

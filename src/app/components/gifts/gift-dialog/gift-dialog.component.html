@@ -1,0 +1,117 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content>
+  <p *ngIf="mode === 'remove' || mode === 'removeGift'">
+    Are you sure you want to remove
+    {{ mode === "remove" ? selectedCat.name : name }} ?
+  </p>
+
+  <ng-container *ngIf="mode === 'show'">
+    <table
+      class="table table-responsive"
+      *ngIf="categories.length; else noItems"
+    >
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="!loader(); else showLoader">
+          <tr *ngFor="let cat of categories; index as i">
+            <th>{{ i + 1 }}</th>
+            <td>{{ cat.name }}</td>
+            <td>
+              <div class="action-btns d-flex gap-4">
+                <fa-icon
+                  [icon]="['far', 'pen-to-square']"
+                  class="edit-icon"
+                  matTooltip="Edit"
+                  (click)="setMode('update', cat)"
+                ></fa-icon>
+                <fa-icon
+                  [icon]="['far', 'trash-can']"
+                  class="text-danger"
+                  matTooltip="Remove"
+                  (click)="setMode('remove', cat)"
+                ></fa-icon>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <ng-template #showLoader>
+          <tr>
+            <th><ngx-skeleton-loader></ngx-skeleton-loader></th>
+            <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+            <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+    <ng-template #noItems>
+      <div class="alert alert-danger">
+        <p class="m-0">No categories present.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container *ngIf="mode === 'add' || mode === 'update'">
+    <form [formGroup]="categoryForm">
+      <div class="mb-3">
+        <label for="" class="form-label">Name</label>
+        <input type="text" class="form-control" formControlName="name" />
+        <p
+          *ngIf="
+            (categoryForm.get('name')?.touched ||
+              categoryForm.get('name')?.dirty) &&
+            categoryForm.get('name')?.invalid
+          "
+          class="form-error m-0 pt-1"
+        >
+          Name is required
+        </p>
+      </div>
+    </form>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    class="btn btn-danger me-3"
+    (click)="closeDialog()"
+    [disabled]="loader()"
+  >
+    Cancel
+  </button>
+  <button
+    *ngIf="mode === 'remove' || mode === 'removeGift'"
+    class="btn btn-primary"
+    (click)="mode === 'remove' ? removeCategory() : removeGift()"
+    [disabled]="loader()"
+  >
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { Remove }
+  </button>
+  <button
+    *ngIf="mode === 'add'"
+    class="btn btn-primary"
+    (click)="updateCategory('add')"
+    [disabled]="loader() || categoryForm.invalid"
+  >
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { Add }
+  </button>
+  <button
+    *ngIf="mode === 'update'"
+    class="btn btn-primary"
+    (click)="updateCategory('update')"
+    [disabled]="loader() || categoryForm.invalid"
+  >
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { Save }
+  </button>
+</mat-dialog-actions>

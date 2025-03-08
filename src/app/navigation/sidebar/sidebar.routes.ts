@@ -22,4 +22,12 @@ export const SIDEBAR_ROUTES: Routes = [
       ),
     data: { breadcrumb: 'Shop' }
   },
+  {
+    path: 'gifts',
+    loadChildren: () =>
+      import('../../components/gifts/gifts.routes').then(
+        (m) => m.GIFT_ROUTES
+      ),
+    data: { breadcrumb: 'Gift' }
+  },
 ];

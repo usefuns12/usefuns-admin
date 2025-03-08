@@ -10,8 +10,6 @@ import { ApiEndpoints } from '../utils/api-constants';
 export class ShopItemService {
   shopItemSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   shopItem$ = this.shopItemSubject.asObservable();
-  drawerSubject: Subject<any> = new Subject<any>();
-  drawer$ = this.drawerSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -43,9 +41,5 @@ export class ShopItemService {
 
   updateShopItems() {
     this.shopItemSubject.next(true);
-  }
-
-  updateDrawer() {
-    this.drawerSubject.next(true);
   }
 }

@@ -14,11 +14,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
-import { ITEM_TOKEN, USER_ID_TOKEN } from '../../utils/injector-tokens.token';
+import {
+  GIFT_TOKEN,
+  ITEM_TOKEN,
+  USER_ID_TOKEN,
+} from '../../utils/injector-tokens.token';
 import { UserFormComponent } from '../../components/user-list/user-form/user-form.component';
 import { ItemFormComponent } from '../../components/shop/item-form/item-form.component';
 import { Subscription } from 'rxjs';
 import { ShopItemService } from '../../services/shop-item.service';
+import { GiftFormComponent } from '../../components/gifts/gift-form/gift-form.component';
+import { DrawerService } from '../../services/drawer.service';
 
 export type MenuItem = {
   icon: string;
@@ -88,6 +94,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       ], */
     },
     {
+      icon: 'gift',
+      label: 'Gifts',
+      route: 'gifts',
+    },
+    {
       icon: 'arrow-right-from-bracket',
       label: 'Logout',
     },
@@ -104,11 +115,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private shopItemService: ShopItemService
+    private drawerService: DrawerService
   ) {}
 
   ngOnInit(): void {
-    this.drawerSubscription = this.shopItemService.drawer$.subscribe(() =>
+    this.drawerSubscription = this.drawerService.drawer$.subscribe(() =>
       this.toggleDrawer()
     );
   }
@@ -134,6 +145,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       providers.push({
         provide: ITEM_TOKEN,
         useValue: { item: Id, mode: Id ? 'edit' : 'add' },
+      });
+    } else if (component === GiftFormComponent) {
+      providers.push({
+        provide: GIFT_TOKEN,
+        useValue: { gift: Id, mode: Id ? 'edit' : 'add' },
       });
     }
     this.dataInjector = Injector.create({ providers });
