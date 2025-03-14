@@ -13,11 +13,6 @@
       <button class="btn btn-primary" (click)="openDrawer()">Add gift</button>
     </div>
   </div>
-  <!-- <mat-chip-listbox class="shop-items-chips pb-3" aria-label="Shop items" value="chatBubble" (change)="onChipSelectionChange($event)">
-    <mat-chip-option *ngFor="let item of itemTypeOptions" [value]="item.value">{{
-      item.name
-    }}</mat-chip-option>
-  </mat-chip-listbox> -->
   <table
     class="table table-responsive"
     *ngIf="filteredGifts.length; else noItems"

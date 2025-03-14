@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import {
+  CAROUSEL_TOKEN,
   GIFT_TOKEN,
   ITEM_TOKEN,
   USER_ID_TOKEN,
@@ -25,6 +26,7 @@ import { Subscription } from 'rxjs';
 import { ShopItemService } from '../../services/shop-item.service';
 import { GiftFormComponent } from '../../components/gifts/gift-form/gift-form.component';
 import { DrawerService } from '../../services/drawer.service';
+import { CarouselFormComponent } from '../../components/carousels/carousel-form/carousel-form.component';
 
 export type MenuItem = {
   icon: string;
@@ -99,6 +101,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: 'gifts',
     },
     {
+      icon: 'images',
+      label: 'Carousels',
+      route: 'carousels',
+    },
+    {
       icon: 'arrow-right-from-bracket',
       label: 'Logout',
     },
@@ -113,10 +120,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   drawerTitle: string;
   drawerSubscription: Subscription;
 
-  constructor(
-    private router: Router,
-    private drawerService: DrawerService
-  ) {}
+  constructor(private router: Router, private drawerService: DrawerService) {}
 
   ngOnInit(): void {
     this.drawerSubscription = this.drawerService.drawer$.subscribe(() =>
@@ -150,6 +154,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       providers.push({
         provide: GIFT_TOKEN,
         useValue: { gift: Id, mode: Id ? 'edit' : 'add' },
+      });
+    } else if (component === CarouselFormComponent) {
+      providers.push({
+        provide: CAROUSEL_TOKEN,
+        useValue: { carousel: Id, mode: Id ? 'edit' : 'add' },
       });
     }
     this.dataInjector = Injector.create({ providers });

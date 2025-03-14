@@ -30,4 +30,12 @@ export const SIDEBAR_ROUTES: Routes = [
       ),
     data: { breadcrumb: 'Gift' }
   },
+  {
+    path: 'carousels',
+    loadChildren: () =>
+      import('../../components/carousels/carousels.routes').then(
+        (m) => m.CAROUSEL_ROUTES
+      ),
+    data: { breadcrumb: 'Carousel' }
+  },
 ];

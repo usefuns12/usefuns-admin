@@ -37,6 +37,13 @@ export class ApiEndpoints  {
     DELETE_GIFT: VersionConstant.v1 + '/gift/deleteGift',
   };
 
+  public static carousel = {
+    GET_CAROUSELS: VersionConstant.v1 + '/carousel/getCarousels',
+    ADD_CAROUSEL: VersionConstant.v1 + '/carousel/add',
+    UPDATE_CAROUSEL: VersionConstant.v1 + '/carousel/update',
+    DELETE_CAROUSEL: VersionConstant.v1 + '/carousel/delete',
+  };
+
   public static csv = {
     UPLOAD_CSV: VersionConstant.v1 + '/admin/uploadCsv',
   };

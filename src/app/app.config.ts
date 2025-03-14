@@ -15,6 +15,7 @@ import {
   faEye,
   faGem,
   faImage,
+  faImages,
   faPenToSquare,
   faTrashCan,
   faUser,
@@ -63,7 +64,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faCircleCheck,
     faXmark,
     faTrashCan,
-    faGift
+    faGift,
+    faImages
   );
 };
 

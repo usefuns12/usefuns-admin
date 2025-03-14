@@ -1,0 +1,83 @@
+<div class="row mb-4">
+  <div class="col-6">
+    <div class="card shadow p-4 mb-4">
+      <h4>Carousel image</h4>
+      <img
+        *ngIf="cImage"
+        [src]="cImage"
+        alt="profile"
+        class="img-fluid mx-auto my-3"
+      />
+      @if (!cImageChanged()) {
+      <button
+        *ngIf="mode === 'add'"
+        type="button"
+        class="btn btn-indigo"
+        (click)="openImageDialog()"
+        [disabled]="isLoading"
+      >
+        Select image
+      </button>
+      }
+      <div
+        *ngIf="mode === 'edit'"
+        class="d-flex justify-content-evenly align-items-center mt-5"
+      >
+        @if (!cImageChanged()) {
+        <button
+          class="btn btn-indigo"
+          type="button"
+          (click)="openImageDialog()"
+        >
+          Change image
+        </button>
+        }
+      </div>
+
+      @if (cImageChanged()) {
+      <div class="text-center">
+        <button
+          class="btn btn-danger"
+          (click)="restoreImage()"
+          [disabled]="isLoading"
+        >
+          Cancel
+        </button>
+      </div>
+      }
+    </div>
+
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="mode === 'add' ? addCarousel() : updateCarousel()"
+        [disabled]="carouselForm.invalid || !cImage|| isLoading"
+      >
+        <span *ngIf="isLoading" class="spinner-border"></span>
+        <span *ngIf="!isLoading">Submit</span>
+      </button>
+    </div>
+  </div>
+  <div class="col-6">
+    <form [formGroup]="carouselForm">
+      <div class="card shadow p-4">
+        <div class="mb-3">
+          <label for="" class="form-label">Action link</label>
+          <input type="text" class="form-control" formControlName="actionLink" />
+        </div>
+
+        <div class="mb-3">
+          <label for="" class="form-label">Active</label>
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              formControlName="isActive"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="shop-list">
+  <div
+    class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+  >
+    <h4>List of Carousels</h4>
+    <button class="btn btn-primary" (click)="openDrawer()">Add carousel</button>
+  </div>
+
+  <table
+    class="table table-responsive"
+    *ngIf="filteredCarousels.length; else noItems"
+  >
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Image</th>
+        <th scope="col">Action link</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="!isLoading; else showLoader">
+        <tr *ngFor="let carousel of filteredCarousels; index as i">
+          <th>{{ i + 1 }}</th>
+          <td class="carousel-img">
+            <div class="img-container">
+              <img loading="lazy" [src]="carousel.carouselImage" alt="image" />
+            </div>
+          </td>
+          <td>{{ carousel.actionLink }}</td>
+          <td>
+            <div class="action-btns d-flex">
+              <fa-icon
+                [icon]="['far', 'pen-to-square']"
+                class="flex-grow-1 edit-icon"
+                matTooltip="Edit"
+                (click)="openDrawer(carousel)"
+              ></fa-icon>
+              <fa-icon
+                [icon]="['far', 'trash-can']"
+                class="flex-grow-1 text-danger"
+                matTooltip="Remove"
+                (click)="openDialog(carousel)"
+              ></fa-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+
+      <ng-template #showLoader>
+        <tr>
+          <th><ngx-skeleton-loader></ngx-skeleton-loader></th>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+          <td><ngx-skeleton-loader></ngx-skeleton-loader></td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+  <ng-template #noItems>
+    <div class="alert alert-danger">
+      <p class="m-0">No carousels present.</p>
+    </div>
+  </ng-template>
+</div>

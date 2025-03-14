@@ -138,13 +138,6 @@ export class GiftsComponent {
     });
   }
 
-  onChipSelectionChange(event: MatChipListboxChange) {
-    this.selectedCurrentItem = event.value;
-    this.filteredGifts = this.gifts.filter(
-      (gift) => gift.itemType === this.selectedCurrentItem
-    );
-  }
-
   openFullImage(src: string) {
     window.open(src, '_blank');
   }
