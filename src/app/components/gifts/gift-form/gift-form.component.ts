@@ -61,6 +61,7 @@ export class GiftFormComponent {
       countryCode: new FormControl(null),
       categoryId: new FormControl(null, [Validators.required]),
       diamonds: new FormControl(null, [Validators.required]),
+      isActive: new FormControl(true),
     });
   }
 
@@ -84,6 +85,7 @@ export class GiftFormComponent {
       categoryId: this.gift.category._id,
       countryCode: this.gift.countryCode,
       diamonds: this.gift.diamonds,
+      isActive: this.gift.isActive
     });
 
     this.resource = this.gift.resource;

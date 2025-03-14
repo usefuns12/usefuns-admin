@@ -4,8 +4,12 @@
   >
     <h4>List of Gifts</h4>
     <div class="btn-actions d-flex gap-2">
-      <button class="btn btn-primary" (click)="openDialog('show')">Show all categories</button>
-      <button class="btn btn-primary" (click)="openDialog('add')">Add category</button>
+      <button class="btn btn-primary" (click)="openDialog('show')">
+        Show all categories
+      </button>
+      <button class="btn btn-primary" (click)="openDialog('add')">
+        Add category
+      </button>
       <button class="btn btn-primary" (click)="openDrawer()">Add gift</button>
     </div>
   </div>
@@ -14,7 +18,10 @@
       item.name
     }}</mat-chip-option>
   </mat-chip-listbox> -->
-  <table class="table table-responsive" *ngIf="filteredGifts.length; else noItems">
+  <table
+    class="table table-responsive"
+    *ngIf="filteredGifts.length; else noItems"
+  >
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -35,19 +42,23 @@
           <td>{{ gift.category.name }}</td>
           <td>
             <div class="img-container">
-              <img *ngIf="!gift.isSVGA" [src]="gift.resource" alt="resource" />
-              <canvas *ngIf="gift.isSVGA" #svgaCanvas></canvas>
+              <a [href]="gift.resource">Download</a>
+              <!-- <img *ngIf="!gift.isSVGA" [src]="gift.resource" alt="resource" />
+              <canvas *ngIf="gift.isSVGA" #svgaCanvas></canvas> -->
             </div>
           </td>
           <td>
             <ng-container *ngIf="gift.thumbnail; else noThumbnail">
-              <div class="img-container" (click)="openFullImage(gift.thumbnail)">
-                <img [src]="gift.thumbnail" alt="thumbnail" />
+              <div
+                class="img-container"
+                (click)="openFullImage(gift.thumbnail)"
+              >
+                <img loading="lazy" [src]="gift.thumbnail" alt="thumbnail" />
               </div>
             </ng-container>
             <ng-template #noThumbnail>-</ng-template>
           </td>
-          <td>{{ gift.countryCode ? gift.countryCode : '-' }}</td>
+          <td>{{ gift.countryCode ? gift.countryCode : "-" }}</td>
           <td>{{ gift.diamonds }}</td>
           <td>
             <div class="action-btns d-flex">
@@ -87,5 +98,4 @@
       <p class="m-0">No gifts present.</p>
     </div>
   </ng-template>
-
 </div>

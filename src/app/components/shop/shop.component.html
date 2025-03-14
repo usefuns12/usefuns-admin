@@ -29,14 +29,15 @@
           <td>{{ item.name }}</td>
           <td>
             <div class="img-container">
-              <img *ngIf="!item.isSVGA" [src]="item.resource" alt="resource" />
-              <canvas *ngIf="item.isSVGA" #svgaCanvas></canvas>
+              <a [href]="item.resource">Download</a>
+              <!-- <img *ngIf="!item.isSVGA" [src]="item.resource" alt="resource" />
+              <canvas *ngIf="item.isSVGA" #svgaCanvas></canvas> -->
             </div>
           </td>
           <td>
             <ng-container *ngIf="item.thumbnail; else noThumbnail">
               <div class="img-container" (click)="openFullImage(item.thumbnail)">
-                <img [src]="item.thumbnail" alt="thumbnail" />
+                <img loading="lazy" [src]="item.thumbnail" alt="thumbnail" />
               </div>
             </ng-container>
             <ng-template #noThumbnail>-</ng-template>

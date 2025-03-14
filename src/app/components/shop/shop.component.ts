@@ -33,7 +33,7 @@ import { Downloader, Parser, Player } from 'svga.lite';
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
 })
-export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
   items: any[] = [];
   filteredItems: any[] = [];
   isLoading: boolean;
@@ -45,11 +45,11 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     { name: 'Frame', value: 'frame' },
     { name: 'Lock Room', value: 'lockRoom' },
     { name: 'Relationship', value: 'relationship' },
-    { name: 'Special Id', value: 'specialId' },
+    /* { name: 'Special Id', value: 'specialId' }, */
     { name: 'Theme', value: 'theme' },
     { name: 'Vehicle', value: 'vehicle' },
   ];
-  @ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
+  //@ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
 
   constructor(
     private sidebar: SidebarComponent,
@@ -77,10 +77,10 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     this.apiService.getItems().subscribe(
       (resp) => {
         this.items = resp.data;
-        this.items = this.items.map((item) => ({
+        /* this.items = this.items.map((item) => ({
           ...item,
           isSVGA: item.resource.endsWith('.svga'),
-        }));
+        })); */
         this.filteredItems = this.items.filter(
           (item) => item.itemType ===  (this.selectedCurrentItem ? this.selectedCurrentItem : 'chatBubble')
         );
@@ -92,7 +92,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngAfterViewInit(): void {
+  /* ngAfterViewInit(): void {
     this.svgaCanvases.changes.subscribe((canvases: QueryList<ElementRef>) => {
       if (canvases.length > 0) {
         const svgaItems = this.filteredItems.filter((item) => item.isSVGA);
@@ -119,7 +119,7 @@ export class ShopComponent implements OnInit, AfterViewInit, OnDestroy {
 
     await player.mount(svgaData);
     player.start();
-  }
+  } */
 
   removeItem(item: any) {
     const dialogRef = this.dialog.open(RemoveItemDialogComponent, {

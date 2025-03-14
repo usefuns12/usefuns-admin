@@ -39,7 +39,7 @@ export class GiftsComponent {
   isLoading: boolean;
   giftSubscription: Subscription;
   selectedCurrentItem: string;
-  @ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
+  //@ViewChildren('svgaCanvas') svgaCanvases!: QueryList<ElementRef>;
 
   constructor(
     private sidebar: SidebarComponent,
@@ -67,10 +67,10 @@ export class GiftsComponent {
     this.apiService.getGifts().subscribe(
       (resp) => {
         this.gifts = resp.data;
-        this.gifts = this.gifts.map((item) => ({
+        /* this.gifts = this.gifts.map((item) => ({
           ...item,
           isSVGA: item.resource.endsWith('.svga'),
-        }));
+        })); */
         this.filteredGifts = this.gifts.filter(
           (gift) =>
             true
@@ -83,7 +83,7 @@ export class GiftsComponent {
     );
   }
 
-  ngAfterViewInit(): void {
+  /* ngAfterViewInit(): void {
     this.svgaCanvases.changes.subscribe((canvases: QueryList<ElementRef>) => {
       if (canvases.length > 0) {
         const svgaItems = this.filteredGifts.filter((gift) => gift.isSVGA);
@@ -110,7 +110,7 @@ export class GiftsComponent {
 
     await player.mount(svgaData);
     player.start();
-  }
+  } */
 
   openDialog(mode: string, gift: any = null) {
     let data: any = {};
