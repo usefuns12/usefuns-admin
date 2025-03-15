@@ -68,6 +68,22 @@
         </div>
 
         <div class="mb-3">
+          <label for="" class="form-label">Country</label>
+          <ng-select
+            formControlName="countryCode"
+            placeholder="Select a country"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let country of countries">
+              <ng-option [value]="country.cca2">
+                {{ country.flag }} | {{ country.name.common }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
+        </div>
+
+        <div class="mb-3">
           <label for="" class="form-label">Active</label>
           <div class="form-check form-switch">
             <input

@@ -14,16 +14,19 @@ import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.compo
 import { ToastrService } from 'ngx-toastr';
 import { DrawerService } from '../../../services/drawer.service';
 import { CarouselService } from '../../../services/carousel.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CountryService } from '../../../services/country.service';
 
 @Component({
   selector: 'app-carousel-form',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, NgSelectModule],
   templateUrl: './carousel-form.component.html',
   styleUrl: './carousel-form.component.scss',
 })
 export class CarouselFormComponent implements OnInit {
   carouselForm: FormGroup;
   carousel: any;
+  countries: any[] = [];
   mode: string;
   cImage: string;
   private cImageBlob: Blob | null;
@@ -36,17 +39,23 @@ export class CarouselFormComponent implements OnInit {
     private apiService: CarouselService,
     private drawerService: DrawerService,
     private dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private countryService: CountryService
   ) {
     this.mode = carouselToken.mode;
     this.carousel = carouselToken.carousel;
     this.carouselForm = this.fb.group({
       actionLink: new FormControl(null),
+      countryCode: new FormControl(null),
       isActive: new FormControl(true),
     });
   }
 
   ngOnInit(): void {
+    this.countryService.getCountries().subscribe((data) => {
+      this.countries = data;
+    });
+
     if (this.mode === 'edit') {
       this.patchFormValues();
     }
@@ -55,6 +64,7 @@ export class CarouselFormComponent implements OnInit {
   patchFormValues() {
     this.carouselForm.patchValue({
       actionLink: this.carousel.actionLink,
+      countryCode: this.carousel.countryCode,
       isActive: this.carousel.isActive,
     });
 
@@ -72,9 +82,6 @@ export class CarouselFormComponent implements OnInit {
       const target = $event.target as HTMLInputElement;
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
-        const fileType = file.type;
-        const fileName = file.name.toLowerCase();
-        const isSvga = fileName.endsWith('.svga');
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -117,6 +124,9 @@ export class CarouselFormComponent implements OnInit {
     const formData = new FormData();
 
     formData.append('isOfficial', postData.isOfficial);
+    if (postData.countryCode) {
+      formData.append('countryCode', postData.countryCode);
+    }
 
     if (postData.actionLink) {
       formData.append('actionLink', postData.actionLink);
