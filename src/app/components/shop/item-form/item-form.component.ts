@@ -54,6 +54,7 @@ export class ItemFormComponent implements OnInit {
   resourceChanged = signal(false);
   thumbnailChanged = signal(false);
   isLoading: boolean = false;
+  isCountryReset: boolean = false;
 
   constructor(
     @Inject(ITEM_TOKEN) itemToken: any,
@@ -318,6 +319,11 @@ export class ItemFormComponent implements OnInit {
       formData.append(`priceAndValidity[${index}][validity]`, item.validity);
     });
 
+    if (this.isCountryReset) {
+      formData.delete('countryCode');
+      formData.append('isCountryReset', 'true');
+    }
+
     if (this.resourceBlob) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
     }
@@ -329,7 +335,7 @@ export class ItemFormComponent implements OnInit {
     formData.append('_id', this.item._id);
     this.apiService.updatetItem(formData).subscribe(
       (resp) => {
-        this.isLoading = false;
+        this.isLoading = this.isCountryReset = false;
         this.drawerService.updateDrawer();
         this.apiService.updateShopItems();
         this.toastr.success(resp.message);

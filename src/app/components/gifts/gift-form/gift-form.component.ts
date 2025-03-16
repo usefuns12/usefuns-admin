@@ -44,6 +44,7 @@ export class GiftFormComponent {
   resourceChanged = signal(false);
   thumbnailChanged = signal(false);
   isLoading: boolean = false;
+  isCountryReset: boolean = false;
 
   constructor(
     @Inject(GIFT_TOKEN) giftToken: any,
@@ -85,7 +86,7 @@ export class GiftFormComponent {
       categoryId: this.gift.category._id,
       countryCode: this.gift.countryCode,
       diamonds: this.gift.diamonds,
-      isActive: this.gift.isActive
+      isActive: this.gift.isActive,
     });
 
     this.resource = this.gift.resource;
@@ -276,6 +277,11 @@ export class GiftFormComponent {
       });
     }
 
+    if (this.isCountryReset) {
+      formData.delete('countryCode');
+      formData.append('isCountryReset', 'true');
+    }
+
     if (this.resourceBlob) {
       formData.append('resource', this.resourceBlob as Blob, 'resource');
     }
@@ -287,7 +293,7 @@ export class GiftFormComponent {
     formData.append('_id', this.gift._id);
     this.apiService.updateGift(formData).subscribe(
       (resp) => {
-        this.isLoading = false;
+        this.isLoading = this.isCountryReset = false;
         this.drawerService.updateDrawer();
         this.apiService.updateGifts();
         this.toastr.success(resp.message);

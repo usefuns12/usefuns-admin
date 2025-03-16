@@ -19,7 +19,12 @@ import { CountryService } from '../../../services/country.service';
 
 @Component({
   selector: 'app-carousel-form',
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, NgSelectModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    NgSelectModule,
+  ],
   templateUrl: './carousel-form.component.html',
   styleUrl: './carousel-form.component.scss',
 })
@@ -32,6 +37,7 @@ export class CarouselFormComponent implements OnInit {
   private cImageBlob: Blob | null;
   cImageChanged = signal(false);
   isLoading: boolean = false;
+  isCountryReset: boolean = false;
 
   constructor(
     @Inject(CAROUSEL_TOKEN) carouselToken: any,
@@ -175,6 +181,11 @@ export class CarouselFormComponent implements OnInit {
       });
     }
 
+    if (this.isCountryReset) {
+      formData.delete('countryCode');
+      formData.append('isCountryReset', 'true');
+    }
+
     if (this.cImageBlob) {
       formData.append('file', this.cImageBlob as Blob, 'carousel');
     }
@@ -182,7 +193,7 @@ export class CarouselFormComponent implements OnInit {
     formData.append('_id', this.carousel._id);
     this.apiService.updateCarousel(formData).subscribe(
       (resp) => {
-        this.isLoading = false;
+        this.isLoading = this.isCountryReset = false;
         this.drawerService.updateDrawer();
         this.apiService.updateCarousels();
         this.toastr.success(resp.message);

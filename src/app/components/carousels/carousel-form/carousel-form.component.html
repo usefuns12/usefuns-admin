@@ -73,7 +73,8 @@
             formControlName="countryCode"
             placeholder="Select a country"
             searchable="true"
-            clearable="false"
+            clearable="true"
+            (clear)="isCountryReset = true"
           >
             <ng-container *ngFor="let country of countries">
               <ng-option [value]="country.cca2">
