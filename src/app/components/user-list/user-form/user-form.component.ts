@@ -42,6 +42,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   userId: string;
   isLoading: boolean;
   countries: any[] = [];
+  gifts: any[] = [];
   currentIndex = signal(0);
   private originalProfileImage: string;
   private originalRoomImage: string;
@@ -105,6 +106,16 @@ export class UserFormComponent implements OnInit, OnDestroy {
       (resp) => {
         this.userDetails = resp.data;
         this.patchFormValues();
+        this.getGifts();
+      },
+      (err) => {}
+    );
+  }
+
+  getGifts() {
+    this.apiService.getGifts(this.userId).subscribe(
+      (resp) => {
+        this.gifts = resp.data;
         this.isLoading = false;
       },
       (err) => {}

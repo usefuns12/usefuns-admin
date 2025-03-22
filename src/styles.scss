@@ -166,7 +166,7 @@ mat-tab-group.user-forms {
     border-color: $indigo;
   }
 
-  mat-tab-group.user-items {
+  mat-tab-group.user-items, .user-gifts {
     flex-direction: row;
 
     mat-tab-header {

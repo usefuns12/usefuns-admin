@@ -22,6 +22,10 @@ export class UserService {
     return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`);
   };
 
+  getGifts = (userId: string): Observable<any> => {
+    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.GET_GIFTS}/${userId}`);
+  };
+
   updateUserForm() {
     this.userFormSubject.next(true);
   }

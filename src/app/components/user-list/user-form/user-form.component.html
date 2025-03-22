@@ -306,6 +306,38 @@
         </div>
       </ng-template>
     </mat-tab>
+    <mat-tab label="Gifts">
+      <ng-template matTabContent>
+        <div class="container-fluid user-gifts">
+          <div class="row">
+            <h4 *ngIf="!gifts.length" class="text-center my-5">No gifts present</h4>
+            <div
+              class="col-md-3 col-sm-6 col-12 mb-3"
+              *ngFor="let gift of gifts"
+            >
+              <div class="card p-2 shadow">
+                <img [src]="gift.thumbnail" alt="" class="img-fluid mx-auto" />
+                <div class="p-1 text-center">
+                  <p class="title">{{ gift.name }}</p>
+                  <div class="d-flex justify-content-between">
+                    <p class="m-0 time-left">
+                      x{{gift.totalSent}}
+                      <br>
+                      <span class="text-secondary">Sent</span>
+                    </p>
+                    <p class="m-0 time-left">
+                      x{{gift.totalReceived}}
+                      <br>
+                      <span class="text-secondary">Received</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
     <mat-tab label="Game & Rewards">
       <ng-template matTabContent>
         <div class="container-fluid">
