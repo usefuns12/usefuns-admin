@@ -43,6 +43,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
   isLoading: boolean;
   countries: any[] = [];
   gifts: any[] = [];
+  giftSummary = {
+    totalGiftSent: 0,
+    totalGiftReceived: 0,
+    totalDiamondsSent: 0,
+    totalDiamondsReceived: 0,
+  };
+
   currentIndex = signal(0);
   private originalProfileImage: string;
   private originalRoomImage: string;
@@ -116,6 +123,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.apiService.getGifts(this.userId).subscribe(
       (resp) => {
         this.gifts = resp.data;
+        this.giftSummary = this.gifts.reduce(
+          (acc, gift) => {
+            acc.totalGiftSent += gift.totalSent || 0;
+            acc.totalGiftReceived += gift.totalReceived || 0;
+            acc.totalDiamondsSent += gift.totalDiamondsSent || 0;
+            acc.totalDiamondsReceived += gift.totalDiamondsReceived || 0;
+            return acc;
+          },
+          {
+            totalGiftSent: 0,
+            totalGiftReceived: 0,
+            totalDiamondsSent: 0,
+            totalDiamondsReceived: 0,
+          }
+        );
+        console.log(this.giftSummary);
         this.isLoading = false;
       },
       (err) => {}

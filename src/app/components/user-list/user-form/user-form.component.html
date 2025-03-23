@@ -309,6 +309,14 @@
     <mat-tab label="Gifts">
       <ng-template matTabContent>
         <div class="container-fluid user-gifts">
+          <div class="alert alert-warning d-flex justify-content-between">
+            <p class="gift-summ m-0">
+              <span class="text-secondary">Gifts sent:</span> {{giftSummary.totalGiftSent}} gifts, worth {{giftSummary.totalDiamondsSent}} diamonds
+            </p>
+            <p class="gift-summ m-0">
+              <span class="text-secondary">Gifts received:</span> {{giftSummary.totalGiftReceived}} gifts, worth {{giftSummary.totalDiamondsReceived}} diamonds
+            </p>
+          </div>
           <div class="row">
             <h4 *ngIf="!gifts.length" class="text-center my-5">No gifts present</h4>
             <div
