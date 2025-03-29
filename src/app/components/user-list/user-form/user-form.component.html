@@ -226,6 +226,12 @@
                       *ngFor="let frame of userDetails.frames"
                     >
                       <div class="card p-2 shadow">
+                        <fa-icon
+                          *ngIf="mode === 'edit'"
+                          class="item-remove"
+                          [icon]="['far', 'trash-can']"
+                          (click)="openRemoveItemDialog('frames', frame._id)"
+                        ></fa-icon>
                         <img
                           [src]="frame.thumbnail"
                           alt=""
@@ -253,6 +259,12 @@
                       *ngFor="let bubble of userDetails.chatBubbles"
                     >
                       <div class="card p-2 shadow">
+                        <fa-icon
+                          *ngIf="mode === 'edit'"
+                          class="item-remove"
+                          [icon]="['far', 'trash-can']"
+                          (click)="openRemoveItemDialog('chatBubbles', bubble._id)"
+                        ></fa-icon>
                         <img
                           [src]="bubble.resource"
                           alt=""
@@ -280,6 +292,12 @@
                       *ngFor="let theme of userDetails.themes"
                     >
                       <div class="card p-2 shadow">
+                        <fa-icon
+                          *ngIf="mode === 'edit'"
+                          class="item-remove"
+                          [icon]="['far', 'trash-can']"
+                          (click)="openRemoveItemDialog('themes', theme._id)"
+                        ></fa-icon>
                         <img
                           [src]="theme.resource"
                           alt=""
@@ -311,14 +329,20 @@
         <div class="container-fluid user-gifts">
           <div class="alert alert-warning d-flex justify-content-between">
             <p class="gift-summ m-0">
-              <span class="text-secondary">Gifts sent:</span> {{giftSummary.totalGiftSent}} gifts, worth {{giftSummary.totalDiamondsSent}} diamonds
+              <span class="text-secondary">Gifts sent:</span>
+              {{ giftSummary.totalGiftSent }} gifts, worth
+              {{ giftSummary.totalDiamondsSent }} diamonds
             </p>
             <p class="gift-summ m-0">
-              <span class="text-secondary">Gifts received:</span> {{giftSummary.totalGiftReceived}} gifts, worth {{giftSummary.totalDiamondsReceived}} diamonds
+              <span class="text-secondary">Gifts received:</span>
+              {{ giftSummary.totalGiftReceived }} gifts, worth
+              {{ giftSummary.totalDiamondsReceived }} diamonds
             </p>
           </div>
           <div class="row">
-            <h4 *ngIf="!gifts.length" class="text-center my-5">No gifts present</h4>
+            <h4 *ngIf="!gifts.length" class="text-center my-5">
+              No gifts present
+            </h4>
             <div
               class="col-md-3 col-sm-6 col-12 mb-3"
               *ngFor="let gift of gifts"
@@ -329,13 +353,13 @@
                   <p class="title">{{ gift.name }}</p>
                   <div class="d-flex justify-content-between">
                     <p class="m-0 time-left">
-                      x{{gift.totalSent}}
-                      <br>
+                      x{{ gift.totalSent }}
+                      <br />
                       <span class="text-secondary">Sent</span>
                     </p>
                     <p class="m-0 time-left">
-                      x{{gift.totalReceived}}
-                      <br>
+                      x{{ gift.totalReceived }}
+                      <br />
                       <span class="text-secondary">Received</span>
                     </p>
                   </div>

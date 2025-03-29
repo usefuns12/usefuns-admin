@@ -20,6 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { ItemsDialogComponent } from '../user-edit/items-dialog/items-dialog.component';
 
 @Component({
   selector: 'app-user-form',
@@ -57,7 +58,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   private roomBlob: Blob | null;
   profileChanged = signal(false);
   roomChanged = signal(false);
-  userFormSubscription: Subscription;
+  subscriptionList: Subscription[] = [];
   loader = signal(false);
 
   constructor(
@@ -98,9 +99,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
       this.countries = data;
     });
 
-    this.userFormSubscription = this.apiService.userForm$.subscribe(() => {
-      this.updateUser();
-    });
+    this.subscriptionList.push(
+      this.apiService.userForm$.subscribe(() => {
+        this.updateUser();
+      })
+    );
+
+    this.subscriptionList.push(
+      this.apiService.userList$.subscribe(() => {
+        this.getUserDetails();
+      })
+    );
   }
 
   setIndex(index: number) {
@@ -138,7 +147,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             totalDiamondsReceived: 0,
           }
         );
-        console.log(this.giftSummary);
         this.isLoading = false;
       },
       (err) => {}
@@ -369,7 +377,30 @@ export class UserFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  openRemoveItemDialog(itemType: string, itemId: string) {
+    const dialogRef = this.dialog.open(ItemsDialogComponent, {
+      width: '50%',
+      disableClose: true,
+      data: {
+        userId: this.userId,
+        mode: 'remove',
+        itemType,
+        itemId
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.success) {
+          this.toastrService.success(result.message);
+        } else {
+          this.toastrService.error(result.message);
+        }
+      }
+    });
+  }
+
   ngOnDestroy(): void {
-    this.userFormSubscription.unsubscribe();
+    this.subscriptionList.forEach((subscription) => subscription.unsubscribe());
   }
 }

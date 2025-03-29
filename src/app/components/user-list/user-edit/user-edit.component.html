@@ -3,11 +3,14 @@
     <app-breadcrumb></app-breadcrumb>
     <div class="d-flex justify-content-between align-items-center">
       <h4>Edit user</h4>
-      <button class="btn btn-primary" (click)="saveUser()" [disabled]="apiService.loader()">
-        @if (apiService.loader()) {
-        <span class="spinner-border"></span>
-        } @if (!apiService.loader()) { Save }
-      </button>
+      <div class="d-flex gap-3">
+          <button class="btn btn-primary" (click)="openItemsDialog()">Add item</button>
+          <button class="btn btn-primary" (click)="saveUser()" [disabled]="apiService.loader()">
+            @if (apiService.loader()) {
+            <span class="spinner-border"></span>
+            } @if (!apiService.loader()) { Save }
+          </button>
+      </div>
     </div>
   </div>
 

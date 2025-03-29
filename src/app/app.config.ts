@@ -65,7 +65,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faXmark,
     faTrashCan,
     faGift,
-    faImages
+    faImages,
+    faTrashCan
   );
 };
 

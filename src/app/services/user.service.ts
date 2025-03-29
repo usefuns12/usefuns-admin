@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiEndpoints } from '../utils/api-constants';
 
@@ -10,6 +10,8 @@ import { ApiEndpoints } from '../utils/api-constants';
 export class UserService {
   userFormSubject: Subject<any> = new Subject<any>();
   userForm$ = this.userFormSubject.asObservable();
+  userListSubject: Subject<any> = new Subject<any>();
+  userList$ = this.userListSubject.asObservable();
   loader = signal(false);
 
   constructor(private http: HttpClient) {}
@@ -30,6 +32,10 @@ export class UserService {
     this.userFormSubject.next(true);
   }
 
+  updateUserData() {
+    this.userListSubject.next(true);
+  }
+
   updateUser = (userId: string, userPost: FormData): Observable<any> => {
     return this.http.put(`${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`, userPost);
   }
@@ -40,5 +46,13 @@ export class UserService {
 
   searchUsers = (term: string): Observable<any> => {
     return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`);
+  }
+
+  addShopItem = (payload: any): Observable<any> => {
+    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.SHOP_ITEM}`, payload);
+  }
+
+  removeShopItem = (payload: any): Observable<any> => {
+    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`, payload);
   }
 }

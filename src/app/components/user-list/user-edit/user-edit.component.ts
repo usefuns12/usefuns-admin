@@ -5,6 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { USER_ID_TOKEN } from '../../../utils/injector-tokens.token';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemsDialogComponent } from './items-dialog/items-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-edit',
@@ -24,7 +27,9 @@ export class UserEditComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public apiService: UserService
+    private dialog: MatDialog,
+    public apiService: UserService,
+    private toastrService: ToastrService
   )
   {
     route.params.subscribe(() => {
@@ -42,4 +47,25 @@ export class UserEditComponent {
   {
     this.apiService.updateUserForm();
   }
+
+  openItemsDialog() {
+      const dialogRef = this.dialog.open(ItemsDialogComponent, {
+        width: '50%',
+        disableClose: true,
+        data: {
+          userId: this.userId,
+          mode: 'add'
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          if (result.success) {
+            this.toastrService.success(result.message);
+          } else {
+            this.toastrService.error(result.message);
+          }
+        }
+      });
+    }
 }

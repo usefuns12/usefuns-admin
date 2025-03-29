@@ -1,0 +1,95 @@
+<h2 mat-dialog-title>{{ mode === "add" ? "Add new item" : "Remove item" }}</h2>
+<mat-dialog-content>
+  <ng-container *ngIf="mode === 'add'">
+    <form [formGroup]="itemForm">
+      <div class="mb-3">
+        <label for="" class="form-label">Item type</label>
+        <ng-select
+          formControlName="itemType"
+          placeholder="Select item type"
+          searchable="true"
+          clearable="false"
+        >
+          <ng-container *ngFor="let item of itemtypes">
+            <ng-option [value]="item.value">
+              {{ item.name }}
+            </ng-option>
+          </ng-container>
+        </ng-select>
+        <p
+          *ngIf="
+            (itemForm.get('itemType')?.touched ||
+              itemForm.get('itemType')?.dirty) &&
+            itemForm.get('itemType')?.invalid
+          "
+          class="form-error m-0 pt-1"
+        >
+          Item type is required
+        </p>
+      </div>
+      <div class="mb-3">
+        <label for="" class="form-label">Item</label>
+        <ng-select
+          formControlName="item"
+          placeholder="Select item"
+          searchable="true"
+          clearable="false"
+        >
+          <ng-container *ngFor="let item of filteredItems">
+            <ng-option [value]="item._id">
+              <img [src]="item.thumbnail" /> | {{ item.name }}
+            </ng-option>
+          </ng-container>
+        </ng-select>
+        <p
+          *ngIf="
+            (itemForm.get('item')?.touched || itemForm.get('item')?.dirty) &&
+            itemForm.get('item')?.invalid
+          "
+          class="form-error m-0 pt-1"
+        >
+          Item is required
+        </p>
+      </div>
+      <div *ngIf="selectedItem" class="mb-3">
+        <label for="" class="form-label">Price</label>
+        <div *ngFor="let price of selectedItem.priceAndValidity; index as i">
+          <div class="form-check">
+            <input
+              [id]="'price' + (i + 1)"
+              type="radio"
+              class="form-check-input"
+              [value]="price._id"
+              formControlName="price"
+            />
+            <label [for]="'price' + (i + 1)" class="form-check-label"
+              >{{ price.price }} | {{ price.validity }} days validity</label
+            >
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container *ngIf="mode === 'remove'">
+    <p>Are you sure you want to remove {{ itemType }} ?</p>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    class="btn btn-danger me-3"
+    (click)="closeDialog()"
+    [disabled]="loader()"
+  >
+    Cancel
+  </button>
+  <button
+    class="btn btn-primary"
+    (click)="mode === 'add' ? addItem() : removeShopItem()"
+    [disabled]="loader() || (mode === 'add' && itemForm.invalid)"
+  >
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { {{ mode === "add" ? "Save" : "Remove" }} }
+  </button>
+</mat-dialog-actions>
