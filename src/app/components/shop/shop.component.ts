@@ -72,6 +72,14 @@ export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
     );
   }
 
+  openAssistDrawer() {
+    this.sidebar.openDrawer(
+      'Assist items',
+      ItemFormComponent,
+      null
+    );
+  }
+
   getItems() {
     this.isLoading = true;
     this.apiService.getItems().subscribe(

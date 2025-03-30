@@ -18,6 +18,7 @@ import { Downloader, Parser, Player } from 'svga.lite';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CountryService } from '../../../services/country.service';
 import { DrawerService } from '../../../services/drawer.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-item-form',
@@ -55,18 +56,37 @@ export class ItemFormComponent implements OnInit {
   thumbnailChanged = signal(false);
   isLoading: boolean = false;
   isCountryReset: boolean = false;
+  assist: boolean;
+  assistItemForm: FormGroup;
+  itemType: string;
+  itemId: string;
+  itemtypes: any[] = [
+    { name: 'Frame', value: 'frame' },
+    { name: 'Chat bubble', value: 'chatBubble' },
+    { name: 'Theme', value: 'theme' },
+    { name: 'Vehicle', value: 'vehicle' },
+    { name: 'Relationship', value: 'relationship' },
+    { name: 'Special Id', value: 'specialId' },
+    { name: 'Lock room', value: 'lockRoom' },
+    { name: 'Extra seat', value: 'extraSeat' },
+  ];
+  users: any[] = [];
+  items: any[] = [];
+  filteredItems: any[] = [];
 
   constructor(
     @Inject(ITEM_TOKEN) itemToken: any,
     private fb: FormBuilder,
     private apiService: ShopItemService,
     private drawerService: DrawerService,
+    private userService: UserService,
     private dialog: MatDialog,
     private toastr: ToastrService,
     private countryService: CountryService
   ) {
     this.mode = itemToken.mode;
     this.item = itemToken.item;
+    this.assist = itemToken.assist;
     this.itemForm = this.fb.group({
       name: new FormControl(null, [Validators.required]),
       countryCode: new FormControl(null),
@@ -74,6 +94,40 @@ export class ItemFormComponent implements OnInit {
       priceAndValidity: this.fb.array([]),
       isOfficial: new FormControl(false),
     });
+
+    if (this.assist) {
+      this.assistItemForm = new FormGroup({
+        userIds: new FormControl(null, [Validators.required]),
+        itemType: new FormControl(null, [Validators.required]),
+        item: new FormControl(null, [Validators.required]),
+        validTill: new FormControl(null, [Validators.required]),
+        isPermanent: new FormControl(null),
+      });
+
+      this.assistItemForm.controls['itemType'].valueChanges.subscribe(
+        (val: string[]) => {
+          this.filteredItems = this.items.filter((item) =>
+            val.includes(item.itemType)
+          );
+        }
+      );
+
+      this.assistItemForm.controls['isPermanent'].valueChanges.subscribe(
+        (val) => {
+          if (val) {
+            this.assistItemForm.controls['validTill'].disable({
+              onlySelf: true,
+            });
+          } else {
+            this.assistItemForm.controls['validTill'].enable({
+              onlySelf: true,
+            });
+          }
+        }
+      );
+      this.getUsers();
+      this.getShopItems();
+    }
     this.addItemPricing();
   }
 
@@ -345,5 +399,73 @@ export class ItemFormComponent implements OnInit {
         this.toastr.error(err);
       }
     );
+  }
+
+  /****** Items assist Module ******/
+  getUsers() {
+    this.userService.getUsers().subscribe(
+      (resp) => {
+        this.users = resp.data;
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  getShopItems() {
+    this.apiService.getItems().subscribe(
+      (resp) => {
+        this.items = resp.data;
+      },
+      (err) => {}
+    );
+  }
+
+  assistItem() {
+    this.isLoading = true;
+    const formData = this.assistItemForm.value;
+    const items = formData.item.map((item: any) => {
+      return {
+        _id: item._id,
+        name: item.name,
+        resource: item.resource,
+        thumbnail: item.thumbnail,
+        itemType: item.itemType,
+        validTill: formData.isPermanent
+          ? null
+          : this.getExpirationTime(formData.validTill),
+        isOfficial: item.isOfficial,
+        isDefault: item.isDefault,
+      };
+    });
+
+    const payload = {
+      userIds: formData.userIds,
+      items,
+    };
+
+    this.userService.assistItems(payload).subscribe(
+      (resp) => {
+        this.isLoading = false;
+        this.drawerService.updateDrawer();
+        this.toastr.success(resp.message);
+      },
+      (err) => {
+        this.isLoading = false;
+        this.toastr.error(err);
+      }
+    );
+  }
+
+  getExpirationTime(days: number): string {
+    const now = new Date();
+
+    const expiration = new Date(now);
+    expiration.setDate(now.getDate() + days); // Add the specified days
+
+    expiration.setHours(23, 59, 59, 999);
+
+    return expiration.toISOString();
   }
 }

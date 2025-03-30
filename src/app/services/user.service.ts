@@ -52,6 +52,10 @@ export class UserService {
     return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.SHOP_ITEM}`, payload);
   }
 
+  assistItems = (payload: any): Observable<any> => {
+    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.ASSIST_ITEMS}`, payload);
+  }
+
   removeShopItem = (payload: any): Observable<any> => {
     return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`, payload);
   }

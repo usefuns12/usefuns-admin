@@ -148,7 +148,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     } else if (component === ItemFormComponent) {
       providers.push({
         provide: ITEM_TOKEN,
-        useValue: { item: Id, mode: Id ? 'edit' : 'add' },
+        useValue: {
+          item: Id,
+          mode: Id ? 'edit' : 'add',
+          assist: title === 'Assist items' ? true : false,
+        },
       });
     } else if (component === GiftFormComponent) {
       providers.push({

@@ -1,231 +1,359 @@
 <div class="row mb-4">
-  <div class="col-4">
-    <div class="card shadow p-4 mb-4">
-      <h4>Resource</h4>
-      <img
-        *ngIf="!isResourceSVGA && resource"
-        [src]="resource"
-        alt="profile"
-        class="img-fluid mx-auto my-3"
-      />
-      <div class="canvas-container mx-auto"></div>
-      @if (!resourceChanged()) {
-      <button
-        *ngIf="mode === 'add'"
-        type="button"
-        class="btn btn-indigo"
-        (click)="openImageDialog('resource')"
-        [disabled]="isLoading"
-      >
-        Select resource
-      </button>
-      }
-      <div
-        *ngIf="mode === 'edit'"
-        class="d-flex justify-content-evenly align-items-center mt-5"
-      >
-        @if (!resourceChanged()) {
-        <button
-          class="btn btn-indigo"
-          type="button"
-          (click)="openImageDialog('resource')"
-        >
-          Change resource
-        </button>
-        }
-      </div>
-      @if (resourceChanged()) {
-      <div class="text-center">
-        <button
-          class="btn btn-danger"
-          (click)="restoreImage('resource')"
-          [disabled]="isLoading"
-        >
-          Cancel
-        </button>
-      </div>
-      }
-    </div>
-
-    <div class="text-center">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="mode === 'add' ? addItem() : updateItem()"
-        [disabled]="itemForm.invalid || !resource || isLoading"
-      >
-        <span *ngIf="isLoading" class="spinner-border"></span>
-        <span *ngIf="!isLoading">Submit</span>
-      </button>
-    </div>
-  </div>
-  <div class="col-4">
-    <div class="card shadow p-4 mb-4">
-      <h4>Thumbnail</h4>
-      <img
-        *ngIf="thumbnail"
-        [src]="thumbnail"
-        alt="profile"
-        class="img-fluid mx-auto my-3"
-      />
-      @if (!thumbnailChanged()) {
-      <button
-        *ngIf="mode === 'add'"
-        type="button"
-        class="btn btn-indigo"
-        (click)="openImageDialog('thumbnail')"
-        [disabled]="isLoading"
-      >
-        Select thumbnail
-      </button>
-      }
-      <div
-        *ngIf="mode === 'edit'"
-        class="d-flex justify-content-evenly align-items-center mt-5"
-      >
-        @if (!thumbnailChanged()) {
-        <button
-          class="btn btn-indigo"
-          type="button"
-          (click)="openImageDialog('thumbnail')"
-        >
-          Change thumbnail
-        </button>
-        }
-      </div>
-
-      @if (thumbnailChanged()) {
-      <div class="text-center">
-        <button
-          class="btn btn-danger"
-          (click)="restoreImage('thumbnail')"
-          [disabled]="isLoading"
-        >
-          Cancel
-        </button>
-      </div>
-      }
-    </div>
-  </div>
-  <div class="col-4">
-    <form [formGroup]="itemForm">
+  <div *ngIf="assist" class="col-6">
+    <form [formGroup]="assistItemForm">
       <div class="card shadow p-4">
         <div class="mb-3">
-          <label for="" class="form-label">Name</label>
-          <input type="text" class="form-control" formControlName="name" />
+          <label for="" class="form-label">User Ids</label>
+          <ng-select
+            formControlName="userIds"
+            placeholder="Select user ids"
+            multiple="true"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let user of users">
+              <ng-option [value]="user._id">
+                {{ user.userId }} | {{ user.name }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
           <p
             *ngIf="
-              (itemForm.get('name')?.touched || itemForm.get('name')?.dirty) &&
-              itemForm.get('name')?.invalid
+              (assistItemForm.get('userIds')?.touched ||
+                assistItemForm.get('userIds')?.dirty) &&
+              assistItemForm.get('userIds')?.invalid
             "
             class="form-error m-0 pt-1"
           >
-            Name is required
+            User Ids is required
           </p>
         </div>
         <div class="mb-3">
           <label for="" class="form-label">Item type</label>
-          <select class="form-select" formControlName="itemType">
-            <ng-container *ngFor="let item of itemTypeOptions">
-              <option [value]="item.value">{{ item.name }}</option>
-            </ng-container>
-          </select>
-          <p
-            *ngIf="
-              (itemForm.get('itemType')?.touched ||
-                itemForm.get('itemType')?.dirty) &&
-              itemForm.get('itemType')?.value === 'select'
-            "
-            class="form-error m-0 pt-1"
-          >
-            Select item type
-          </p>
-        </div>
-        <div class="mb-3">
-          <label for="" class="form-label">Country</label>
           <ng-select
-            formControlName="countryCode"
-            placeholder="Select a country"
+            formControlName="itemType"
+            placeholder="Select item type"
+            multiple="true"
             searchable="true"
-            clearable="true"
-            (clear)="isCountryReset = true"
+            clearable="false"
           >
-            <ng-container *ngFor="let country of countries">
-              <ng-option [value]="country.cca2">
-                {{ country.flag }} | {{ country.name.common }}
+            <ng-container *ngFor="let item of itemtypes">
+              <ng-option [value]="item.value">
+                {{ item.name }}
               </ng-option>
             </ng-container>
           </ng-select>
-        </div>
-        <div formArrayName="priceAndValidity">
-          <div
-            class="d-flex justify-content-between align-items-center gap-2 mb-3"
-            *ngFor="let priceCtrl of itemPricing.controls; let i = index"
-            [formGroupName]="i"
+          <p
+            *ngIf="
+              (assistItemForm.get('itemType')?.touched ||
+                assistItemForm.get('itemType')?.dirty) &&
+              assistItemForm.get('itemType')?.invalid
+            "
+            class="form-error m-0 pt-1"
           >
-            <div>
-              <label for="" class="form-label">Price</label>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="price"
-              />
-              <p
-                *ngIf="
-                  (priceCtrl.get('price')?.touched ||
-                    priceCtrl.get('price')?.dirty) &&
-                  priceCtrl.get('price')?.invalid
-                "
-                class="form-error m-0 pt-1"
-              >
-                Price is required
-              </p>
-            </div>
-            <div>
-              <label for="" class="form-label">Validity</label>
-              <div class="d-flex align-items-center gap-4">
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="validity"
-                />
-                <fa-icon
-                  icon="xmark"
-                  class="close-btn"
-                  *ngIf="itemPricing.length > 1"
-                  (click)="removePricing(i)"
-                ></fa-icon>
-              </div>
-              <p
-                *ngIf="
-                  (priceCtrl.get('validity')?.touched ||
-                    priceCtrl.get('validity')?.dirty) &&
-                  priceCtrl.get('validity')?.invalid
-                "
-                class="form-error m-0 pt-1"
-              >
-                Validity is required
-              </p>
-            </div>
-          </div>
+            Item type is required
+          </p>
         </div>
-        <div class="text-center">
-          <button type="button" class="btn btn-link" (click)="addItemPricing()">
-            +Add price
-          </button>
-        </div>
-
         <div class="mb-3">
-          <label for="" class="form-label">Official</label>
+          <label for="" class="form-label">Item</label>
+          <ng-select
+            formControlName="item"
+            placeholder="Select item"
+            multiple="true"
+            searchable="true"
+            clearable="false"
+          >
+            <ng-container *ngFor="let item of filteredItems">
+              <ng-option [value]="item">
+                <img class="item-img" [src]="item.thumbnail" /> |
+                {{ item.name }}
+              </ng-option>
+            </ng-container>
+          </ng-select>
+          <p
+            *ngIf="
+              (assistItemForm.get('item')?.touched ||
+                assistItemForm.get('item')?.dirty) &&
+              assistItemForm.get('item')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Item is required
+          </p>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Validity</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="validTill"
+          />
+          <p
+            *ngIf="
+              (assistItemForm.get('validTill')?.touched ||
+                assistItemForm.get('validTill')?.dirty) &&
+              assistItemForm.get('validTill')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Validity is required
+          </p>
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Permanent</label>
           <div class="form-check form-switch">
             <input
               class="form-check-input"
               type="checkbox"
-              formControlName="isOfficial"
+              formControlName="isPermanent"
             />
           </div>
         </div>
+
+        <button
+          class="btn btn-primary"
+          (click)="assistItem()"
+          [disabled]="assistItemForm.invalid"
+        >
+          Save
+        </button>
       </div>
     </form>
   </div>
+  <ng-container *ngIf="!assist">
+    <div class="col-4">
+      <div class="card shadow p-4 mb-4">
+        <h4>Resource</h4>
+        <img
+          *ngIf="!isResourceSVGA && resource"
+          [src]="resource"
+          alt="profile"
+          class="img-fluid mx-auto my-3"
+        />
+        <div class="canvas-container mx-auto"></div>
+        @if (!resourceChanged()) {
+        <button
+          *ngIf="mode === 'add'"
+          type="button"
+          class="btn btn-indigo"
+          (click)="openImageDialog('resource')"
+          [disabled]="isLoading"
+        >
+          Select resource
+        </button>
+        }
+        <div
+          *ngIf="mode === 'edit'"
+          class="d-flex justify-content-evenly align-items-center mt-5"
+        >
+          @if (!resourceChanged()) {
+          <button
+            class="btn btn-indigo"
+            type="button"
+            (click)="openImageDialog('resource')"
+          >
+            Change resource
+          </button>
+          }
+        </div>
+        @if (resourceChanged()) {
+        <div class="text-center">
+          <button
+            class="btn btn-danger"
+            (click)="restoreImage('resource')"
+            [disabled]="isLoading"
+          >
+            Cancel
+          </button>
+        </div>
+        }
+      </div>
+
+      <div class="text-center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="mode === 'add' ? addItem() : updateItem()"
+          [disabled]="itemForm.invalid || !resource || isLoading"
+        >
+          <span *ngIf="isLoading" class="spinner-border"></span>
+          <span *ngIf="!isLoading">Submit</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card shadow p-4 mb-4">
+        <h4>Thumbnail</h4>
+        <img
+          *ngIf="thumbnail"
+          [src]="thumbnail"
+          alt="profile"
+          class="img-fluid mx-auto my-3"
+        />
+        @if (!thumbnailChanged()) {
+        <button
+          *ngIf="mode === 'add'"
+          type="button"
+          class="btn btn-indigo"
+          (click)="openImageDialog('thumbnail')"
+          [disabled]="isLoading"
+        >
+          Select thumbnail
+        </button>
+        }
+        <div
+          *ngIf="mode === 'edit'"
+          class="d-flex justify-content-evenly align-items-center mt-5"
+        >
+          @if (!thumbnailChanged()) {
+          <button
+            class="btn btn-indigo"
+            type="button"
+            (click)="openImageDialog('thumbnail')"
+          >
+            Change thumbnail
+          </button>
+          }
+        </div>
+
+        @if (thumbnailChanged()) {
+        <div class="text-center">
+          <button
+            class="btn btn-danger"
+            (click)="restoreImage('thumbnail')"
+            [disabled]="isLoading"
+          >
+            Cancel
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="col-4">
+      <form [formGroup]="itemForm">
+        <div class="card shadow p-4">
+          <div class="mb-3">
+            <label for="" class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name" />
+            <p
+              *ngIf="
+                (itemForm.get('name')?.touched ||
+                  itemForm.get('name')?.dirty) &&
+                itemForm.get('name')?.invalid
+              "
+              class="form-error m-0 pt-1"
+            >
+              Name is required
+            </p>
+          </div>
+          <div class="mb-3">
+            <label for="" class="form-label">Item type</label>
+            <select class="form-select" formControlName="itemType">
+              <ng-container *ngFor="let item of itemTypeOptions">
+                <option [value]="item.value">{{ item.name }}</option>
+              </ng-container>
+            </select>
+            <p
+              *ngIf="
+                (itemForm.get('itemType')?.touched ||
+                  itemForm.get('itemType')?.dirty) &&
+                itemForm.get('itemType')?.value === 'select'
+              "
+              class="form-error m-0 pt-1"
+            >
+              Select item type
+            </p>
+          </div>
+          <div class="mb-3">
+            <label for="" class="form-label">Country</label>
+            <ng-select
+              formControlName="countryCode"
+              placeholder="Select a country"
+              searchable="true"
+              clearable="true"
+              (clear)="isCountryReset = true"
+            >
+              <ng-container *ngFor="let country of countries">
+                <ng-option [value]="country.cca2">
+                  {{ country.flag }} | {{ country.name.common }}
+                </ng-option>
+              </ng-container>
+            </ng-select>
+          </div>
+          <div formArrayName="priceAndValidity">
+            <div
+              class="d-flex justify-content-between align-items-center gap-2 mb-3"
+              *ngFor="let priceCtrl of itemPricing.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div>
+                <label for="" class="form-label">Price</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="price"
+                />
+                <p
+                  *ngIf="
+                    (priceCtrl.get('price')?.touched ||
+                      priceCtrl.get('price')?.dirty) &&
+                    priceCtrl.get('price')?.invalid
+                  "
+                  class="form-error m-0 pt-1"
+                >
+                  Price is required
+                </p>
+              </div>
+              <div>
+                <label for="" class="form-label">Validity</label>
+                <div class="d-flex align-items-center gap-4">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="validity"
+                  />
+                  <fa-icon
+                    icon="xmark"
+                    class="close-btn"
+                    *ngIf="itemPricing.length > 1"
+                    (click)="removePricing(i)"
+                  ></fa-icon>
+                </div>
+                <p
+                  *ngIf="
+                    (priceCtrl.get('validity')?.touched ||
+                      priceCtrl.get('validity')?.dirty) &&
+                    priceCtrl.get('validity')?.invalid
+                  "
+                  class="form-error m-0 pt-1"
+                >
+                  Validity is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="text-center">
+            <button
+              type="button"
+              class="btn btn-link"
+              (click)="addItemPricing()"
+            >
+              +Add price
+            </button>
+          </div>
+
+          <div class="mb-3">
+            <label for="" class="form-label">Official</label>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                formControlName="isOfficial"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-container>
 </div>

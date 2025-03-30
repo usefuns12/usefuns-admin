@@ -3,14 +3,30 @@
     class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
   >
     <h4>List of Items</h4>
-    <button class="btn btn-primary" (click)="openDrawer()">Add new item</button>
+
+    <div class="d-flex gap-3">
+      <button class="btn btn-primary" (click)="openAssistDrawer()">Assist items</button>
+      <button class="btn btn-primary" (click)="openDrawer()">
+        Add new item
+      </button>
+    </div>
   </div>
-  <mat-chip-listbox class="shop-items-chips pb-3" aria-label="Shop items" value="chatBubble" (change)="onChipSelectionChange($event)">
-    <mat-chip-option *ngFor="let item of itemTypeOptions" [value]="item.value">{{
-      item.name
-    }}</mat-chip-option>
+  <mat-chip-listbox
+    class="shop-items-chips pb-3"
+    aria-label="Shop items"
+    value="chatBubble"
+    (change)="onChipSelectionChange($event)"
+  >
+    <mat-chip-option
+      *ngFor="let item of itemTypeOptions"
+      [value]="item.value"
+      >{{ item.name }}</mat-chip-option
+    >
   </mat-chip-listbox>
-  <table class="table table-responsive" *ngIf="filteredItems.length; else noItems">
+  <table
+    class="table table-responsive"
+    *ngIf="filteredItems.length; else noItems"
+  >
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -36,13 +52,16 @@
           </td>
           <td>
             <ng-container *ngIf="item.thumbnail; else noThumbnail">
-              <div class="img-container" (click)="openFullImage(item.thumbnail)">
+              <div
+                class="img-container"
+                (click)="openFullImage(item.thumbnail)"
+              >
                 <img loading="lazy" [src]="item.thumbnail" alt="thumbnail" />
               </div>
             </ng-container>
             <ng-template #noThumbnail>-</ng-template>
           </td>
-          <td>{{ item.countryCode ? item.countryCode : '-' }}</td>
+          <td>{{ item.countryCode ? item.countryCode : "-" }}</td>
           <td>
             <ng-container *ngFor="let itemMeta of item.priceAndValidity">
               <span>Price: </span>{{ itemMeta.price }}, <span>Validity: </span
@@ -87,5 +106,4 @@
       <p class="m-0">No items present.</p>
     </div>
   </ng-template>
-
 </div>
