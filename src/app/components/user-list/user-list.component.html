@@ -63,19 +63,29 @@
                 (click)="navigateUser(user._id)"
               ></fa-icon>
               <fa-icon
-                *ngIf="user.isActiveUser"
-                icon="ban"
+                [matMenuTriggerFor]="menu"
+                icon="ellipsis-vertical"
                 class="flex-grow-1 text-danger"
-                matTooltip="Ban"
-                (click)="banUser(user)"
+                matTooltip="More options"
               ></fa-icon>
-              <fa-icon
-                *ngIf="!user.isActiveUser"
-                [icon]="['far', 'circle-check']"
-                class="flex-grow-1 text-success"
-                matTooltip="Unban"
-                (click)="banUser(user)"
-              ></fa-icon>
+              <mat-menu #menu="matMenu">
+                <div mat-menu-item (click)="banUser(user)">
+                  <fa-icon
+                    [icon]="user.isActiveUser ? 'ban' : ['far', 'circle-check']"
+                    class="flex-grow-1"
+                    [ngClass]="user.isActiveUser ? 'text-danger' : 'text-success'"
+                  ></fa-icon>
+                  {{user.isActiveUser ? 'Ban user' : 'Unban user'}}
+                </div>
+                <div mat-menu-item (click)="banUser(user, true)">
+                  <fa-icon
+                    icon="mobile-screen"
+                    class="flex-grow-1"
+                    [ngClass]="user.isActiveDevice ? 'text-danger' : 'text-success'"
+                  ></fa-icon>
+                  {{user.isActiveDevice ? 'Ban device' : 'Unban device'}}
+                </div>
+              </mat-menu>
             </div>
           </td>
         </tr>

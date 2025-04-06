@@ -1,8 +1,17 @@
-<h2 mat-dialog-title>{{ isActiveUser ? "Ban user" : "Unban user" }}</h2>
+<h2 mat-dialog-title *ngIf="isDevice">
+  {{ isActiveDevice ? "Ban device" : "Unban device" }}
+</h2>
+<h2 mat-dialog-title *ngIf="!isDevice">
+  {{ isActiveUser ? "Ban user" : "Unban user" }}
+</h2>
 <mat-dialog-content>
-  <p>
+  <p *ngIf="!isDevice">
     Are you sure you want to {{ isActiveUser ? "ban" : "unban" }}
     {{ name }} with UID: {{ uid }} ?
+  </p>
+  <p *ngIf="isDevice">
+    Are you sure you want to {{ isActiveDevice ? "ban" : "unban" }}
+    device for {{ name }} with UID: {{ uid }} ?
   </p>
 </mat-dialog-content>
 <mat-dialog-actions>
@@ -13,9 +22,14 @@
   >
     Cancel
   </button>
-  <button class="btn btn-primary" (click)="updateUser()" [disabled]="loader()">
+  <button *ngIf="!isDevice" class="btn btn-primary" (click)="updateUser()" [disabled]="loader()">
     @if (loader()) {
     <span class="spinner-border"></span>
     } @if (!loader()) { {{ isActiveUser ? "Ban" : "Unban" }} }
+  </button>
+  <button *ngIf="isDevice" class="btn btn-primary" (click)="banDevice()" [disabled]="loader()">
+    @if (loader()) {
+    <span class="spinner-border"></span>
+    } @if (!loader()) { {{ isActiveDevice ? "Ban" : "Unban" }} }
   </button>
 </mat-dialog-actions>

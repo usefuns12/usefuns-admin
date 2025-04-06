@@ -59,4 +59,8 @@ export class UserService {
   removeShopItem = (payload: any): Observable<any> => {
     return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`, payload);
   }
+
+  banDevice = (payload: any): Observable<any> => {
+    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.BAN_DEVICE}`, payload);
+  }
 }

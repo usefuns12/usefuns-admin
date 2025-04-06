@@ -11,6 +11,9 @@ import { BanUserDialogComponent } from './ban-user-dialog/ban-user-dialog.compon
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+
 import {
   Subject,
   debounceTime,
@@ -29,6 +32,8 @@ import {
     CommonModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
+    MatButtonModule,
+    MatMenuModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
@@ -97,7 +102,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.router.navigate(['edit'], navExtras);
   }
 
-  banUser(user: any) {
+  banUser(user: any, isDevice: boolean = false) {
     const dialogRef = this.dialog.open(BanUserDialogComponent, {
       width: '50%',
       disableClose: true,
@@ -106,6 +111,8 @@ export class UserListComponent implements OnInit, OnDestroy {
         uid: user.userId,
         name: user.name,
         isActiveUser: user.isActiveUser,
+        isActiveDevice: user.isActiveDevice,
+        isDevice
       },
     });
 

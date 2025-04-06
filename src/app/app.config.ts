@@ -28,9 +28,11 @@ import {
   faChevronUp,
   faCircle,
   faCropSimple,
+  faEllipsisVertical,
   faGift,
   faHeadset,
   faMagnifyingGlass,
+  faMobileScreen,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -66,7 +68,9 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faTrashCan,
     faGift,
     faImages,
-    faTrashCan
+    faTrashCan,
+    faEllipsisVertical,
+    faMobileScreen
   );
 };
 

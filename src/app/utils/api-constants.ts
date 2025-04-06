@@ -14,7 +14,8 @@ export class ApiEndpoints  {
     GET_GIFTS: VersionConstant.v1 + '/user/getGifts',
     SHOP_ITEM: VersionConstant.v1 + '/user/shop',
     ASSIST_ITEMS: VersionConstant.v1 + '/user/assistItems',
-    REMOVE_SHOP_ITEM: VersionConstant.v1 + '/user/removeItem'
+    REMOVE_SHOP_ITEM: VersionConstant.v1 + '/user/removeItem',
+    BAN_DEVICE: VersionConstant.v1 + '/user/banDevice'
   };
 
   public static rooms = {
