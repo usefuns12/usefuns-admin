@@ -2,45 +2,45 @@
   <div
     class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
   >
-    <h4>List of Carousels</h4>
-    <button class="btn btn-primary" (click)="openDrawer()">Add carousel</button>
+    <h4>List of API Keys</h4>
+    <button class="btn btn-primary" (click)="openDrawer()">Add API Keys</button>
   </div>
 
   <table
     class="table table-responsive"
-    *ngIf="filteredCarousels.length; else noItems"
+    *ngIf="filteredApiKeys.length; else noItems"
   >
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Image</th>
-        <th scope="col">Action link</th>
+        <th scope="col">Service name</th>
+        <th scope="col">Secret keys</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngIf="!isLoading; else showLoader">
-        <tr *ngFor="let carousel of filteredCarousels; index as i">
+        <tr *ngFor="let api of filteredApiKeys; index as i">
           <th>{{ i + 1 }}</th>
-          <td class="carousel-img">
-            <div class="img-container">
-              <img loading="lazy" [src]="carousel.carouselImage" alt="image" />
-            </div>
+          <td>{{api.service}}</td>
+          <td>
+            <ng-container *ngFor="let key of api.secretKeys; index as j">
+              Key {{j + 1}}: {{ key }} <br>
+            </ng-container>
           </td>
-          <td>{{ carousel.actionLink }}</td>
           <td>
             <div class="action-btns d-flex">
               <fa-icon
                 [icon]="['far', 'pen-to-square']"
                 class="flex-grow-1 edit-icon"
                 matTooltip="Edit"
-                (click)="openDrawer(carousel)"
+                (click)="openDrawer(api)"
               ></fa-icon>
               <fa-icon
                 [icon]="['far', 'trash-can']"
                 class="flex-grow-1 text-danger"
                 matTooltip="Remove"
-                (click)="openDialog(carousel)"
+                (click)="openDialog(api)"
               ></fa-icon>
             </div>
           </td>
@@ -59,7 +59,7 @@
   </table>
   <ng-template #noItems>
     <div class="alert alert-danger">
-      <p class="m-0">No carousels present.</p>
+      <p class="m-0">No API keys present.</p>
     </div>
   </ng-template>
 </div>

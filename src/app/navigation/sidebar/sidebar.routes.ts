@@ -38,4 +38,12 @@ export const SIDEBAR_ROUTES: Routes = [
       ),
     data: { breadcrumb: 'Carousel' }
   },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('../../components/api-config/api-config.routes').then(
+        (m) => m.APICONFIG_ROUTES
+      ),
+    data: { breadcrumb: 'Settings' }
+  },
 ];

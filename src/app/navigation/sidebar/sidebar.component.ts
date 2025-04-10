@@ -13,8 +13,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import {
+  RouterOutlet,
+  RouterModule,
+  Router,
+  ActivatedRoute,
+} from '@angular/router';
+import {
+  APIKEY_TOKEN,
   CAROUSEL_TOKEN,
   GIFT_TOKEN,
   ITEM_TOKEN,
@@ -27,6 +33,7 @@ import { ShopItemService } from '../../services/shop-item.service';
 import { GiftFormComponent } from '../../components/gifts/gift-form/gift-form.component';
 import { DrawerService } from '../../services/drawer.service';
 import { CarouselFormComponent } from '../../components/carousels/carousel-form/carousel-form.component';
+import { ApiFormComponent } from '../../components/api-config/api-form/api-form.component';
 
 export type MenuItem = {
   icon: string;
@@ -106,6 +113,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: 'carousels',
     },
     {
+      icon: 'gear',
+      label: 'Settings',
+      route: 'settings',
+      subItems: [
+        {
+          icon: 'code',
+          label: 'API Config',
+          route: 'settings/apiConfig',
+        },
+      ],
+    },
+    {
       icon: 'arrow-right-from-bracket',
       label: 'Logout',
     },
@@ -120,7 +139,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
   drawerTitle: string;
   drawerSubscription: Subscription;
 
-  constructor(private router: Router, private drawerService: DrawerService) {}
+  constructor(
+    private router: Router,
+    private drawerService: DrawerService,
+    public route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.drawerSubscription = this.drawerService.drawer$.subscribe(() =>
@@ -163,6 +186,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       providers.push({
         provide: CAROUSEL_TOKEN,
         useValue: { carousel: Id, mode: Id ? 'edit' : 'add' },
+      });
+    }
+    else if (component === ApiFormComponent) {
+      providers.push({
+        provide: APIKEY_TOKEN,
+        useValue: { apiKey: Id, mode: Id ? 'edit' : 'add' },
       });
     }
     this.dataInjector = Injector.create({ providers });

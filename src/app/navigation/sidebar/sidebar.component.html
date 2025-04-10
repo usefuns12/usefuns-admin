@@ -19,8 +19,8 @@
             *ngIf="item.label !== 'Logout'"
             mat-list-item
             [matTooltip]="item.label"
-            [routerLink]="item.route"
-            routerLinkActive="active"
+            [routerLink]="!item.subItems?.length ? item.route : null"
+            [routerLinkActive]="!item.subItems?.length ? 'active' : ''"
             (click)="toggleNestedMenu(item)"
           >
             <fa-icon
@@ -28,7 +28,8 @@
               [icon]="
                 item.icon === 'headset' ||
                 item.icon === 'arrow-right-from-bracket' ||
-                item.icon === 'gift'
+                item.icon === 'gift' ||
+                item.icon === 'gear'
                   ? ['fas', item.icon]
                   : ['far', item.icon]
               "
@@ -54,7 +55,8 @@
               matListItemIcon
               [icon]="
                 item.icon === 'headset' ||
-                item.icon === 'arrow-right-from-bracket'
+                item.icon === 'arrow-right-from-bracket' ||
+                item.icon === 'gear'
                   ? ['fas', item.icon]
                   : ['far', item.icon]
               "
@@ -63,11 +65,17 @@
           </a>
           @if (item.subItems?.length && nestedMenuOpen() && !collapsed()) {
           <div class="submenu-items" @expandSubMenu>
-            <a *ngFor="let subItem of item.subItems" mat-list-item>
+            <a
+              *ngFor="let subItem of item.subItems"
+              mat-list-item
+              [routerLink]="subItem.route"
+              [relativeTo]="route"
+              routerLinkActive="active"
+            >
               <fa-icon
                 matListItemIcon
                 [icon]="
-                  subItem.icon === 'crop-simple'
+                  subItem.icon === 'crop-simple' || subItem.icon === 'code'
                     ? ['fas', subItem.icon]
                     : ['far', subItem.icon]
                 "
@@ -113,7 +121,7 @@
               class="btn-close shadow-none"
               (click)="drawer.close()"
             ></button>
-            <h3 class="m-0">{{drawerTitle}}</h3>
+            <h3 class="m-0">{{ drawerTitle }}</h3>
           </div>
           <mat-divider></mat-divider>
         </div>

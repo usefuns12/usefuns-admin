@@ -1,0 +1,69 @@
+<div class="row mb-4">
+  <div class="col-6">
+    <form [formGroup]="apiKeyForm">
+      <div class="card shadow p-4">
+        <div class="mb-3">
+          <label for="" class="form-label">Service name</label>
+          <input type="text" class="form-control" formControlName="service" />
+          <p
+            *ngIf="
+              (apiKeyForm.get('service')?.touched ||
+                apiKeyForm.get('service')?.dirty) &&
+              apiKeyForm.get('service')?.invalid
+            "
+            class="form-error m-0 pt-1"
+          >
+            Service name is required
+          </p>
+        </div>
+
+        <div formArrayName="secretKeys">
+          <div
+            class="mb-3"
+            *ngFor="let control of secretKeys.controls; let i = index"
+          >
+            <label for="" class="form-label">Secret key</label>
+            <div class="d-flex align-items-center gap-4">
+              <input [formControlName]="i" class="form-control" />
+              <fa-icon
+                icon="xmark"
+                class="close-btn"
+                *ngIf="secretKeys.length > 1"
+                (click)="removeSecretKey(i)"
+              ></fa-icon>
+            </div>
+            <p
+              *ngIf="(control?.touched || control?.dirty) && control?.invalid"
+              class="form-error m-0 pt-1"
+            >
+              Secret key is required
+            </p>
+          </div>
+        </div>
+        <div class="text-center mb-3">
+          <button type="button" class="btn btn-link" (click)="addSecretKey()">
+            +Add another secret key
+          </button>
+        </div>
+
+        <!-- <div class="mb-3">
+          <label for="" class="form-label">Active</label>
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              formControlName="isActive"
+            />
+          </div>
+        </div> -->
+        <button
+          class="btn btn-primary"
+          (click)="mode === 'add' ? addApiKey() : updateApiKey()"
+          [disabled]="apiKeyForm.invalid"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

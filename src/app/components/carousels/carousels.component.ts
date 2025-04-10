@@ -65,7 +65,6 @@ export class CarouselsComponent implements OnInit, OnDestroy {
   }
 
   openDialog(carousel: any) {
-    let data: any = {};
     const dialogRef = this.dialog.open(CarouselDialogComponent, {
       width: '50%',
       disableClose: true,

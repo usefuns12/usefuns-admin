@@ -27,8 +27,10 @@ import {
   faChevronDown,
   faChevronUp,
   faCircle,
+  faCode,
   faCropSimple,
   faEllipsisVertical,
+  faGear,
   faGift,
   faHeadset,
   faMagnifyingGlass,
@@ -70,7 +72,9 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faImages,
     faTrashCan,
     faEllipsisVertical,
-    faMobileScreen
+    faMobileScreen,
+    faGear,
+    faCode
   );
 };
 

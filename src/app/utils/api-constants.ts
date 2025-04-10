@@ -49,6 +49,13 @@ export class ApiEndpoints  {
     DELETE_CAROUSEL: VersionConstant.v1 + '/carousel/delete',
   };
 
+  public static apiKey = {
+    GET_APIKEYS: VersionConstant.v1 + '/apiConfig/getApiKeys',
+    ADD_APIKEY: VersionConstant.v1 + '/apiConfig/add',
+    UPDATE_APIKEY: VersionConstant.v1 + '/apiConfig/update',
+    DELETE_APIKEY: VersionConstant.v1 + '/apiConfig/delete',
+  };
+
   public static csv = {
     UPLOAD_CSV: VersionConstant.v1 + '/admin/uploadCsv',
   };
