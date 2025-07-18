@@ -1,7 +1,6 @@
-import { environment } from '../../environments/environment';
 import { VersionConstant } from './version-constants';
 
-export class ApiEndpoints  {
+export class ApiEndpoints {
   public static auth = {
     LOGIN: VersionConstant.v1 + '/admin/masterLogin',
   };
@@ -15,13 +14,13 @@ export class ApiEndpoints  {
     SHOP_ITEM: VersionConstant.v1 + '/user/shop',
     ASSIST_ITEMS: VersionConstant.v1 + '/user/assistItems',
     REMOVE_SHOP_ITEM: VersionConstant.v1 + '/user/removeItem',
-    BAN_DEVICE: VersionConstant.v1 + '/user/banDevice'
+    BAN_DEVICE: VersionConstant.v1 + '/user/banDevice',
   };
 
   public static rooms = {
     GET_ROOMS: VersionConstant.v1 + '/user/getAll/limitedData',
     GET_ROOM_DETAILS: VersionConstant.v1 + '/user/getById',
-    UPDATE_ROOM: VersionConstant.v1 + '/room/update'
+    UPDATE_ROOM: VersionConstant.v1 + '/room/update',
   };
 
   public static shop = {
@@ -40,6 +39,13 @@ export class ApiEndpoints  {
     ADD_GIFT: VersionConstant.v1 + '/gift/addGift',
     UPDATE_GIFT: VersionConstant.v1 + '/gift/updateGift',
     DELETE_GIFT: VersionConstant.v1 + '/gift/deleteGift',
+  };
+
+  public static quantity = {
+    GET_ALL: VersionConstant.v1 + '/quantity/getQuantities',
+    ADD: VersionConstant.v1 + '/quantity/addQuantity',
+    UPDATE: VersionConstant.v1 + '/quantity/updateQuantity',
+    DELETE: VersionConstant.v1 + '/quantity/deleteQuantity',
   };
 
   public static carousel = {
@@ -69,11 +75,12 @@ export class ApiEndpoints  {
     GET_REPORT: VersionConstant.v1 + '/admin/downloadReport',
     GET_REPORTSUMM_SIZE: VersionConstant.v1 + '/admin/getReportSummarySize',
     GET_REPORTSUMM: VersionConstant.v1 + '/admin/downloadSummary',
-    GET_VERIFICATION_REPORT: VersionConstant.v1 + '/admin/getVerificationReport'
-  }
+    GET_VERIFICATION_REPORT:
+      VersionConstant.v1 + '/admin/getVerificationReport',
+  };
 
   public static operator = {
     GET_OPERATORS: VersionConstant.v1 + '/admin/getOperators',
-    DELETE_OPERATOR: VersionConstant.v1 + '/admin/deleteOperator'
-  }
+    DELETE_OPERATOR: VersionConstant.v1 + '/admin/deleteOperator',
+  };
 }

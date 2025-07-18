@@ -5,8 +5,13 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
+  MatTooltipDefaultOptions,
+} from '@angular/material/tooltip';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { JwtModule } from '@auth0/angular-jwt';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faCircleCheck,
@@ -35,17 +40,13 @@ import {
   faHeadset,
   faMagnifyingGlass,
   faMobileScreen,
+  faQ,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  MatTooltipDefaultOptions,
-  MAT_TOOLTIP_DEFAULT_OPTIONS,
-} from '@angular/material/tooltip';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from './services/http-interceptors/token.interceptor';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { JwtModule } from '@auth0/angular-jwt';
 import { provideToastr } from 'ngx-toastr';
+import { routes } from './app.routes';
+import { tokenInterceptor } from './services/http-interceptors/token.interceptor';
 
 const setupFontAwesome = (library: FaIconLibrary) => {
   library.addIcons(
@@ -74,7 +75,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faEllipsisVertical,
     faMobileScreen,
     faGear,
-    faCode
+    faCode,
+    faQ
   );
 };
 

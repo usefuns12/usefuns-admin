@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiEndpoints } from '../utils/api-constants';
 
@@ -17,15 +17,21 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getUsers = (page?: number, limit?: number): Observable<any> => {
-    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.GET_USERS}`);
+    return this.http.get(
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_USERS}`
+    );
   };
 
   getUserDetails = (userId: string): Observable<any> => {
-    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`);
+    return this.http.get(
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`
+    );
   };
 
   getGifts = (userId: string): Observable<any> => {
-    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.GET_GIFTS}/${userId}`);
+    return this.http.get(
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_GIFTS}/${userId}`
+    );
   };
 
   updateUserForm() {
@@ -37,30 +43,50 @@ export class UserService {
   }
 
   updateUser = (userId: string, userPost: FormData): Observable<any> => {
-    return this.http.put(`${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`, userPost);
-  }
+    return this.http.put(
+      `${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`,
+      userPost
+    );
+  };
 
   updateUserRoom = (roomId: string, roomPost: FormData): Observable<any> => {
-    return this.http.put(`${environment.baseUrl}/${ApiEndpoints.rooms.UPDATE_ROOM}/${roomId}`, roomPost);
-  }
+    return this.http.put(
+      `${environment.baseUrl}/${ApiEndpoints.rooms.UPDATE_ROOM}/${roomId}`,
+      roomPost
+    );
+  };
 
   searchUsers = (term: string): Observable<any> => {
-    return this.http.get(`${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`);
-  }
+    return this.http.get(
+      `${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`
+    );
+  };
 
   addShopItem = (payload: any): Observable<any> => {
-    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.SHOP_ITEM}`, payload);
-  }
+    return this.http.post(
+      `${environment.baseUrl}/${ApiEndpoints.users.SHOP_ITEM}`,
+      payload
+    );
+  };
 
   assistItems = (payload: any): Observable<any> => {
-    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.ASSIST_ITEMS}`, payload);
-  }
+    return this.http.post(
+      `${environment.baseUrl}/${ApiEndpoints.users.ASSIST_ITEMS}`,
+      payload
+    );
+  };
 
   removeShopItem = (payload: any): Observable<any> => {
-    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`, payload);
-  }
+    return this.http.post(
+      `${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`,
+      payload
+    );
+  };
 
-  banDevice = (payload: any): Observable<any> => {
-    return this.http.post(`${environment.baseUrl}/${ApiEndpoints.users.BAN_DEVICE}`, payload);
-  }
+  banDevice = (userId: string, payload: any): Observable<any> => {
+    return this.http.put(
+      `${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`,
+      payload
+    );
+  };
 }

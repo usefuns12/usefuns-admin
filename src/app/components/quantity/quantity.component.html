@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h4>Quantity List</h4>
+  <button class="btn btn-primary" (click)="openDialog('add')">Add New</button>
+</div>
+
+<table class="table" *ngIf="quantities.length; else noData">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Quantity</th>
+      <th>Cashback</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let q of quantities; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ q.quantity }}</td>
+      <td>{{ q.cashbackAmount }}</td>
+      <td>
+        <div class="action-btns d-flex">
+          <fa-icon
+            [icon]="['far', 'pen-to-square']"
+            class="flex-grow-1 edit-icon"
+            matTooltip="Edit"
+            (click)="openDialog('edit', q)"
+          ></fa-icon>
+          <fa-icon
+            [icon]="['far', 'trash-can']"
+            class="flex-grow-1 text-danger"
+            matTooltip="Remove"
+            (click)="openDialog('removeQuantity', q)"
+          ></fa-icon>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>No records found.</p>
+</ng-template>

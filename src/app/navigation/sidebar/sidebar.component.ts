@@ -1,3 +1,5 @@
+import { animate, style, transition, trigger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -6,19 +8,25 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommonModule } from '@angular/common';
-import { animate, style, transition, trigger } from '@angular/animations';
 import {
-  RouterOutlet,
-  RouterModule,
-  Router,
   ActivatedRoute,
+  Router,
+  RouterModule,
+  RouterOutlet,
 } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { Subscription } from 'rxjs';
+import { ApiFormComponent } from '../../components/api-config/api-form/api-form.component';
+import { CarouselFormComponent } from '../../components/carousels/carousel-form/carousel-form.component';
+import { GiftFormComponent } from '../../components/gifts/gift-form/gift-form.component';
+import { QuantityComponent } from '../../components/quantity/quantity.component';
+import { ItemFormComponent } from '../../components/shop/item-form/item-form.component';
+import { UserFormComponent } from '../../components/user-list/user-form/user-form.component';
+import { DrawerService } from '../../services/drawer.service';
 import {
   APIKEY_TOKEN,
   CAROUSEL_TOKEN,
@@ -26,14 +34,6 @@ import {
   ITEM_TOKEN,
   USER_ID_TOKEN,
 } from '../../utils/injector-tokens.token';
-import { UserFormComponent } from '../../components/user-list/user-form/user-form.component';
-import { ItemFormComponent } from '../../components/shop/item-form/item-form.component';
-import { Subscription } from 'rxjs';
-import { ShopItemService } from '../../services/shop-item.service';
-import { GiftFormComponent } from '../../components/gifts/gift-form/gift-form.component';
-import { DrawerService } from '../../services/drawer.service';
-import { CarouselFormComponent } from '../../components/carousels/carousel-form/carousel-form.component';
-import { ApiFormComponent } from '../../components/api-config/api-form/api-form.component';
 
 export type MenuItem = {
   icon: string;
@@ -106,6 +106,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       icon: 'gift',
       label: 'Gifts',
       route: 'gifts',
+    },
+    {
+      icon: 'q',
+      label: 'Quantities',
+      route: 'quantities',
     },
     {
       icon: 'images',
@@ -182,13 +187,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
         provide: GIFT_TOKEN,
         useValue: { gift: Id, mode: Id ? 'edit' : 'add' },
       });
+    } else if (component === QuantityComponent) {
+      providers.push({
+        provide: ITEM_TOKEN,
+        useValue: { item: Id, mode: Id ? 'edit' : 'add' },
+      });
     } else if (component === CarouselFormComponent) {
       providers.push({
         provide: CAROUSEL_TOKEN,
         useValue: { carousel: Id, mode: Id ? 'edit' : 'add' },
       });
-    }
-    else if (component === ApiFormComponent) {
+    } else if (component === ApiFormComponent) {
       providers.push({
         provide: APIKEY_TOKEN,
         useValue: { apiKey: Id, mode: Id ? 'edit' : 'add' },

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, signal } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -5,7 +6,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { UserService } from '../../../services/user.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-ban-user-dialog',
@@ -59,11 +59,10 @@ export class BanUserDialogComponent {
   banDevice() {
     this.loader.set(true);
     const payload = {
-      userId: this.userId,
-      isActiveDevice: !this.isActiveDevice
+      isActiveDevice: !this.isActiveDevice,
     };
 
-    this.apiService.banDevice(payload).subscribe(
+    this.apiService.banDevice(this.userId, payload).subscribe(
       (resp) => {
         this.loader.set(false);
         this.dialogRef.close({ success: true, message: resp.message });

@@ -12,23 +12,27 @@ export const SIDEBAR_ROUTES: Routes = [
       import('../../components/user-list/user.routes').then(
         (m) => m.USER_ROUTES
       ),
-    data: { breadcrumb: 'Users' }
+    data: { breadcrumb: 'Users' },
   },
   {
     path: 'shop',
     loadChildren: () =>
-      import('../../components/shop/shop.routes').then(
-        (m) => m.SHOP_ROUTES
-      ),
-    data: { breadcrumb: 'Shop' }
+      import('../../components/shop/shop.routes').then((m) => m.SHOP_ROUTES),
+    data: { breadcrumb: 'Shop' },
   },
   {
     path: 'gifts',
     loadChildren: () =>
-      import('../../components/gifts/gifts.routes').then(
-        (m) => m.GIFT_ROUTES
+      import('../../components/gifts/gifts.routes').then((m) => m.GIFT_ROUTES),
+    data: { breadcrumb: 'Gift' },
+  },
+  {
+    path: 'quantities',
+    loadChildren: () =>
+      import('../../components/quantity/quantity.routes').then(
+        (m) => m.QUANTITY_ROUTES
       ),
-    data: { breadcrumb: 'Gift' }
+    data: { breadcrumb: 'Quantities' },
   },
   {
     path: 'carousels',
@@ -36,7 +40,7 @@ export const SIDEBAR_ROUTES: Routes = [
       import('../../components/carousels/carousels.routes').then(
         (m) => m.CAROUSEL_ROUTES
       ),
-    data: { breadcrumb: 'Carousel' }
+    data: { breadcrumb: 'Carousel' },
   },
   {
     path: 'settings',
@@ -44,6 +48,6 @@ export const SIDEBAR_ROUTES: Routes = [
       import('../../components/api-config/api-config.routes').then(
         (m) => m.APICONFIG_ROUTES
       ),
-    data: { breadcrumb: 'Settings' }
+    data: { breadcrumb: 'Settings' },
   },
 ];
