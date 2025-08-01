@@ -1,5 +1,5 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, signal } from '@angular/core';
-import { ShopItemService } from '../../../services/shop-item.service';
 import {
   FormArray,
   FormBuilder,
@@ -9,16 +9,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ITEM_TOKEN } from '../../../utils/injector-tokens.token';
-import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { Downloader, Parser, Player } from 'svga.lite';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { CountryService } from '../../../services/country.service';
 import { DrawerService } from '../../../services/drawer.service';
+import { ShopItemService } from '../../../services/shop-item.service';
 import { UserService } from '../../../services/user.service';
+import { ITEM_TOKEN } from '../../../utils/injector-tokens.token';
+import { ImgCropperComponent } from '../../dialogs/img-cropper/img-cropper.component';
 
 @Component({
   selector: 'app-item-form',
@@ -73,6 +73,9 @@ export class ItemFormComponent implements OnInit {
   users: any[] = [];
   items: any[] = [];
   filteredItems: any[] = [];
+  showCsvUpload: boolean = false;
+  csvFile: File | null = null;
+  csvUserIds: string[] = [];
 
   constructor(
     @Inject(ITEM_TOKEN) itemToken: any,
@@ -125,10 +128,37 @@ export class ItemFormComponent implements OnInit {
           }
         }
       );
+
       this.getUsers();
       this.getShopItems();
     }
+
+    this.itemForm.controls['itemType']?.valueChanges.subscribe((value) => {
+      this.showCsvUpload = value === 'specialId';
+    });
+
     this.addItemPricing();
+  }
+
+  onCsvUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const csvText = reader.result as string;
+        // Remove newlines, trim, and split
+        this.csvUserIds = csvText
+          .replace(/\r?\n|\r/g, '')
+          .split(',')
+          .map((id) => id.trim())
+          .filter((id) => id);
+        console.log('Parsed CSV IDs:', this.csvUserIds);
+      };
+
+      reader.readAsText(file);
+    }
   }
 
   ngOnInit(): void {
@@ -326,6 +356,11 @@ export class ItemFormComponent implements OnInit {
 
     if (this.thumbnail) {
       formData.append('thumbnail', this.thumbnailBlob as Blob, 'thumbnail');
+    }
+
+    // Append CSV User IDs if available
+    if (this.csvUserIds.length > 0) {
+      formData.append('specialId', JSON.stringify(this.csvUserIds));
     }
 
     this.apiService.addtem(formData).subscribe(

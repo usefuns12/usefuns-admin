@@ -43,6 +43,14 @@ export const SIDEBAR_ROUTES: Routes = [
     data: { breadcrumb: 'Carousel' },
   },
   {
+    path: 'reports',
+    loadChildren: () =>
+      import('../../components/report-list/report-list.routes').then(
+        (m) => m.REPORT_ROUTES
+      ),
+    data: { breadcrumb: 'Reports' },
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('../../components/api-config/api-config.routes').then(

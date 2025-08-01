@@ -1,25 +1,16 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
 import { ShopItemService } from '../../services/shop-item.service';
 import { ItemFormComponent } from './item-form/item-form.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
-import { Subscription } from 'rxjs';
 import { RemoveItemDialogComponent } from './remove-item-dialog/remove-item-dialog.component';
-import { Downloader, Parser, Player } from 'svga.lite';
 
 @Component({
   selector: 'app-shop',
@@ -45,7 +36,7 @@ export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
     { name: 'Frame', value: 'frame' },
     { name: 'Lock Room', value: 'lockRoom' },
     { name: 'Relationship', value: 'relationship' },
-    /* { name: 'Special Id', value: 'specialId' }, */
+    { name: 'Special Id', value: 'specialId' },
     { name: 'Theme', value: 'theme' },
     { name: 'Vehicle', value: 'vehicle' },
   ];
@@ -73,11 +64,22 @@ export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
   }
 
   openAssistDrawer() {
-    this.sidebar.openDrawer(
-      'Assist items',
-      ItemFormComponent,
-      null
-    );
+    this.sidebar.openDrawer('Assist items', ItemFormComponent, null);
+  }
+
+  downloadSpecialIdCSV(ids: string[], itemName: string) {
+    const csvContent = ids.join(','); // Simple one-line CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const fileName = `${itemName || 'special-ids'}-${new Date()
+      .toISOString()
+      .slice(0, 10)}.csv`;
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   getItems() {
@@ -90,7 +92,9 @@ export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
           isSVGA: item.resource.endsWith('.svga'),
         })); */
         this.filteredItems = this.items.filter(
-          (item) => item.itemType ===  (this.selectedCurrentItem ? this.selectedCurrentItem : 'chatBubble')
+          (item) =>
+            item.itemType ===
+            (this.selectedCurrentItem ? this.selectedCurrentItem : 'chatBubble')
         );
         this.isLoading = false;
       },

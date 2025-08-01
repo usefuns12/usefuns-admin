@@ -1,0 +1,50 @@
+<div class="report-list">
+  <div
+    class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+  >
+    <h4>List of Reports</h4>
+  </div>
+
+  <table
+    class="table table-responsive"
+    *ngIf="filteredReports.length; else noItems"
+  >
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Reporter</th>
+        <th>Reported</th>
+        <th>Report Type</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Room</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="!isLoading; else showLoader">
+        <tr *ngFor="let report of filteredReports; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ report.user_name }} ({{ report.reported_by_country }})</td>
+          <td>{{ report.reported_id }} ({{ report.reported_id_country }})</td>
+          <td>{{ report.report_type }}</td>
+          <td>{{ report.reported_text }}</td>
+          <td>{{ report.status }}</td>
+          <td>{{ report.room_name }}</td>
+          <td>{{ report.created_at | date : "short" }}</td>
+        </tr>
+      </ng-container>
+      <ng-template #showLoader>
+        <tr>
+          <td colspan="8">
+            <ngx-skeleton-loader count="1"></ngx-skeleton-loader>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+
+  <ng-template #noItems>
+    <div class="alert alert-warning m-3">No reports found.</div>
+  </ng-template>
+</div>

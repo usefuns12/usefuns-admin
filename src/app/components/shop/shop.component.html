@@ -5,7 +5,9 @@
     <h4>List of Items</h4>
 
     <div class="d-flex gap-3">
-      <button class="btn btn-primary" (click)="openAssistDrawer()">Assist items</button>
+      <button class="btn btn-primary" (click)="openAssistDrawer()">
+        Assist items
+      </button>
       <button class="btn btn-primary" (click)="openDrawer()">
         Add new item
       </button>
@@ -72,10 +74,19 @@
           <td>
             <div class="action-btns d-flex">
               <fa-icon
+                [icon]="['fas', 'file-csv']"
+                class="flex-grow-1 text-success"
+                matTooltip="Download CSV"
+                (click)="downloadSpecialIdCSV(item.specialId, item.name)"
+                *ngIf="item.itemType === 'specialId' && item.specialId?.length"
+              ></fa-icon>
+
+              <fa-icon
                 [icon]="['far', 'pen-to-square']"
                 class="flex-grow-1 edit-icon"
                 matTooltip="Edit"
                 (click)="openDrawer(item)"
+                *ngIf="item.itemType != 'specialId'"
               ></fa-icon>
               <fa-icon
                 [icon]="['far', 'trash-can']"

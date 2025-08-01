@@ -18,6 +18,7 @@ import {
   faClock,
   faComment,
   faEye,
+  faFileAlt,
   faGem,
   faImage,
   faImages,
@@ -35,6 +36,7 @@ import {
   faCode,
   faCropSimple,
   faEllipsisVertical,
+  faFileCsv,
   faGear,
   faGift,
   faHeadset,
@@ -76,7 +78,9 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faMobileScreen,
     faGear,
     faCode,
-    faQ
+    faQ,
+    faFileAlt,
+    faFileCsv
   );
 };
 

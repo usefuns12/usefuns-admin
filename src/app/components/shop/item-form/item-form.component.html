@@ -264,6 +264,20 @@
               Select item type
             </p>
           </div>
+
+          <div class="mb-3" *ngIf="showCsvUpload">
+            <label for="csvUpload" class="form-label"
+              >Upload Special ID CSV</label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="csvUpload"
+              (change)="onCsvUpload($event)"
+              accept=".csv"
+            />
+          </div>
+
           <div class="mb-3">
             <label for="" class="form-label">Country</label>
             <ng-select

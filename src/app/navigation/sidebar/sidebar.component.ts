@@ -118,6 +118,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: 'carousels',
     },
     {
+      icon: 'file-alt',
+      label: 'Reports',
+      route: 'reports',
+    },
+    {
       icon: 'gear',
       label: 'Settings',
       route: 'settings',
