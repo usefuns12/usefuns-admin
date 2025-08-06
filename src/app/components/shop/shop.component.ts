@@ -67,6 +67,13 @@ export class ShopComponent implements OnInit, /* AfterViewInit, */ OnDestroy {
     this.sidebar.openDrawer('Assist items', ItemFormComponent, null);
   }
 
+  openAssistSpecialIdDrawer() {
+    this.sidebar.openDrawer('Assist Special ID', ItemFormComponent, {
+      assistSpecialId: true,
+      mode: 'assistSpecialId',
+    });
+  }
+
   downloadSpecialIdCSV(ids: string[], itemName: string) {
     const csvContent = ids.join(','); // Simple one-line CSV
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

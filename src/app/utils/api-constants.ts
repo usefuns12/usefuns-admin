@@ -15,6 +15,7 @@ export class ApiEndpoints {
     ASSIST_ITEMS: VersionConstant.v1 + '/user/assistItems',
     REMOVE_SHOP_ITEM: VersionConstant.v1 + '/user/removeItem',
     BAN_DEVICE: VersionConstant.v1 + '/user/banDevice',
+    ASSIST_SPECIAL_ID_ITEMS: VersionConstant.v1 + '/user/assistSpecialIdItems',
   };
 
   public static rooms = {

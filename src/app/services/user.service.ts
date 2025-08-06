@@ -89,4 +89,11 @@ export class UserService {
       payload
     );
   };
+
+  assistSpecialIdItems = (payload: any): Observable<any> => {
+    return this.http.post(
+      `${environment.baseUrl}/${ApiEndpoints.users.ASSIST_SPECIAL_ID_ITEMS}`,
+      payload
+    );
+  };
 }

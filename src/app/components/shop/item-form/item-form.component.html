@@ -1,5 +1,5 @@
 <div class="row mb-4">
-  <div *ngIf="assist" class="col-6">
+  <div *ngIf="assist || assistSpecialId" class="col-6">
     <form [formGroup]="assistItemForm">
       <div class="card shadow p-4">
         <div class="mb-3">
@@ -28,59 +28,62 @@
             User Ids is required
           </p>
         </div>
-        <div class="mb-3">
-          <label for="" class="form-label">Item type</label>
-          <ng-select
-            formControlName="itemType"
-            placeholder="Select item type"
-            multiple="true"
-            searchable="true"
-            clearable="false"
-          >
-            <ng-container *ngFor="let item of itemtypes">
-              <ng-option [value]="item.value">
-                {{ item.name }}
-              </ng-option>
-            </ng-container>
-          </ng-select>
-          <p
-            *ngIf="
-              (assistItemForm.get('itemType')?.touched ||
-                assistItemForm.get('itemType')?.dirty) &&
-              assistItemForm.get('itemType')?.invalid
-            "
-            class="form-error m-0 pt-1"
-          >
-            Item type is required
-          </p>
-        </div>
-        <div class="mb-3">
-          <label for="" class="form-label">Item</label>
-          <ng-select
-            formControlName="item"
-            placeholder="Select item"
-            multiple="true"
-            searchable="true"
-            clearable="false"
-          >
-            <ng-container *ngFor="let item of filteredItems">
-              <ng-option [value]="item">
-                <img class="item-img" [src]="item.thumbnail" /> |
-                {{ item.name }}
-              </ng-option>
-            </ng-container>
-          </ng-select>
-          <p
-            *ngIf="
-              (assistItemForm.get('item')?.touched ||
-                assistItemForm.get('item')?.dirty) &&
-              assistItemForm.get('item')?.invalid
-            "
-            class="form-error m-0 pt-1"
-          >
-            Item is required
-          </p>
-        </div>
+        <!-- Only show itemType and item in assist mode -->
+        <ng-container *ngIf="assist">
+          <div class="mb-3">
+            <label class="form-label">Item type</label>
+            <ng-select
+              formControlName="itemType"
+              placeholder="Select item type"
+              multiple="true"
+              searchable="true"
+              clearable="false"
+            >
+              <ng-container *ngFor="let item of itemtypes">
+                <ng-option [value]="item.value">
+                  {{ item.name }}
+                </ng-option>
+              </ng-container>
+            </ng-select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Item</label>
+            <ng-select
+              formControlName="item"
+              placeholder="Select item"
+              multiple="true"
+              searchable="true"
+              clearable="false"
+            >
+              <ng-container *ngFor="let item of filteredItems">
+                <ng-option [value]="item">
+                  <img class="item-img" [src]="item.thumbnail" /> |
+                  {{ item.name }}
+                </ng-option>
+              </ng-container>
+            </ng-select>
+          </div>
+        </ng-container>
+
+        <!-- Special ID dropdown only in assistSpecialId with single user selected -->
+        <ng-container *ngIf="assistSpecialId && showSpecialIdDropdown">
+          <div class="mb-3">
+            <label class="form-label">Special ID</label>
+            <ng-select
+              formControlName="specialId"
+              placeholder="Select special ID"
+              [searchable]="true"
+              [clearable]="true"
+            >
+              <ng-container *ngFor="let item of specialIdItems">
+                <ng-option [value]="item">
+                  {{ item }}
+                </ng-option>
+              </ng-container>
+            </ng-select>
+          </div>
+        </ng-container>
         <div class="mb-3">
           <label for="" class="form-label">Validity</label>
           <input
@@ -120,7 +123,7 @@
       </div>
     </form>
   </div>
-  <ng-container *ngIf="!assist">
+  <ng-container *ngIf="!assist && !assistSpecialId">
     <div class="col-4">
       <div class="card shadow p-4 mb-4">
         <h4>Resource</h4>

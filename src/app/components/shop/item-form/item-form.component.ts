@@ -76,6 +76,8 @@ export class ItemFormComponent implements OnInit {
   showCsvUpload: boolean = false;
   csvFile: File | null = null;
   csvUserIds: string[] = [];
+  assistSpecialId: boolean = false;
+  showSpecialIdDropdown: boolean = false;
 
   constructor(
     @Inject(ITEM_TOKEN) itemToken: any,
@@ -87,7 +89,7 @@ export class ItemFormComponent implements OnInit {
     private toastr: ToastrService,
     private countryService: CountryService
   ) {
-    this.mode = itemToken.mode;
+    this.mode = itemToken.mode || itemToken?.item?.mode;
     this.item = itemToken.item;
     this.assist = itemToken.assist;
     this.itemForm = this.fb.group({
@@ -98,22 +100,33 @@ export class ItemFormComponent implements OnInit {
       isOfficial: new FormControl(false),
     });
 
-    if (this.assist) {
+    this.assistSpecialId = itemToken?.item?.assistSpecialId ?? false;
+    // this.mode = itemToken?.item?.mode;
+
+    if (this.assist || this.assistSpecialId) {
       this.assistItemForm = new FormGroup({
         userIds: new FormControl(null, [Validators.required]),
-        itemType: new FormControl(null, [Validators.required]),
-        item: new FormControl(null, [Validators.required]),
+        ...(this.assist
+          ? {
+              itemType: new FormControl(null, [Validators.required]),
+              item: new FormControl(null, [Validators.required]),
+            }
+          : {
+              specialId: new FormControl(null), // Optional
+            }),
         validTill: new FormControl(null, [Validators.required]),
         isPermanent: new FormControl(null),
       });
 
-      this.assistItemForm.controls['itemType'].valueChanges.subscribe(
-        (val: string[]) => {
-          this.filteredItems = this.items.filter((item) =>
-            val.includes(item.itemType)
-          );
-        }
-      );
+      if (this.assist) {
+        this.assistItemForm.controls['itemType'].valueChanges.subscribe(
+          (val: string[]) => {
+            this.filteredItems = this.items.filter((item) =>
+              val.includes(item.itemType)
+            );
+          }
+        );
+      }
 
       this.assistItemForm.controls['isPermanent'].valueChanges.subscribe(
         (val) => {
@@ -129,6 +142,19 @@ export class ItemFormComponent implements OnInit {
         }
       );
 
+      this.assistItemForm.controls['userIds'].valueChanges.subscribe(
+        (userIds) => {
+          if (this.assistSpecialId) {
+            if (userIds?.length === 1) {
+              this.showSpecialIdDropdown = true;
+            } else {
+              this.showSpecialIdDropdown = false;
+              this.assistItemForm.patchValue({ specialId: null });
+            }
+          }
+        }
+      );
+
       this.getUsers();
       this.getShopItems();
     }
@@ -138,6 +164,17 @@ export class ItemFormComponent implements OnInit {
     });
 
     this.addItemPricing();
+  }
+
+  get specialIdItems(): string[] {
+    const allIds = this.items
+      .filter((i) => i.itemType === 'specialId') // Filter only specialId items
+      .flatMap((i) => i.specialId ?? []); // Extract and flatten all specialId arrays
+
+    // Remove duplicates
+    const uniqueIds = Array.from(new Set(allIds));
+
+    return uniqueIds;
   }
 
   onCsvUpload(event: Event) {
@@ -197,7 +234,7 @@ export class ItemFormComponent implements OnInit {
     });
 
     this.resource = this.item.resource;
-    this.isResourceSVGA = this.resource.endsWith('.svga');
+    this.isResourceSVGA = this.resource?.endsWith('.svga');
     if (this.isResourceSVGA) {
       this.showSVGA(this.resource);
     }
@@ -206,7 +243,7 @@ export class ItemFormComponent implements OnInit {
     }
 
     this.itemPricing.clear();
-    this.item.priceAndValidity.forEach((itemPrice: any, index: number) => {
+    this.item.priceAndValidity?.forEach((itemPrice: any, index: number) => {
       this.addItemPricing();
       this.itemPricing
         .at(index)
@@ -460,8 +497,11 @@ export class ItemFormComponent implements OnInit {
   assistItem() {
     this.isLoading = true;
     const formData = this.assistItemForm.value;
-    const items = formData.item.map((item: any) => {
-      return {
+
+    let items;
+
+    if (this.assist) {
+      items = formData.item.map((item: any) => ({
         _id: item._id,
         name: item.name,
         resource: item.resource,
@@ -472,25 +512,49 @@ export class ItemFormComponent implements OnInit {
           : this.getExpirationTime(formData.validTill),
         isOfficial: item.isOfficial,
         isDefault: item.isDefault,
+      }));
+    } else if (this.assistSpecialId) {
+      items = {
+        specialId: formData.specialId,
+        validTill: formData.isPermanent
+          ? null
+          : this.getExpirationTime(formData.validTill),
       };
-    });
+    }
 
     const payload = {
       userIds: formData.userIds,
       items,
     };
 
-    this.userService.assistItems(payload).subscribe(
-      (resp) => {
-        this.isLoading = false;
-        this.drawerService.updateDrawer();
-        this.toastr.success(resp.message);
-      },
-      (err) => {
-        this.isLoading = false;
-        this.toastr.error(err);
-      }
-    );
+    // if special id assist then hit special id assist service
+    if (this.assistSpecialId) {
+      this.userService.assistSpecialIdItems(payload).subscribe(
+        (resp) => {
+          this.isLoading = false;
+          this.drawerService.updateDrawer();
+          this.toastr.success(resp.message);
+        },
+        (err) => {
+          this.isLoading = false;
+          this.toastr.error(err);
+        }
+      );
+
+      console.log('Special ID assist payload:', payload);
+    } else {
+      this.userService.assistItems(payload).subscribe(
+        (resp) => {
+          this.isLoading = false;
+          this.drawerService.updateDrawer();
+          this.toastr.success(resp.message);
+        },
+        (err) => {
+          this.isLoading = false;
+          this.toastr.error(err);
+        }
+      );
+    }
   }
 
   getExpirationTime(days: number): string {
