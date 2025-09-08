@@ -84,4 +84,37 @@ export class ApiEndpoints {
     GET_OPERATORS: VersionConstant.v1 + '/admin/getOperators',
     DELETE_OPERATOR: VersionConstant.v1 + '/admin/deleteOperator',
   };
+
+  public static countryManagers = {
+    GET_COUNTRY_MANAGERS:
+      VersionConstant.v1 + '/users/get-all?role=CountryManager', // pending
+    ADD_COUNTRY_MANAGER: VersionConstant.v1 + '/users/create',
+    UPDATE_COUNTRY_MANAGER: VersionConstant.v1 + '/users', // pending
+    DELETE_COUNTRY_MANAGER: VersionConstant.v1 + '/users', // pending
+  };
+
+  public static countryAdmins = {
+    GET_COUNTRY_ADMINS: VersionConstant.v1 + '/users/get-all?role=CountryAdmin', // pending
+    GET_COUNTRY_ADMINS_BY_MANAGER:
+      VersionConstant.v1 + '/users/get-country-admins',
+    ADD_COUNTRY_ADMIN: VersionConstant.v1 + '/users/create',
+    UPDATE_COUNTRY_ADMIN: VersionConstant.v1 + '/users', // pending
+    DELETE_COUNTRY_ADMIN: VersionConstant.v1 + '/users', // pending
+  };
+
+  public static admin = {
+    GET_ADMINS: VersionConstant.v1 + '/users/get-all?role=Admin', // pending
+    GET_ADMIN_BY_COUNTRY_ADMIN:
+      VersionConstant.v1 + '/users/get-admins-by-country-admin',
+    ADD_ADMIN: VersionConstant.v1 + '/users/create',
+    UPDATE_ADMIN: VersionConstant.v1 + '/users', // pending
+    DELETE_ADMIN: VersionConstant.v1 + '/users', // pending
+  };
+
+  public static subAdmin = {
+    GET_SUBADMINS: VersionConstant.v1 + '/users/get-all?role=SubAdmin', // pending
+    ADD_SUBADMIN: VersionConstant.v1 + '/users/create',
+    UPDATE_SUBADMIN: VersionConstant.v1 + '/users', // pending
+    DELETE_SUBADMIN: VersionConstant.v1 + '/users', // pending
+  };
 }

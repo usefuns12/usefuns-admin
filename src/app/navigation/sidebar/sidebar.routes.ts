@@ -34,6 +34,39 @@ export const SIDEBAR_ROUTES: Routes = [
       ),
     data: { breadcrumb: 'Quantities' },
   },
+
+  {
+    path: 'country-managers',
+    loadChildren: () =>
+      import('../../components/country-manager/country-manager.routes').then(
+        (m) => m.COUNTRY_MANAGERS_ROUTES
+      ),
+    data: { breadcrumb: 'Country Managers' },
+  },
+  {
+    path: 'country-admin',
+    loadChildren: () =>
+      import('../../components/country-admin/country-admin.routes').then(
+        (m) => m.COUNTRY_ADMINS_ROUTES
+      ),
+    data: { breadcrumb: 'Country Admins' },
+  },
+  {
+    path: 'admins',
+    loadChildren: () =>
+      import('../../components/admin/admin.routes').then(
+        (m) => m.ADMINS_ROUTES
+      ),
+    data: { breadcrumb: 'Admins' },
+  },
+  {
+    path: 'sub-admins',
+    loadChildren: () =>
+      import('../../components/sub-admin/sub-admin.routes').then(
+        (m) => m.ADMINS_ROUTES
+      ),
+    data: { breadcrumb: 'Sub Admins' },
+  },
   {
     path: 'carousels',
     loadChildren: () =>

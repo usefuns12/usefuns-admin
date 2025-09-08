@@ -43,6 +43,7 @@ import {
   faMagnifyingGlass,
   faMobileScreen,
   faQ,
+  faUserTie,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -80,7 +81,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faCode,
     faQ,
     faFileAlt,
-    faFileCsv
+    faFileCsv,
+    faUserTie
   );
 };
 

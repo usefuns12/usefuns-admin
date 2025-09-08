@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h4>Country Managers</h4>
+  <button class="btn btn-primary" (click)="openDialog('add')">Add New</button>
+</div>
+
+<table class="table" *ngIf="managers.length; else noData">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>User ID</th>
+      <th>Name</th>
+      <th>Total Target</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mgr of managers; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ mgr.customerRef?.userId }}</td>
+      <td>{{ mgr.customerRef?.name }}</td>
+      <td>--</td>
+      <!-- placeholder until API supports it -->
+      <td>--</td>
+      <!-- placeholder until API supports it -->
+      <td>
+        <div class="action-btns d-flex">
+          <fa-icon
+            [icon]="['far', 'pen-to-square']"
+            class="flex-grow-1 edit-icon"
+            matTooltip="Edit"
+            (click)="openDialog('edit', mgr)"
+          ></fa-icon>
+          <fa-icon
+            [icon]="['far', 'trash-can']"
+            class="flex-grow-1 text-danger"
+            matTooltip="Remove"
+            (click)="openDialog('removeManager', mgr)"
+          ></fa-icon>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>No records found.</p>
+</ng-template>

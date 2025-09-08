@@ -1,0 +1,8 @@
+<div class="p-4">
+  <h5 class="mb-3">{{ data.title }}</h5>
+  <p>{{ data.message }}</p>
+  <div class="d-flex justify-content-end gap-3 mt-4">
+    <button class="btn btn-secondary" (click)="close(false)">Cancel</button>
+    <button class="btn btn-danger" (click)="close(true)">Delete</button>
+  </div>
+</div>

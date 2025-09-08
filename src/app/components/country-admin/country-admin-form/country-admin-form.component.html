@@ -1,0 +1,80 @@
+<h4 mat-dialog-title>
+  {{ mode === "add" ? "Add Country Admin" : "Edit Country Admin" }}
+</h4>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <!-- Customer Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Customer</label>
+      <ng-select
+        formControlName="customerId"
+        placeholder="Select customer"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let user of filteredUsers" [value]="user._id">
+          {{ user.name }}
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Country Manager Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Country Manager</label>
+      <ng-select
+        formControlName="parents"
+        placeholder="Select manager"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let mgr of managers" [value]="mgr._id">
+          {{ mgr.name }}
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Country Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Country</label>
+      <ng-select
+        formControlName="countryCode"
+        placeholder="Select a country"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option
+          *ngFor="let country of countries"
+          [value]="country.name.common"
+        >
+          {{ country.flag }} | {{ country.name.common }}
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="text" class="form-control" formControlName="password" />
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="text-end">
+      <button
+        class="btn btn-secondary me-2"
+        type="button"
+        (click)="dialogRef.close()"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="isLoading || form.invalid"
+      >
+        {{ isLoading ? "Saving..." : "Submit" }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

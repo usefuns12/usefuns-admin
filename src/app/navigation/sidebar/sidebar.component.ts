@@ -113,6 +113,26 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: 'quantities',
     },
     {
+      icon: 'user-tie',
+      label: 'Country Managers',
+      route: 'country-managers',
+    },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Country Admins',
+    //   route: 'country-admin',
+    // },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Admins',
+    //   route: 'admins',
+    // },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Sub Admins',
+    //   route: 'sub-admins',
+    // },
+    {
       icon: 'images',
       label: 'Carousels',
       route: 'carousels',
