@@ -68,6 +68,14 @@ export const SIDEBAR_ROUTES: Routes = [
     data: { breadcrumb: 'Sub Admins' },
   },
   {
+    path: 'agencies',
+    loadChildren: () =>
+      import('../../components/agency/agency.routes').then(
+        (m) => m.AGENCY_ROUTES
+      ),
+    data: { breadcrumb: 'Agencies' },
+  },
+  {
     path: 'carousels',
     loadChildren: () =>
       import('../../components/carousels/carousels.routes').then(

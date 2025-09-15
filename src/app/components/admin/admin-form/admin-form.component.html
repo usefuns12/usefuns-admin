@@ -14,7 +14,7 @@
         clearable="true"
       >
         <ng-option *ngFor="let user of users" [value]="user._id">
-          {{ user.name }}
+          {{ user.userId }}
         </ng-option>
       </ng-select>
     </div>
@@ -29,7 +29,7 @@
         clearable="true"
       >
         <ng-option *ngFor="let mgr of managers" [value]="mgr._id">
-          {{ mgr.name }}
+          {{ mgr.userId }}
         </ng-option>
       </ng-select>
     </div>
@@ -45,7 +45,7 @@
         [disabled]="!form.value.countryManagerId"
       >
         <ng-option *ngFor="let admin of countryAdmins" [value]="admin._id">
-          {{ admin.name }}
+          {{ admin.userId }}
         </ng-option>
       </ng-select>
     </div>

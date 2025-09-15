@@ -14,6 +14,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { JwtModule } from '@auth0/angular-jwt';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
+  faBuilding,
   faCircleCheck,
   faClock,
   faComment,
@@ -82,7 +83,8 @@ const setupFontAwesome = (library: FaIconLibrary) => {
     faQ,
     faFileAlt,
     faFileCsv,
-    faUserTie
+    faUserTie,
+    faBuilding
   );
 };
 

@@ -87,34 +87,41 @@ export class ApiEndpoints {
 
   public static countryManagers = {
     GET_COUNTRY_MANAGERS:
-      VersionConstant.v1 + '/users/get-all?role=CountryManager', // pending
+      VersionConstant.v1 + '/users/get-all?role=CountryManager',
     ADD_COUNTRY_MANAGER: VersionConstant.v1 + '/users/create',
-    UPDATE_COUNTRY_MANAGER: VersionConstant.v1 + '/users', // pending
-    DELETE_COUNTRY_MANAGER: VersionConstant.v1 + '/users', // pending
+    UPDATE_COUNTRY_MANAGER: VersionConstant.v1 + '/users',
+    DELETE_COUNTRY_MANAGER: VersionConstant.v1 + '/users',
   };
 
   public static countryAdmins = {
-    GET_COUNTRY_ADMINS: VersionConstant.v1 + '/users/get-all?role=CountryAdmin', // pending
+    GET_COUNTRY_ADMINS: VersionConstant.v1 + '/users/get-all?role=CountryAdmin',
     GET_COUNTRY_ADMINS_BY_MANAGER:
       VersionConstant.v1 + '/users/get-country-admins',
     ADD_COUNTRY_ADMIN: VersionConstant.v1 + '/users/create',
-    UPDATE_COUNTRY_ADMIN: VersionConstant.v1 + '/users', // pending
-    DELETE_COUNTRY_ADMIN: VersionConstant.v1 + '/users', // pending
+    UPDATE_COUNTRY_ADMIN: VersionConstant.v1 + '/users',
+    DELETE_COUNTRY_ADMIN: VersionConstant.v1 + '/users',
   };
 
   public static admin = {
-    GET_ADMINS: VersionConstant.v1 + '/users/get-all?role=Admin', // pending
+    GET_ADMINS: VersionConstant.v1 + '/users/get-all?role=Admin',
     GET_ADMIN_BY_COUNTRY_ADMIN:
       VersionConstant.v1 + '/users/get-admins-by-country-admin',
     ADD_ADMIN: VersionConstant.v1 + '/users/create',
-    UPDATE_ADMIN: VersionConstant.v1 + '/users', // pending
-    DELETE_ADMIN: VersionConstant.v1 + '/users', // pending
+    UPDATE_ADMIN: VersionConstant.v1 + '/users',
+    DELETE_ADMIN: VersionConstant.v1 + '/users',
   };
 
   public static subAdmin = {
-    GET_SUBADMINS: VersionConstant.v1 + '/users/get-all?role=SubAdmin', // pending
+    GET_SUBADMINS: VersionConstant.v1 + '/users/get-all?role=SubAdmin',
     ADD_SUBADMIN: VersionConstant.v1 + '/users/create',
-    UPDATE_SUBADMIN: VersionConstant.v1 + '/users', // pending
-    DELETE_SUBADMIN: VersionConstant.v1 + '/users', // pending
+    UPDATE_SUBADMIN: VersionConstant.v1 + '/users',
+    DELETE_SUBADMIN: VersionConstant.v1 + '/users',
+  };
+
+  public static agency = {
+    GET_AGENCIES: VersionConstant.v1 + '/agencies',
+    ADD_AGENCY: VersionConstant.v1 + '/agencies/create',
+    UPDATE_AGENCY: VersionConstant.v1 + '/agencies',
+    DELETE_AGENCY: VersionConstant.v1 + '/agencies',
   };
 }

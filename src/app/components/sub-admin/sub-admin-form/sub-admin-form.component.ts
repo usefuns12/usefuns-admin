@@ -110,7 +110,7 @@ export class SubAdminFormComponent implements OnInit {
     this.countryManagerService.getCountryManagers().subscribe((resp) => {
       this.managers = resp?.data?.map((m: any) => ({
         _id: m._id,
-        name: m?.customerRef?.name,
+        userId: m?.customerRef?.userId,
       }));
     });
   }
@@ -121,7 +121,7 @@ export class SubAdminFormComponent implements OnInit {
       .subscribe((resp) => {
         this.countryAdmins = (resp?.data || []).map((a: any) => ({
           _id: a._id,
-          name: a?.customerRef?.name,
+          userId: a?.customerRef?.userId,
         }));
       });
   }
@@ -132,7 +132,7 @@ export class SubAdminFormComponent implements OnInit {
       .subscribe((resp) => {
         this.admins = (resp?.data || []).map((a: any) => ({
           _id: a._id,
-          name: a?.customerRef?.name,
+          userId: a?.customerRef?.userId,
         }));
       });
   }

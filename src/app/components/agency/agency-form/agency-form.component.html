@@ -1,0 +1,59 @@
+<h4 mat-dialog-title>
+  {{ mode === "add" ? "Add Agency" : "Edit Agency" }}
+</h4>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <!-- Agency ID -->
+    <div class="mb-3">
+      <label class="form-label">Agency ID</label>
+      <input type="text" class="form-control" formControlName="agencyId" />
+    </div>
+
+    <!-- Code -->
+    <div class="mb-3">
+      <label class="form-label">Code</label>
+      <input type="text" class="form-control" formControlName="code" />
+    </div>
+
+    <!-- Name -->
+    <div class="mb-3">
+      <label class="form-label">Agency Name</label>
+      <input type="text" class="form-control" formControlName="name" />
+    </div>
+
+    <!-- Owner -->
+    <div class="mb-3">
+      <label class="form-label">Owner (Admin/SubAdmin)</label>
+      <ng-select
+        formControlName="ownerUserId"
+        placeholder="Select owner"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let owner of owners" [value]="owner._id">
+          {{ owner?.customerRef?.userId }}
+        </ng-option>
+      </ng-select>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="text-end">
+      <button
+        class="btn btn-secondary me-2"
+        type="button"
+        (click)="dialogRef.close()"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="isLoading || form.invalid"
+      >
+        {{ isLoading ? "Saving..." : "Submit" }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

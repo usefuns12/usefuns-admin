@@ -47,7 +47,7 @@ export class CountryAdminFormComponent implements OnInit {
     this.form = this.fb.group({
       customerId: [null, Validators.required],
       parents: [null, Validators.required], // country manager(s)
-      countryCode: [null, Validators.required],
+      countryCode: [null],
       password: [null, Validators.required],
     });
 
@@ -77,7 +77,7 @@ export class CountryAdminFormComponent implements OnInit {
     this.countryManagerService.getCountryManagers().subscribe((resp) => {
       this.managers = resp?.data?.map((manager: any) => ({
         _id: manager._id,
-        name: manager?.customerRef?.name,
+        userId: manager?.customerRef?.userId,
       }));
     });
   }
