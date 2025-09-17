@@ -124,4 +124,11 @@ export class ApiEndpoints {
     UPDATE_AGENCY: VersionConstant.v1 + '/agencies',
     DELETE_AGENCY: VersionConstant.v1 + '/agencies',
   };
+
+  public static host = {
+    GET_HOSTS: VersionConstant.v1 + '/hosts',
+    ADD_HOST: VersionConstant.v1 + '/hosts/create',
+    UPDATE_HOST: VersionConstant.v1 + '/hosts',
+    DELETE_HOST: VersionConstant.v1 + '/hosts',
+  };
 }

@@ -76,6 +76,12 @@ export const SIDEBAR_ROUTES: Routes = [
     data: { breadcrumb: 'Agencies' },
   },
   {
+    path: 'hosts',
+    loadChildren: () =>
+      import('../../components/host/host.routes').then((m) => m.HOST_ROUTES),
+    data: { breadcrumb: 'Hosts' },
+  },
+  {
     path: 'carousels',
     loadChildren: () =>
       import('../../components/carousels/carousels.routes').then(

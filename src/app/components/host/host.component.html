@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h4>Hosts</h4>
+  <button class="btn btn-primary" (click)="openDialog('add')">Add New</button>
+</div>
+
+<table class="table" *ngIf="hosts.length; else noData">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Host ID</th>
+      <th>Customer</th>
+      <th>Agency</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let host of hosts; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ host.hostId }}</td>
+      <td>{{ host.customerRef?.name }} ({{ host.customerRef?.userId }})</td>
+      <td>{{ host.agencyId?.name || "--" }}</td>
+      <td>{{ host.status }}</td>
+      <td>
+        <div class="action-btns d-flex">
+          <fa-icon
+            [icon]="['far', 'pen-to-square']"
+            class="flex-grow-1 edit-icon"
+            matTooltip="Edit"
+            (click)="openDialog('edit', host)"
+          ></fa-icon>
+          <fa-icon
+            [icon]="['far', 'trash-can']"
+            class="flex-grow-1 text-danger"
+            matTooltip="Remove"
+            (click)="openDialog('removeHost', host)"
+          ></fa-icon>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>No records found.</p>
+</ng-template>

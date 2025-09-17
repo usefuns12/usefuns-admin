@@ -1,0 +1,67 @@
+<h4 mat-dialog-title>
+  {{ mode === "add" ? "Add Host" : "Edit Host" }}
+</h4>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <!-- Customer Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Customer</label>
+      <ng-select
+        formControlName="customerRef"
+        placeholder="Select Customer"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let user of users" [value]="user._id">
+          {{ user.name }} ({{ user.userId }})
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Agency Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Agency</label>
+      <ng-select
+        formControlName="agencyId"
+        placeholder="Select Agency"
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let agency of agencies" [value]="agency._id">
+          {{ agency.name }} ({{ agency.code }})
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Password (only show on Add) -->
+    <div class="mb-3" *ngIf="mode === 'add'">
+      <label class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+        placeholder="Enter password"
+      />
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="text-end">
+      <button
+        class="btn btn-secondary me-2"
+        type="button"
+        (click)="dialogRef.close()"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="isLoading || form.invalid"
+      >
+        {{ isLoading ? "Saving..." : "Submit" }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>
