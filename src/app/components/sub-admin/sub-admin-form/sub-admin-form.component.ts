@@ -35,7 +35,6 @@ export class SubAdminFormComponent implements OnInit {
   managers: any[] = [];
   countryAdmins: any[] = [];
   admins: any[] = [];
-  countries: any[] = [];
 
   private readonly staticRoleId = '68a6b5b05ed2a73734c3c467'; // Replace with real RoleId
 
@@ -76,7 +75,6 @@ export class SubAdminFormComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers();
     this.getManagers();
-    this.getCountries();
 
     // ✅ Manager change → load country admins
     this.form.get('countryManagerId')?.valueChanges.subscribe((managerId) => {
@@ -101,7 +99,7 @@ export class SubAdminFormComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getUsers().subscribe((resp) => {
+    this.userService.getUnAssignedUsers().subscribe((resp) => {
       this.users = resp.data;
     });
   }
@@ -135,12 +133,6 @@ export class SubAdminFormComponent implements OnInit {
           userId: a?.customerRef?.userId,
         }));
       });
-  }
-
-  getCountries(): void {
-    this.countryService.getCountries().subscribe((data) => {
-      this.countries = data;
-    });
   }
 
   submit(): void {

@@ -7,6 +7,7 @@ export class ApiEndpoints {
 
   public static users = {
     GET_USERS: VersionConstant.v1 + '/user/getAll/limitedData',
+    GET_UNASSIGNED_USERS: VersionConstant.v1 + '/user/getUnassignedUsers',
     GET_USER_DETAILS: VersionConstant.v1 + '/user/getById',
     UPDATE_USER: VersionConstant.v1 + '/admin/user/update',
     SEARCH_USER: VersionConstant.v1 + '/user/search',

@@ -67,7 +67,7 @@ export class CountryAdminFormComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getUsers().subscribe((resp) => {
+    this.userService.getUnAssignedUsers().subscribe((resp) => {
       this.users = resp.data;
       this.filteredUsers = [...this.users];
     });

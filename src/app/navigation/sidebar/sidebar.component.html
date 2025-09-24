@@ -58,7 +58,8 @@
               [icon]="
                 item.icon === 'headset' ||
                 item.icon === 'arrow-right-from-bracket' ||
-                item.icon === 'gear'
+                item.icon === 'gear' ||
+                item.icon === 'user-tie'
                   ? ['fas', item.icon]
                   : ['far', item.icon]
               "
@@ -77,7 +78,9 @@
               <fa-icon
                 matListItemIcon
                 [icon]="
-                  subItem.icon === 'crop-simple' || subItem.icon === 'code'
+                  subItem.icon === 'crop-simple' ||
+                  subItem.icon === 'code' ||
+                  subItem.icon === 'user-tie'
                     ? ['fas', subItem.icon]
                     : ['far', subItem.icon]
                 "

@@ -112,26 +112,65 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Quantities',
       route: 'quantities',
     },
+
     {
-      icon: 'user-tie',
-      label: 'Country Managers',
-      route: 'country-managers',
+      icon: 'gear',
+      label: 'Management',
+      route: '#',
+      subItems: [
+        {
+          icon: 'user-tie',
+          label: 'Country Managers',
+          route: 'country-managers',
+        },
+        {
+          icon: 'user-tie',
+          label: 'Country Admins',
+          route: 'country-admin',
+        },
+        {
+          icon: 'user-tie',
+          label: 'Admins',
+          route: 'admins',
+        },
+        {
+          icon: 'user-tie',
+          label: 'Sub Admins',
+          route: 'sub-admins',
+        },
+        {
+          icon: 'building',
+          label: 'Agencies',
+          route: 'agencies',
+        },
+        {
+          icon: 'user-tie',
+          label: 'Hosts',
+          route: 'hosts',
+        },
+      ],
     },
-    {
-      icon: 'user-tie',
-      label: 'Country Admins',
-      route: 'country-admin',
-    },
-    {
-      icon: 'user-tie',
-      label: 'Admins',
-      route: 'admins',
-    },
-    {
-      icon: 'user-tie',
-      label: 'Sub Admins',
-      route: 'sub-admins',
-    },
+
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Country Managers',
+    //   route: 'country-managers',
+    // },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Country Admins',
+    //   route: 'country-admin',
+    // },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Admins',
+    //   route: 'admins',
+    // },
+    // {
+    //   icon: 'user-tie',
+    //   label: 'Sub Admins',
+    //   route: 'sub-admins',
+    // },
     // {
     //   icon: 'building',
     //   label: 'Agencies',
@@ -142,6 +181,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     //   label: 'Hosts',
     //   route: 'hosts',
     // },
+
     {
       icon: 'images',
       label: 'Carousels',

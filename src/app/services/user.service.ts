@@ -22,6 +22,12 @@ export class UserService {
     );
   };
 
+  getUnAssignedUsers = (): Observable<any> => {
+    return this.http.get(
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_UNASSIGNED_USERS}`
+    );
+  };
+
   getUserDetails = (userId: string): Observable<any> => {
     return this.http.get(
       `${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`

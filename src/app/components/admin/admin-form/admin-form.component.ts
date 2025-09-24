@@ -33,7 +33,6 @@ export class AdminFormComponent implements OnInit {
   users: any[] = [];
   managers: any[] = [];
   countryAdmins: any[] = [];
-  countries: any[] = [];
 
   private readonly staticRoleId = '68a6b5b05ed2a73734c3c464'; // Admin role
 
@@ -71,7 +70,6 @@ export class AdminFormComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers();
     this.getManagers();
-    this.getCountries();
 
     // ✅ Watch for manager change to load admins dynamically
     this.form.get('countryManagerId')?.valueChanges.subscribe((managerId) => {
@@ -85,7 +83,7 @@ export class AdminFormComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getUsers().subscribe((resp) => {
+    this.userService.getUnAssignedUsers().subscribe((resp) => {
       this.users = resp.data;
     });
   }
@@ -108,12 +106,6 @@ export class AdminFormComponent implements OnInit {
           userId: a?.customerRef?.userId,
         }));
       });
-  }
-
-  getCountries(): void {
-    this.countryService.getCountries().subscribe((data) => {
-      this.countries = data;
-    });
   }
 
   submit(): void {
