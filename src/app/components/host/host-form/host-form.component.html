@@ -33,17 +33,6 @@
         </ng-option>
       </ng-select>
     </div>
-
-    <!-- Password (only show on Add) -->
-    <div class="mb-3" *ngIf="mode === 'add'">
-      <label class="form-label">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        formControlName="password"
-        placeholder="Enter password"
-      />
-    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions>

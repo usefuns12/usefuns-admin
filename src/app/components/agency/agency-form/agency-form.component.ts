@@ -44,7 +44,6 @@ export class AgencyFormComponent implements OnInit {
 
     this.form = this.fb.group({
       agencyId: [null, Validators.required],
-      code: [null, Validators.required],
       name: [null, Validators.required],
       ownerUserId: [null, Validators.required],
     });
@@ -52,7 +51,6 @@ export class AgencyFormComponent implements OnInit {
     if (this.mode === 'edit') {
       this.form.patchValue({
         agencyId: data.agency.agencyId,
-        code: data.agency.code,
         name: data.agency.name,
         ownerUserId: data.agency.ownerUserId._id,
       });

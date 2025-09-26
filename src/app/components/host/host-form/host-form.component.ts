@@ -45,10 +45,6 @@ export class HostFormComponent implements OnInit {
     this.form = this.fb.group({
       customerRef: [null, Validators.required],
       agencyId: [null, Validators.required],
-      password: [
-        null,
-        this.mode === 'add' ? Validators.required : Validators.nullValidator,
-      ],
     });
 
     if (this.mode === 'edit') {
