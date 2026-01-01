@@ -16,7 +16,22 @@
       <input type="text" class="form-control" formControlName="name" />
     </div>
 
-    <!-- Owner -->
+    <!-- ⭐ NEW: CUSTOMER DROPDOWN -->
+    <div class="mb-3">
+      <label class="form-label">Customer</label>
+      <ng-select
+        formControlName="customerRef"
+        placeholder="Search customer..."
+        searchable="true"
+        clearable="true"
+      >
+        <ng-option *ngFor="let c of customers" [value]="c._id">
+          {{ c.userId }} - {{ c.name }}
+        </ng-option>
+      </ng-select>
+    </div>
+
+    <!-- Owner (Admin + SubAdmin) -->
     <div class="mb-3">
       <label class="form-label">Owner (Admin/SubAdmin)</label>
       <ng-select

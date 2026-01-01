@@ -57,7 +57,7 @@ export class SubAdminFormComponent implements OnInit {
       countryManagerId: [null, Validators.required],
       countryAdminId: [null, Validators.required],
       adminId: [null, Validators.required],
-      countryCode: [null, Validators.required],
+      countryCode: [null],
       password: [null, Validators.required],
     });
 

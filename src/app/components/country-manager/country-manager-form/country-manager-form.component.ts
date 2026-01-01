@@ -30,7 +30,7 @@ export class CountryManagerFormComponent implements OnInit {
   filteredUsers: any[] = [];
   countries: any[] = [];
 
-  private readonly staticRoleId = '68a6b5b05ed2a73734c3c462'; // CountryManager roleId
+  private readonly staticRoleId = '68a6b5af5ed2a73734c3c45e'; // CountryManager roleId
 
   constructor(
     private fb: FormBuilder,

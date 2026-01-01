@@ -14,9 +14,11 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
+
 import { AdminService } from '../../../services/admin.service';
 import { AgencyService } from '../../../services/agency.service';
 import { SubAdminService } from '../../../services/subadmin.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-agency-form',
@@ -30,12 +32,14 @@ export class AgencyFormComponent implements OnInit {
   isLoading = false;
 
   owners: any[] = [];
+  customers: any[] = []; // ⭐ NEW LIST
 
   constructor(
     private fb: FormBuilder,
     private agencyService: AgencyService,
     private adminService: AdminService,
     private subAdminService: SubAdminService,
+    private userService: UserService, // ⭐ NEW SERVICE
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<AgencyFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -45,6 +49,7 @@ export class AgencyFormComponent implements OnInit {
     this.form = this.fb.group({
       agencyId: [null, Validators.required],
       name: [null, Validators.required],
+      customerRef: [null, Validators.required], // ⭐ NEW FORM CONTROL
       ownerUserId: [null, Validators.required],
     });
 
@@ -52,30 +57,44 @@ export class AgencyFormComponent implements OnInit {
       this.form.patchValue({
         agencyId: data.agency.agencyId,
         name: data.agency.name,
-        ownerUserId: data.agency.ownerUserId._id,
+        customerRef: data.agency.customerRef?._id || null, // ⭐ PATCH CUSTOMER
+        ownerUserId: data.agency.ownerUserId?._id || null,
       });
     }
   }
 
   ngOnInit(): void {
+    this.getCustomers(); // ⭐ LOAD CUSTOMERS
     this.getOwners();
   }
 
+  // ⭐ FETCH CUSTOMERS FOR DROPDOWN
+  getCustomers() {
+    this.userService.getUnAssignedUsers().subscribe({
+      next: (resp: any) => {
+        this.customers = resp.data?.map((c: any) => ({
+          _id: c._id,
+          userId: c.userId,
+          name: c.name,
+        }));
+      },
+      error: () => (this.customers = []),
+    });
+  }
+
+  // FETCH ADMINS + SUB-ADMINS
   getOwners(): void {
-    // ✅ fetch admins and sub-admins separately
     forkJoin({
       admins: this.adminService.getAdmin(),
       subAdmins: this.subAdminService.getSubAdmin(),
     }).subscribe({
       next: (resp) => {
-        // merge both arrays into single owners array
         this.owners = [
           ...(resp.admins?.data || []),
           ...(resp.subAdmins?.data || []),
         ];
       },
-      error: (err) => {
-        console.error('Error fetching owners:', err);
+      error: () => {
         this.owners = [];
       },
     });
@@ -85,7 +104,12 @@ export class AgencyFormComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isLoading = true;
-    const payload = this.form.value;
+    const payload = {
+      agencyId: this.form.value.agencyId,
+      name: this.form.value.name,
+      customerRef: this.form.value.customerRef, // ⭐ SEND CUSTOMER REF
+      ownerUserId: this.form.value.ownerUserId,
+    };
 
     if (this.mode === 'add') {
       this.agencyService.addAgency(payload).subscribe({

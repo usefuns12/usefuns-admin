@@ -61,7 +61,7 @@ export class HostFormComponent implements OnInit {
   }
 
   getCustomers(): void {
-    this.userService.getUsers().subscribe({
+    this.userService.getUnAssignedUsers().subscribe({
       next: (resp) => (this.users = resp.data || []),
       error: (err) => console.error('Error fetching users:', err),
     });

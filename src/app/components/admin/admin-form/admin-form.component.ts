@@ -47,13 +47,14 @@ export class AdminFormComponent implements OnInit {
     public dialogRef: MatDialogRef<AdminFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    // console.log('Form Value:', this.form.value);
     this.mode = data.mode;
 
     this.form = this.fb.group({
       customerId: [null, Validators.required],
       countryManagerId: [null, Validators.required],
       countryAdminId: [null, Validators.required],
-      countryCode: [null, Validators.required],
+      countryCode: [null],
       password: [null, Validators.required],
     });
 
