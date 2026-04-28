@@ -1,0 +1,129 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center pt-4 pb-3">
+    <h4 class="mb-0">Agency Commission Details</h4>
+    <div>
+      <button class="btn btn-secondary btn-sm me-2" (click)="goBack()">
+        <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
+        Back
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="loadCycleDetails(cycle._id)"
+      >
+        <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && cycle">
+    <!-- Cycle Information -->
+    <div class="card mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h5 class="mb-0">Commission Information</h5>
+        <span class="badge" [ngClass]="getStatusClass(cycle.status)">
+          {{ cycle.status }}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Cycle ID:</strong> {{ cycle._id }}</p>
+            <p>
+              <strong>Agency:</strong>
+              {{ cycle.agencyId?.agencyName || "N/A" }}
+            </p>
+            <p>
+              <strong>Agency ID:</strong> {{ cycle.agencyId?._id || "N/A" }}
+            </p>
+            <p>
+              <strong>Country Code:</strong>
+              {{ cycle.agencyId?.countryCode || "N/A" }}
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p>
+              <strong>Cycle Start:</strong> {{ formatDate(cycle.cycleStart) }}
+            </p>
+            <p><strong>Cycle End:</strong> {{ formatDate(cycle.cycleEnd) }}</p>
+            <p>
+              <strong>Created At:</strong> {{ formatDate(cycle.createdAt) }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commission Calculation -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Commission Calculation</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <p class="text-muted mb-1">Total Salary Paid</p>
+            <h4>{{ cycle.totalSalaryPaid || 0 }}</h4>
+          </div>
+          <div class="col-md-4">
+            <p class="text-muted mb-1">Commission Percentage</p>
+            <h4>{{ (cycle.commissionPercentage || 0).toFixed(2) }}%</h4>
+          </div>
+          <div class="col-md-4">
+            <p class="text-muted mb-1">Commission (UCoins)</p>
+            <h3 class="text-success">{{ cycle.commissionUcoins || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contributing Hosts -->
+    <div
+      class="card mb-4"
+      *ngIf="cycle.contributingHosts && cycle.contributingHosts.length > 0"
+    >
+      <div class="card-header">
+        <h5 class="mb-0">Contributing Hosts</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Host Name</th>
+                <th>Host ID</th>
+                <th>Salary (UCoins)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let host of cycle.contributingHosts">
+                <td>{{ host.hostId?.hostName || "N/A" }}</td>
+                <td>{{ host.hostId?._id || "N/A" }}</td>
+                <td>{{ host.salaryUcoins || 0 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculation Details -->
+    <div class="card mb-4" *ngIf="cycle.calculation">
+      <div class="card-header">
+        <h5 class="mb-0">Calculation Details</h5>
+      </div>
+      <div class="card-body">
+        <pre class="bg-light p-3">{{ cycle.calculation | json }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

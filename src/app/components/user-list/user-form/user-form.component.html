@@ -22,29 +22,30 @@
                 class="d-flex justify-content-evenly align-items-center mt-5"
               >
                 @if (!profileChanged()) {
-                <button
-                  class="btn btn-indigo"
-                  type="button"
-                  (click)="openImageDialog('profile')"
-                >
-                  Change profile
-                </button>
-                } @if (profileChanged()) {
-                <button
-                  class="btn btn-danger"
-                  (click)="restoreImage('profile')"
-                  [disabled]="loader()"
-                >
-                  Cancel
-                </button>
-                <button
-                  class="btn btn-primary"
-                  (click)="updateProfile('profile')"
-                  [disabled]="loader()"
-                >
-                  <span *ngIf="loader()" class="spinner-border"></span>
-                  <span *ngIf="!loader()">Save</span>
-                </button>
+                  <button
+                    class="btn btn-indigo"
+                    type="button"
+                    (click)="openImageDialog('profile')"
+                  >
+                    Change profile
+                  </button>
+                }
+                @if (profileChanged()) {
+                  <button
+                    class="btn btn-danger"
+                    (click)="restoreImage('profile')"
+                    [disabled]="loader()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="updateProfile('profile')"
+                    [disabled]="loader()"
+                  >
+                    <span *ngIf="loader()" class="spinner-border"></span>
+                    <span *ngIf="!loader()">Save</span>
+                  </button>
                 }
               </div>
             </div>
@@ -155,29 +156,30 @@
                 class="d-flex justify-content-evenly align-items-center mt-5"
               >
                 @if (!roomChanged()) {
-                <button
-                  class="btn btn-indigo"
-                  type="button"
-                  (click)="openImageDialog('room')"
-                >
-                  Change room profile
-                </button>
-                } @if (roomChanged()) {
-                <button
-                  class="btn btn-danger"
-                  (click)="restoreImage('room')"
-                  [disabled]="loader()"
-                >
-                  Cancel
-                </button>
-                <button
-                  class="btn btn-primary"
-                  (click)="updateProfile('room')"
-                  [disabled]="loader()"
-                >
-                  <span *ngIf="loader()" class="spinner-border"></span>
-                  <span *ngIf="!loader()">Save</span>
-                </button>
+                  <button
+                    class="btn btn-indigo"
+                    type="button"
+                    (click)="openImageDialog('room')"
+                  >
+                    Change room profile
+                  </button>
+                }
+                @if (roomChanged()) {
+                  <button
+                    class="btn btn-danger"
+                    (click)="restoreImage('room')"
+                    [disabled]="loader()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="updateProfile('room')"
+                    [disabled]="loader()"
+                  >
+                    <span *ngIf="loader()" class="spinner-border"></span>
+                    <span *ngIf="!loader()">Save</span>
+                  </button>
                 }
               </div>
             </div>
@@ -263,7 +265,9 @@
                           *ngIf="mode === 'edit'"
                           class="item-remove"
                           [icon]="['far', 'trash-can']"
-                          (click)="openRemoveItemDialog('chatBubbles', bubble._id)"
+                          (click)="
+                            openRemoveItemDialog('chatBubbles', bubble._id)
+                          "
                         ></fa-icon>
                         <img
                           [src]="bubble.resource"
@@ -316,9 +320,89 @@
                 </div>
               </ng-template>
             </mat-tab>
-            <mat-tab label="Vehicles"></mat-tab>
+            <mat-tab label="Vehicles">
+              <ng-template matTabContent>
+                <div class="container-fluid">
+                  <div class="row">
+                    <h4
+                      *ngIf="!userDetails?.vehicles?.length"
+                      class="text-center my-5"
+                    >
+                      No vehicles present
+                    </h4>
+                    <div
+                      class="col-md-3 col-sm-6 col-12 mb-3"
+                      *ngFor="let vehicle of userDetails?.vehicles"
+                    >
+                      <div class="card p-2 shadow">
+                        <fa-icon
+                          *ngIf="mode === 'edit'"
+                          class="item-remove"
+                          [icon]="['far', 'trash-can']"
+                          (click)="
+                            openRemoveItemDialog('vehicles', vehicle._id)
+                          "
+                        ></fa-icon>
+                        <img
+                          [src]="vehicle.thumbnail"
+                          alt=""
+                          class="img-fluid mx-auto"
+                        />
+                        <div class="p-1 text-center">
+                          <p class="m-0 title">{{ vehicle.name }}</p>
+                          <p class="m-0 time-left">
+                            <fa-icon [icon]="['far', 'clock']"></fa-icon>
+                            {{ vehicle.validTill | timeLeft }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
             <mat-tab label="Relations"></mat-tab>
-            <mat-tab label="Special ID"></mat-tab>
+            <mat-tab label="Special ID">
+              <ng-template matTabContent>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-4 col-sm-6 col-12 mb-3">
+                      <div class="card p-3 shadow h-100">
+                        <div class="mb-2">
+                          <p class="m-0 text-secondary">Status</p>
+                          <h6 class="m-0">
+                            {{
+                              userDetails?.isSpecialId ? "Active" : "Not Active"
+                            }}
+                          </h6>
+                        </div>
+                        <div class="mb-2">
+                          <p class="m-0 text-secondary">Special ID</p>
+                          <h6 class="m-0">
+                            {{
+                              userDetails?.isSpecialId
+                                ? userDetails?.userId
+                                : "-"
+                            }}
+                          </h6>
+                        </div>
+                        <div class="mb-0">
+                          <p class="m-0 text-secondary">Valid Till</p>
+                          <h6 class="m-0">
+                            {{
+                              userDetails?.specialIdValidity
+                                ? (userDetails?.specialIdValidity
+                                  | date: "medium")
+                                : "-"
+                            }}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
             <mat-tab label="Room accessories"></mat-tab>
           </mat-tab-group>
         </div>

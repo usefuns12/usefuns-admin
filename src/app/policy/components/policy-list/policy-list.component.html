@@ -1,0 +1,295 @@
+<div class="policy-container">
+  <div class="header mb-4">
+    <h2>Policy Management</h2>
+  </div>
+
+  <div class="stats-grid row mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Salary Cycles</h5>
+          <div class="stats-list">
+            <div *ngIf="salaryStats.length === 0" class="text-muted">
+              No salary stats available
+            </div>
+            <div *ngFor="let stat of salaryStats" class="stat-row">
+              <span class="stat-label">{{ stat._id }}:</span>
+              <strong class="stat-value">{{ stat.count }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Commission Cycles</h5>
+          <div class="stats-list">
+            <div *ngIf="commissionStats.length === 0" class="text-muted">
+              No commission stats available
+            </div>
+            <div *ngFor="let stat of commissionStats" class="stat-row">
+              <span class="stat-label">{{ stat._id }}:</span>
+              <strong class="stat-value">{{ stat.count }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-grid row">
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Host Salary Policy</h5>
+          <button
+            class="btn btn-primary"
+            (click)="showSalaryPolicyModal = true"
+          >
+            Configure Policy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Agency Commission Policy</h5>
+          <button
+            class="btn btn-primary"
+            (click)="showCommissionPolicyModal = true"
+          >
+            Configure Policy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Process Salary Cycles</h5>
+          <button class="btn btn-warning" (click)="processSalaryCycles()">
+            Process Cycles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Pay All Salaries</h5>
+          <button class="btn btn-success" (click)="payAllSalaries()">
+            Pay Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Calculate Commissions</h5>
+          <button class="btn btn-warning" (click)="calculateCommissions()">
+            Calculate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Pay All Commissions</h5>
+          <button class="btn btn-success" (click)="payAllCommissions()">
+            Pay Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary Policy Modal -->
+  <div class="modal-backdrop" *ngIf="showSalaryPolicyModal"></div>
+  <div class="modal d-block" *ngIf="showSalaryPolicyModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Host Salary Policy</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="showSalaryPolicyModal = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group mb-3">
+            <label class="form-label">Min Days</label>
+            <input
+              type="number"
+              [(ngModel)]="salaryPolicyForm.minDays"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Max Days</label>
+            <input
+              type="number"
+              [(ngModel)]="salaryPolicyForm.maxDays"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Diamond Target</label>
+            <input
+              type="number"
+              [(ngModel)]="salaryPolicyForm.diamondTarget"
+              class="form-control"
+            />
+          </div>
+
+          <h6 class="mt-4 mb-3">Hour Slabs</h6>
+          <div class="table-responsive mb-3">
+            <table class="table table-sm table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Min Hours</th>
+                  <th>Percentage</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let slab of salaryPolicyForm.hourSlabs; let i = index"
+                >
+                  <td>
+                    <input
+                      type="number"
+                      [(ngModel)]="slab.minHours"
+                      class="form-control form-control-sm"
+                      placeholder="Min Hours"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      [(ngModel)]="slab.percentage"
+                      class="form-control form-control-sm"
+                      placeholder="Percentage"
+                    />
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="removeHourSlab(i)"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-sm btn-secondary mb-3" (click)="addHourSlab()">
+            + Add Slab
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            (click)="showSalaryPolicyModal = false"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" (click)="saveSalaryPolicy()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commission Policy Modal -->
+  <div class="modal-backdrop" *ngIf="showCommissionPolicyModal"></div>
+  <div class="modal d-block" *ngIf="showCommissionPolicyModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Agency Commission Policy</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="showCommissionPolicyModal = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="mb-3">Commission Slabs</h6>
+          <div class="table-responsive mb-3">
+            <table class="table table-sm table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Min Ucoins</th>
+                  <th>Percentage</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let slab of commissionPolicyForm.commissionSlabs;
+                    let i = index
+                  "
+                >
+                  <td>
+                    <input
+                      type="number"
+                      [(ngModel)]="slab.minTotalUcoins"
+                      class="form-control form-control-sm"
+                      placeholder="Min Ucoins"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      [(ngModel)]="slab.percentage"
+                      class="form-control form-control-sm"
+                      placeholder="Percentage"
+                    />
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="removeCommissionSlab(i)"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button
+            class="btn btn-sm btn-secondary"
+            (click)="addCommissionSlab()"
+          >
+            + Add Slab
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            (click)="showCommissionPolicyModal = false"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" (click)="saveCommissionPolicy()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

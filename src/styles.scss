@@ -1,14 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../bootstrap-5.3.3-dist/css/bootstrap.min.css";
 @import "./assets/themes/variables.scss";
 @import "@ng-select/ng-select/themes/default.theme.css";
-@import 'ngx-toastr/toastr';
+@import "ngx-toastr/toastr";
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 @supports (scrollbar-width: thin) {
   * {
-      scrollbar-width: thin;
-      scrollbar-color: #444 transparent
+    scrollbar-width: thin;
+    scrollbar-color: #444 transparent;
   }
 }
 
@@ -22,7 +26,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #880777;
 }
 
-.btn:focus, .btn-active {
+.btn:focus,
+.btn-active {
   outline: none;
   box-shadow: none;
 }
@@ -35,39 +40,47 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-input:focus, select:focus{
-  outline: none!important;
-  box-shadow: none!important;
+input:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .form-check {
-  input, label {
+  input,
+  label {
     cursor: pointer;
   }
 }
 
-.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+.ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
   box-shadow: none;
 }
 
 input[type="search"]::-webkit-search-decoration:hover,
 input[type="search"]::-webkit-search-cancel-button:hover {
-    cursor:pointer;
+  cursor: pointer;
 }
 
-.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(
+    .mdc-evolution-chip--disabled
+  ) {
   background-color: $indigo !important;
 }
 
-.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__checkmark {
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled)
+  .mdc-evolution-chip__checkmark {
   color: $white !important;
 }
 
-.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(
+    .mdc-evolution-chip--disabled
+  )
+  .mdc-evolution-chip__text-label {
   color: $white !important;
 }
 
@@ -85,14 +98,12 @@ input[type="search"]::-webkit-search-cancel-button:hover {
 
 /*************** Login Page ***************/
 .login {
-
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(to left, $primary, $secondary);
 
-  .card-container
-  {
+  .card-container {
     width: 50%;
     max-width: 680px;
 
@@ -166,7 +177,8 @@ mat-tab-group.user-forms {
     border-color: $indigo;
   }
 
-  mat-tab-group.user-items, .user-gifts {
+  mat-tab-group.user-items,
+  .user-gifts {
     flex-direction: row;
 
     mat-tab-header {
@@ -186,7 +198,10 @@ mat-tab-group.user-forms {
       border-bottom: none;
       border-right-style: solid;
       border-right-width: var(--mat-tab-header-divider-height, 1px);
-      border-right-color: var(--mat-tab-header-divider-color, var(--mat-sys-surface-variant));
+      border-right-color: var(
+        --mat-tab-header-divider-color,
+        var(--mat-sys-surface-variant)
+      );
     }
 
     img {
@@ -197,21 +212,22 @@ mat-tab-group.user-forms {
       font-weight: 500;
     }
 
-    .time-left, .gift-summ {
-      color: $indigo
+    .time-left,
+    .gift-summ {
+      color: $indigo;
     }
   }
 }
 
 mat-tab-group.user-forms.user-items-active > {
   .mat-mdc-tab-body-wrapper {
+    overflow: initial;
+
+    .mat-mdc-tab-body.mat-mdc-tab-body-active {
       overflow: initial;
 
-      .mat-mdc-tab-body.mat-mdc-tab-body-active {
+      .mat-mdc-tab-body-content {
         overflow: initial;
-
-        .mat-mdc-tab-body-content {
-          overflow: initial;
       }
     }
   }
@@ -258,7 +274,8 @@ mat-sidenav.sidebar {
     overflow: hidden;
   }
 
-  .header, .footer {
+  .header,
+  .footer {
     display: flex;
     align-items: center;
     padding: 16px;
@@ -318,7 +335,8 @@ mat-sidenav-content.mat-drawer-content {
   transition: margin 200ms ease-in-out;
   overflow: initial;
 
-  .sidenav-content .header-content, .shop-items-chips {
+  .sidenav-content .header-content,
+  .shop-items-chips {
     position: sticky;
     top: 64px;
     z-index: 10;
@@ -335,7 +353,8 @@ mat-sidenav-content.collapsed {
 }
 
 mat-toolbar.mat-toolbar {
-  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
   height: 64px;
   position: sticky;
   top: 0;
@@ -366,13 +385,15 @@ mat-toolbar.mat-toolbar {
       border-color: var(--bs-border-color);
     }
 
-    .input-group-text, input {
+    .input-group-text,
+    input {
       background-color: $light;
     }
   }
 }
 
-.users-list, .shop-list {
+.users-list,
+.shop-list {
   table {
     td.status {
       p fa-icon {
@@ -395,10 +416,11 @@ mat-toolbar.mat-toolbar {
 }
 
 mat-divider {
-  border-top-color: #c4c6d0!important;
+  border-top-color: #c4c6d0 !important;
 }
 
-.basic-info, .room-info {
+.basic-info,
+.room-info {
   img {
     width: 200px;
     height: 200px;

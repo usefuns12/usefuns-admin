@@ -71,6 +71,11 @@ export type MenuItem = {
 export class SidebarComponent implements OnInit, OnDestroy {
   menuItems: MenuItem[] = [
     {
+      icon: 'chart-line',
+      label: 'KPI Dashboard',
+      route: 'kpi',
+    },
+    {
       icon: 'user',
       label: 'Users',
       route: 'users',
@@ -112,6 +117,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Quantities',
       route: 'quantities',
     },
+    {
+      icon: 'gift',
+      label: 'Treasure Box Levels',
+      route: 'treasurebox',
+    },
 
     {
       icon: 'gear',
@@ -147,6 +157,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
           icon: 'user-tie',
           label: 'Hosts',
           route: 'hosts',
+        },
+        {
+          icon: 'headset',
+          label: 'Customer Service Rooms',
+          route: 'customer-service-rooms',
         },
       ],
     },
@@ -193,6 +208,43 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: 'reports',
     },
     {
+      icon: 'wallet',
+      label: 'Salary Management',
+      route: 'salary',
+      subItems: [
+        {
+          icon: 'money-bill-wave',
+          label: 'Host Salaries',
+          route: 'salary',
+        },
+        {
+          icon: 'coins',
+          label: 'Admin Actions',
+          route: 'admin-salary',
+        },
+      ],
+    },
+    {
+      icon: 'shield-halved',
+      label: 'Fraud Management',
+      route: 'fraud',
+    },
+    {
+      icon: 'scale-balanced',
+      label: 'Dispute Management',
+      route: 'dispute',
+    },
+    {
+      icon: 'bell',
+      label: 'Alert Management',
+      route: 'alert',
+    },
+    {
+      icon: 'file-contract',
+      label: 'Policy Management',
+      route: 'policy',
+    },
+    {
       icon: 'gear',
       label: 'Settings',
       route: 'settings',
@@ -211,7 +263,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ];
 
   collapsed = signal(false);
-  nestedMenuOpen = signal(false);
+  nestedMenuOpen = signal<string | null>(null);
   isDrawerOpen = signal(false);
   drawerContent: any = null;
   dataInjector: any = null;
@@ -222,12 +274,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private drawerService: DrawerService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.drawerSubscription = this.drawerService.drawer$.subscribe(() =>
-      this.toggleDrawer()
+      this.toggleDrawer(),
     );
   }
 
@@ -236,7 +288,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.nestedMenuOpen.set(!this.nestedMenuOpen());
+    // Toggle the menu - if clicking same menu, close it; otherwise open the new one
+    this.nestedMenuOpen.set(
+      this.nestedMenuOpen() === item.label ? null : item.label,
+    );
   }
 
   openDrawer(title: string, component: any, Id: any) {

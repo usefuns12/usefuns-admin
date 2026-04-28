@@ -10,7 +10,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'users',
     loadChildren: () =>
       import('../../components/user-list/user.routes').then(
-        (m) => m.USER_ROUTES
+        (m) => m.USER_ROUTES,
       ),
     data: { breadcrumb: 'Users' },
   },
@@ -30,16 +30,24 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'quantities',
     loadChildren: () =>
       import('../../components/quantity/quantity.routes').then(
-        (m) => m.QUANTITY_ROUTES
+        (m) => m.QUANTITY_ROUTES,
       ),
     data: { breadcrumb: 'Quantities' },
+  },
+  {
+    path: 'treasurebox',
+    loadChildren: () =>
+      import('../../components/treasurebox-level/treasurebox-level.routes').then(
+        (m) => m.TREASUREBOX_LEVEL_ROUTES,
+      ),
+    data: { breadcrumb: 'Treasure Box Levels' },
   },
 
   {
     path: 'country-managers',
     loadChildren: () =>
       import('../../components/country-manager/country-manager.routes').then(
-        (m) => m.COUNTRY_MANAGERS_ROUTES
+        (m) => m.COUNTRY_MANAGERS_ROUTES,
       ),
     data: { breadcrumb: 'Country Managers' },
   },
@@ -47,7 +55,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'country-admin',
     loadChildren: () =>
       import('../../components/country-admin/country-admin.routes').then(
-        (m) => m.COUNTRY_ADMINS_ROUTES
+        (m) => m.COUNTRY_ADMINS_ROUTES,
       ),
     data: { breadcrumb: 'Country Admins' },
   },
@@ -55,7 +63,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'admins',
     loadChildren: () =>
       import('../../components/admin/admin.routes').then(
-        (m) => m.ADMINS_ROUTES
+        (m) => m.ADMINS_ROUTES,
       ),
     data: { breadcrumb: 'Admins' },
   },
@@ -63,7 +71,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'sub-admins',
     loadChildren: () =>
       import('../../components/sub-admin/sub-admin.routes').then(
-        (m) => m.ADMINS_ROUTES
+        (m) => m.ADMINS_ROUTES,
       ),
     data: { breadcrumb: 'Sub Admins' },
   },
@@ -71,7 +79,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'agencies',
     loadChildren: () =>
       import('../../components/agency/agency.routes').then(
-        (m) => m.AGENCY_ROUTES
+        (m) => m.AGENCY_ROUTES,
       ),
     data: { breadcrumb: 'Agencies' },
   },
@@ -82,10 +90,18 @@ export const SIDEBAR_ROUTES: Routes = [
     data: { breadcrumb: 'Hosts' },
   },
   {
+    path: 'customer-service-rooms',
+    loadChildren: () =>
+      import('../../components/customer-service-room/customer-service-room.routes').then(
+        (m) => m.CUSTOMER_SERVICE_ROOM_ROUTES,
+      ),
+    data: { breadcrumb: 'Customer Service Rooms' },
+  },
+  {
     path: 'carousels',
     loadChildren: () =>
       import('../../components/carousels/carousels.routes').then(
-        (m) => m.CAROUSEL_ROUTES
+        (m) => m.CAROUSEL_ROUTES,
       ),
     data: { breadcrumb: 'Carousel' },
   },
@@ -93,7 +109,7 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'reports',
     loadChildren: () =>
       import('../../components/report-list/report-list.routes').then(
-        (m) => m.REPORT_ROUTES
+        (m) => m.REPORT_ROUTES,
       ),
     data: { breadcrumb: 'Reports' },
   },
@@ -101,8 +117,54 @@ export const SIDEBAR_ROUTES: Routes = [
     path: 'settings',
     loadChildren: () =>
       import('../../components/api-config/api-config.routes').then(
-        (m) => m.APICONFIG_ROUTES
+        (m) => m.APICONFIG_ROUTES,
       ),
     data: { breadcrumb: 'Settings' },
+  },
+  {
+    path: 'salary',
+    loadChildren: () =>
+      import('../../components/salary/salary.routes').then(
+        (m) => m.SALARY_ROUTES,
+      ),
+    data: { breadcrumb: 'Salary Management' },
+  },
+  {
+    path: 'kpi',
+    loadChildren: () =>
+      import('../../components/kpi/kpi.routes').then((m) => m.kpiRoutes),
+    data: { breadcrumb: 'KPI Dashboard' },
+  },
+  {
+    path: 'admin-salary',
+    loadChildren: () =>
+      import('../../components/admin-salary/admin-salary.routes').then(
+        (m) => m.ADMIN_SALARY_ROUTES,
+      ),
+    data: { breadcrumb: 'Admin Salary Management' },
+  },
+  {
+    path: 'policy',
+    loadChildren: () =>
+      import('../../policy/policy.routes').then((m) => m.POLICY_ROUTES),
+    data: { breadcrumb: 'Policy Management' },
+  },
+  {
+    path: 'fraud',
+    loadChildren: () =>
+      import('../../fraud/fraud.routes').then((m) => m.FRAUD_ROUTES),
+    data: { breadcrumb: 'Fraud Management' },
+  },
+  {
+    path: 'dispute',
+    loadChildren: () =>
+      import('../../dispute/dispute.routes').then((m) => m.DISPUTE_ROUTES),
+    data: { breadcrumb: 'Dispute Management' },
+  },
+  {
+    path: 'alert',
+    loadChildren: () =>
+      import('../../alert/alert.routes').then((m) => m.ALERT_ROUTES),
+    data: { breadcrumb: 'Alert Management' },
   },
 ];

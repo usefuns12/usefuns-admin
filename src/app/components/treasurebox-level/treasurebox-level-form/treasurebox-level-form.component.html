@@ -1,0 +1,339 @@
+<form [formGroup]="levelForm" (ngSubmit)="submit()" class="p-4">
+  <div style="max-height: 70vh; overflow-y: auto; padding-right: 8px">
+    <div class="mb-3">
+      <label class="form-label">Level</label>
+      <input type="number" class="form-control" formControlName="level" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image</label>
+      <div class="border rounded p-3 text-center">
+        <img
+          *ngIf="image"
+          [src]="image"
+          alt="treasurebox"
+          class="img-fluid mx-auto"
+          style="max-height: 200px"
+        />
+        <div *ngIf="!image" class="text-muted">No image selected</div>
+        <div class="mt-2">
+          @if (!imageChanged()) {
+            <button
+              class="btn btn-sm btn-primary"
+              type="button"
+              (click)="openImageDialog()"
+              [disabled]="isLoading"
+            >
+              {{ image ? "Change Image" : "Select Image" }}
+            </button>
+          }
+        </div>
+        @if (imageChanged()) {
+          <div class="mt-2">
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="restoreImage()"
+              [disabled]="isLoading"
+            >
+              Cancel
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Diamond To Open</label>
+      <input
+        type="number"
+        class="form-control"
+        formControlName="diamondToOpen"
+      />
+    </div>
+
+    <div class="mb-4 mt-2" formArrayName="person1Items">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label m-0">Person 1 Items</label>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          type="button"
+          (click)="addItem(person1Items)"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <div
+        class="border rounded p-3 mb-3"
+        *ngFor="let item of person1Items.controls; index as i"
+        [formGroupName]="i"
+      >
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" formControlName="type">
+              <option *ngFor="let type of itemTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-5" *ngIf="item.get('type')?.value !== 'item'">
+            <label class="form-label">Amount</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+            />
+          </div>
+          <div class="col-md-4" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Item</label>
+            <select class="form-select" formControlName="itemId">
+              <option [ngValue]="null">Select item</option>
+              <option
+                *ngFor="let shopItem of selectableItems"
+                [value]="shopItem._id"
+              >
+                {{ shopItem.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Validity (days)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="validDays"
+            />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button
+              class="btn btn-outline-danger w-100"
+              type="button"
+              (click)="removeItem(person1Items, i)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4 mt-2" formArrayName="person2Items">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label m-0">Person 2 Items</label>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          type="button"
+          (click)="addItem(person2Items)"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <div
+        class="border rounded p-3 mb-3"
+        *ngFor="let item of person2Items.controls; index as i"
+        [formGroupName]="i"
+      >
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" formControlName="type">
+              <option *ngFor="let type of itemTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-5" *ngIf="item.get('type')?.value !== 'item'">
+            <label class="form-label">Amount</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+            />
+          </div>
+          <div class="col-md-4" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Item</label>
+            <select class="form-select" formControlName="itemId">
+              <option [ngValue]="null">Select item</option>
+              <option
+                *ngFor="let shopItem of selectableItems"
+                [value]="shopItem._id"
+              >
+                {{ shopItem.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Validity (days)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="validDays"
+            />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button
+              class="btn btn-outline-danger w-100"
+              type="button"
+              (click)="removeItem(person2Items, i)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4 mt-2" formArrayName="person3Items">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label m-0">Person 3 Items</label>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          type="button"
+          (click)="addItem(person3Items)"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <div
+        class="border rounded p-3 mb-3"
+        *ngFor="let item of person3Items.controls; index as i"
+        [formGroupName]="i"
+      >
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" formControlName="type">
+              <option *ngFor="let type of itemTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-5" *ngIf="item.get('type')?.value !== 'item'">
+            <label class="form-label">Amount</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+            />
+          </div>
+          <div class="col-md-4" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Item</label>
+            <select class="form-select" formControlName="itemId">
+              <option [ngValue]="null">Select item</option>
+              <option
+                *ngFor="let shopItem of selectableItems"
+                [value]="shopItem._id"
+              >
+                {{ shopItem.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Validity (days)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="validDays"
+            />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button
+              class="btn btn-outline-danger w-100"
+              type="button"
+              (click)="removeItem(person3Items, i)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4 mt-2" formArrayName="otherItems">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label m-0">Other Items</label>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          type="button"
+          (click)="addItem(otherItems)"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <div
+        class="border rounded p-3 mb-3"
+        *ngFor="let item of otherItems.controls; index as i"
+        [formGroupName]="i"
+      >
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" formControlName="type">
+              <option *ngFor="let type of itemTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-5" *ngIf="item.get('type')?.value !== 'item'">
+            <label class="form-label">Amount</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+            />
+          </div>
+          <div class="col-md-4" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Item</label>
+            <select class="form-select" formControlName="itemId">
+              <option [ngValue]="null">Select item</option>
+              <option
+                *ngFor="let shopItem of selectableItems"
+                [value]="shopItem._id"
+              >
+                {{ shopItem.name }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3" *ngIf="item.get('type')?.value === 'item'">
+            <label class="form-label">Validity (days)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="validDays"
+            />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button
+              class="btn btn-outline-danger w-100"
+              type="button"
+              (click)="removeItem(otherItems, i)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-danger mb-3" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="d-flex gap-2 mt-3">
+    <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+      {{ mode === "add" ? "Add Level" : "Update Level" }}
+    </button>
+    <button
+      class="btn btn-outline-secondary"
+      type="button"
+      (click)="dialogRef.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

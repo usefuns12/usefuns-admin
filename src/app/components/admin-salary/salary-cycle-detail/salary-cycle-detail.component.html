@@ -1,0 +1,369 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center pt-4 pb-3">
+    <h4 class="mb-0">Salary Cycle Details</h4>
+    <div>
+      <button class="btn btn-secondary btn-sm me-2" (click)="goBack()">
+        <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
+        Back
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="loadCycleDetails(cycle._id)"
+      >
+        <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && cycle">
+    <!-- Cycle Information -->
+    <div class="card mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h5 class="mb-0">Cycle Information</h5>
+        <span class="badge" [ngClass]="getStatusClass(cycle.status)">
+          {{ cycle.status }}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Cycle ID:</strong> {{ cycle._id }}</p>
+            <p>
+              <strong>Host:</strong>
+              {{ cycle.hostId?.hostName || "N/A" }}
+            </p>
+            <p><strong>Host ID:</strong> {{ cycle.hostId?._id || "N/A" }}</p>
+            <p>
+              <strong>Agency:</strong>
+              {{ cycle.hostId?.agencyRef?.agencyName || "No Agency" }}
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p>
+              <strong>Cycle Start:</strong> {{ formatDate(cycle.cycleStart) }}
+            </p>
+            <p><strong>Cycle End:</strong> {{ formatDate(cycle.cycleEnd) }}</p>
+            <p>
+              <strong>Created At:</strong> {{ formatDate(cycle.createdAt) }}
+            </p>
+            <p *ngIf="cycle.recalculatedAt">
+              <strong>Recalculated At:</strong>
+              {{ formatDate(cycle.recalculatedAt) }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary Calculation -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Salary Calculation</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <p class="text-muted mb-1">Total Diamonds</p>
+            <h4>{{ cycle.totalDiamonds || 0 }}</h4>
+          </div>
+          <div class="col-md-3">
+            <p class="text-muted mb-1">Valid Diamonds</p>
+            <h4>{{ cycle.validDiamonds || 0 }}</h4>
+          </div>
+          <div class="col-md-3">
+            <p class="text-muted mb-1">Total Hours</p>
+            <h4>{{ (cycle.totalHostHours || 0).toFixed(2) }}</h4>
+          </div>
+          <div class="col-md-3">
+            <p class="text-muted mb-1">Salary Percentage</p>
+            <h4>{{ (cycle.salaryPercentage || 0).toFixed(2) }}%</h4>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <p class="text-muted mb-1">Salary (UCoins)</p>
+            <h3 class="text-success">{{ cycle.salaryUcoins || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recalculation History -->
+    <div
+      class="card mb-4"
+      *ngIf="
+        cycle.recalculationHistory && cycle.recalculationHistory.length > 0
+      "
+    >
+      <div class="card-header">
+        <h5 class="mb-0">Recalculation History</h5>
+      </div>
+      <div class="card-body">
+        <div
+          class="alert alert-info"
+          *ngFor="let history of cycle.recalculationHistory"
+        >
+          <p><strong>Date:</strong> {{ formatDate(history.timestamp) }}</p>
+          <p><strong>Reason:</strong> {{ history.reason }}</p>
+          <p>
+            <strong>Amount Change:</strong> {{ history.oldAmount }} →
+            {{ history.newAmount }} ({{
+              history.newAmount - history.oldAmount
+            }})
+          </p>
+          <p *ngIf="history.changes">
+            <strong>Adjustments:</strong> Diamonds:
+            {{ history.changes.diamondAdjustment }}, Hours:
+            {{ history.changes.hourAdjustment }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Admin Actions</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            class="btn btn-warning"
+            (click)="openRecalculateModal()"
+            [disabled]="cycle.status === 'paid'"
+          >
+            <fa-icon [icon]="['fas', 'calculator']"></fa-icon>
+            Recalculate
+          </button>
+
+          <button
+            class="btn btn-info"
+            (click)="openHoldModal()"
+            *ngIf="cycle.status !== 'paid' && cycle.status !== 'held'"
+          >
+            <fa-icon [icon]="['fas', 'pause']"></fa-icon>
+            Hold Payment
+          </button>
+
+          <button
+            class="btn btn-success"
+            (click)="releaseCycle()"
+            *ngIf="cycle.status === 'held'"
+          >
+            <fa-icon [icon]="['fas', 'play']"></fa-icon>
+            Release Hold
+          </button>
+
+          <button
+            class="btn btn-primary"
+            (click)="openForcePayoutModal()"
+            *ngIf="cycle.status !== 'paid' && cycle.status !== 'held'"
+          >
+            <fa-icon [icon]="['fas', 'bolt']"></fa-icon>
+            Force Payout
+          </button>
+
+          <button
+            class="btn btn-danger"
+            (click)="openReverseModal()"
+            *ngIf="cycle.status === 'paid'"
+          >
+            <fa-icon [icon]="['fas', 'undo']"></fa-icon>
+            Reverse Payment
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hold/Release Information -->
+    <div class="card mb-4" *ngIf="cycle.status === 'held' && cycle.holdReason">
+      <div class="card-header bg-warning">
+        <h5 class="mb-0">Hold Information</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Reason:</strong> {{ cycle.holdReason }}</p>
+        <p><strong>Held At:</strong> {{ formatDate(cycle.heldAt) }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recalculate Modal -->
+<div
+  class="modal"
+  [class.show]="showRecalculateModal"
+  *ngIf="showRecalculateModal"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Recalculate Salary Cycle</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Reason *</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [(ngModel)]="recalculateForm.reason"
+            placeholder="Explain why recalculation is needed"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Diamond Adjustment</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="recalculateForm.diamondAdjustment"
+            placeholder="Enter positive or negative value"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Hour Adjustment</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            [(ngModel)]="recalculateForm.hourAdjustment"
+            placeholder="Enter positive or negative value"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-warning" (click)="recalculate()">
+          Recalculate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hold Modal -->
+<div class="modal" [class.show]="showHoldModal" *ngIf="showHoldModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Hold Salary Cycle</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Reason *</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [(ngModel)]="actionReason"
+            placeholder="Explain why this cycle should be held"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-warning" (click)="holdCycle()">
+          Hold Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Force Payout Modal -->
+<div
+  class="modal"
+  [class.show]="showForcePayoutModal"
+  *ngIf="showForcePayoutModal"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Force Payout</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning">
+          <strong>Warning:</strong> This will immediately credit the host's
+          wallet, bypassing the normal waiting period.
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Reason *</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [(ngModel)]="actionReason"
+            placeholder="Explain why immediate payout is needed"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="forcePayout()">
+          Force Payout
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reverse Payment Modal -->
+<div class="modal" [class.show]="showReverseModal" *ngIf="showReverseModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Reverse Payment</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          <strong>Critical Action:</strong> This will deduct the salary amount
+          from the host's wallet. Ensure the wallet has sufficient balance.
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Reason *</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [(ngModel)]="actionReason"
+            placeholder="Explain why this payment needs to be reversed"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="reversePayment()">
+          Reverse Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal-backdrop"
+  *ngIf="
+    showRecalculateModal ||
+    showHoldModal ||
+    showForcePayoutModal ||
+    showReverseModal
+  "
+  (click)="closeModal()"
+></div>

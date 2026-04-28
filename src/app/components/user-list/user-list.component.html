@@ -73,17 +73,32 @@
                   <fa-icon
                     [icon]="user.isActiveUser ? 'ban' : ['far', 'circle-check']"
                     class="flex-grow-1"
-                    [ngClass]="user.isActiveUser ? 'text-danger' : 'text-success'"
+                    [ngClass]="
+                      user.isActiveUser ? 'text-danger' : 'text-success'
+                    "
                   ></fa-icon>
-                  {{user.isActiveUser ? 'Ban user' : 'Unban user'}}
+                  {{ user.isActiveUser ? "Ban user" : "Unban user" }}
                 </div>
                 <div mat-menu-item (click)="banUser(user, true)">
                   <fa-icon
                     icon="mobile-screen"
                     class="flex-grow-1"
-                    [ngClass]="user.isActiveDevice ? 'text-danger' : 'text-success'"
+                    [ngClass]="
+                      user.isActiveDevice ? 'text-danger' : 'text-success'
+                    "
                   ></fa-icon>
-                  {{user.isActiveDevice ? 'Ban device' : 'Unban device'}}
+                  {{ user.isActiveDevice ? "Ban device" : "Unban device" }}
+                </div>
+                <div mat-menu-item (click)="toggleMysteryMen(user)">
+                  <fa-icon
+                    icon="user-secret"
+                    class="flex-grow-1 text-info"
+                  ></fa-icon>
+                  {{
+                    user.isMysteryMen
+                      ? "Remove Mystery Men"
+                      : "Make Mystery Men"
+                  }}
                 </div>
               </mat-menu>
             </div>

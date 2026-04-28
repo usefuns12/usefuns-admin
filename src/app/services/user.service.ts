@@ -18,25 +18,25 @@ export class UserService {
 
   getUsers = (page?: number, limit?: number): Observable<any> => {
     return this.http.get(
-      `${environment.baseUrl}/${ApiEndpoints.users.GET_USERS}`
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_USERS}`,
     );
   };
 
   getUnAssignedUsers = (): Observable<any> => {
     return this.http.get(
-      `${environment.baseUrl}/${ApiEndpoints.users.GET_UNASSIGNED_USERS}`
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_UNASSIGNED_USERS}`,
     );
   };
 
   getUserDetails = (userId: string): Observable<any> => {
     return this.http.get(
-      `${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_USER_DETAILS}/${userId}`,
     );
   };
 
   getGifts = (userId: string): Observable<any> => {
     return this.http.get(
-      `${environment.baseUrl}/${ApiEndpoints.users.GET_GIFTS}/${userId}`
+      `${environment.baseUrl}/${ApiEndpoints.users.GET_GIFTS}/${userId}`,
     );
   };
 
@@ -51,55 +51,62 @@ export class UserService {
   updateUser = (userId: string, userPost: FormData): Observable<any> => {
     return this.http.put(
       `${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`,
-      userPost
+      userPost,
     );
   };
 
   updateUserRoom = (roomId: string, roomPost: FormData): Observable<any> => {
     return this.http.put(
       `${environment.baseUrl}/${ApiEndpoints.rooms.UPDATE_ROOM}/${roomId}`,
-      roomPost
+      roomPost,
     );
   };
 
   searchUsers = (term: string): Observable<any> => {
     return this.http.get(
-      `${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`
+      `${environment.baseUrl}/${ApiEndpoints.users.SEARCH_USER}/${term}`,
     );
   };
 
   addShopItem = (payload: any): Observable<any> => {
     return this.http.post(
       `${environment.baseUrl}/${ApiEndpoints.users.SHOP_ITEM}`,
-      payload
+      payload,
     );
   };
 
   assistItems = (payload: any): Observable<any> => {
     return this.http.post(
       `${environment.baseUrl}/${ApiEndpoints.users.ASSIST_ITEMS}`,
-      payload
+      payload,
     );
   };
 
   removeShopItem = (payload: any): Observable<any> => {
     return this.http.post(
       `${environment.baseUrl}/${ApiEndpoints.users.REMOVE_SHOP_ITEM}`,
-      payload
+      payload,
     );
   };
 
   banDevice = (userId: string, payload: any): Observable<any> => {
     return this.http.put(
       `${environment.baseUrl}/${ApiEndpoints.users.UPDATE_USER}/${userId}`,
-      payload
+      payload,
     );
   };
 
   assistSpecialIdItems = (payload: any): Observable<any> => {
     return this.http.post(
       `${environment.baseUrl}/${ApiEndpoints.users.ASSIST_SPECIAL_ID_ITEMS}`,
-      payload
+      payload,
+    );
+  };
+
+  toggleMysteryMen = (userId: string): Observable<any> => {
+    return this.http.post(
+      `${environment.baseUrl}/${ApiEndpoints.users.TOGGLE_MYSTERY_MEN}/${userId}`,
+      {},
     );
   };
 }

@@ -1,0 +1,160 @@
+.policy-container {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 30px;
+
+  h2 {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.stats-grid {
+  margin-bottom: 30px;
+
+  .card {
+    border: none;
+
+    .card-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  }
+
+  .stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .stat-value {
+      color: #007bff;
+      font-size: 18px;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.actions-grid {
+  .card {
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .btn {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+}
+
+.modal {
+  &.d-block {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-dialog {
+    margin: 0;
+  }
+
+  .modal-content {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+    .modal-header {
+      background: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+
+      .modal-title {
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    .modal-body {
+      .form-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      h6 {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .table {
+        font-size: 14px;
+
+        input {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .modal-footer {
+      background: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+    }
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.slab-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  input {
+    flex: 1;
+  }
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}

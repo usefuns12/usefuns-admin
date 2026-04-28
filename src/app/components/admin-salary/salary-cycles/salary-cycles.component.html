@@ -1,0 +1,201 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center pt-4 pb-3">
+    <h4 class="mb-0">Salary Cycles Management</h4>
+    <button class="btn btn-primary btn-sm" (click)="loadData()">
+      <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4" *ngIf="stats.overall">
+    <div class="col-md-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Total Cycles</h6>
+          <h3 class="mb-0">{{ stats.overall.totalCycles || 0 }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Total Salary Paid</h6>
+          <h3 class="mb-0">{{ stats.overall.totalSalaryPaid || 0 }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Average Salary</h6>
+          <h3 class="mb-0">{{ (stats.overall.avgSalary || 0).toFixed(2) }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Status Breakdown</h6>
+          <div class="d-flex gap-2 flex-wrap">
+            <span
+              *ngFor="let stat of stats.byStatus"
+              class="badge"
+              [ngClass]="getStatusClass(stat._id)"
+            >
+              {{ stat._id }}: {{ stat.count }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Filters</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" [(ngModel)]="filters.status">
+            <option *ngFor="let opt of statusOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Host ID</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filters.hostId"
+            placeholder="Enter Host ID"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Start Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="filters.startDate"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">End Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="filters.endDate"
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <button class="btn btn-primary me-2" (click)="applyFilters()">
+            <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+            Apply Filters
+          </button>
+          <button class="btn btn-secondary" (click)="resetFilters()">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Salary Cycles Table -->
+  <div class="card" *ngIf="!isLoading">
+    <div class="card-header">
+      <h5 class="mb-0">Salary Cycles</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Cycle ID</th>
+              <th>Host Name</th>
+              <th>Cycle Period</th>
+              <th>Diamonds</th>
+              <th>Hours</th>
+              <th>Salary (UCoins)</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cycle of cycles">
+              <td>{{ cycle._id.substring(0, 8) }}...</td>
+              <td>{{ cycle.hostId?.hostName || "N/A" }}</td>
+              <td>
+                {{ formatDate(cycle.cycleStart) }} -
+                {{ formatDate(cycle.cycleEnd) }}
+              </td>
+              <td>{{ cycle.totalDiamonds || 0 }}</td>
+              <td>{{ (cycle.totalHostHours || 0).toFixed(2) }}</td>
+              <td>{{ cycle.salaryUcoins || 0 }}</td>
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(cycle.status)">
+                  {{ cycle.status }}
+                </span>
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="viewDetails(cycle._id)"
+                >
+                  <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="cycles.length === 0">
+              <td colspan="8" class="text-center text-muted py-4">
+                No salary cycles found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <nav *ngIf="pagination.pages > 1" class="mt-3">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="pagination.page === 1">
+            <button class="page-link" (click)="changePage(pagination.page - 1)">
+              Previous
+            </button>
+          </li>
+          <li
+            class="page-item"
+            *ngFor="let p of [].constructor(pagination.pages); let i = index"
+            [class.active]="pagination.page === i + 1"
+          >
+            <button class="page-link" (click)="changePage(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+          <li
+            class="page-item"
+            [class.disabled]="pagination.page === pagination.pages"
+          >
+            <button class="page-link" (click)="changePage(pagination.page + 1)">
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

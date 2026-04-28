@@ -17,12 +17,16 @@ export class ApiEndpoints {
     REMOVE_SHOP_ITEM: VersionConstant.v1 + '/user/removeItem',
     BAN_DEVICE: VersionConstant.v1 + '/user/banDevice',
     ASSIST_SPECIAL_ID_ITEMS: VersionConstant.v1 + '/user/assistSpecialIdItems',
+    TOGGLE_MYSTERY_MEN: VersionConstant.v1 + '/user/toggle-mystery-men',
   };
 
   public static rooms = {
     GET_ROOMS: VersionConstant.v1 + '/user/getAll/limitedData',
     GET_ROOM_DETAILS: VersionConstant.v1 + '/user/getById',
     UPDATE_ROOM: VersionConstant.v1 + '/room/update',
+    GET_COUNTRY_ADMIN_ROOMS: VersionConstant.v1 + '/room/country-admin-rooms',
+    CONVERT_CUSTOMER_SERVICE_ROOM:
+      VersionConstant.v1 + '/room/convert-customer-service',
   };
 
   public static shop = {
@@ -62,6 +66,12 @@ export class ApiEndpoints {
     ADD_APIKEY: VersionConstant.v1 + '/apiConfig/add',
     UPDATE_APIKEY: VersionConstant.v1 + '/apiConfig/update',
     DELETE_APIKEY: VersionConstant.v1 + '/apiConfig/delete',
+  };
+
+  public static treasurebox = {
+    GET_LEVELS: VersionConstant.v1 + '/treasurebox/levels',
+    CREATE_LEVEL: VersionConstant.v1 + '/treasurebox/level',
+    UPDATE_LEVEL: VersionConstant.v1 + '/treasurebox/level',
   };
 
   public static csv = {
@@ -131,5 +141,103 @@ export class ApiEndpoints {
     ADD_HOST: VersionConstant.v1 + '/hosts/create',
     UPDATE_HOST: VersionConstant.v1 + '/hosts',
     DELETE_HOST: VersionConstant.v1 + '/hosts',
+  };
+
+  public static salary = {
+    GET_SALARY_CYCLES: VersionConstant.v1 + '/admin/salary/salary-cycles',
+    GET_SALARY_CYCLE_STATS:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/stats',
+    GET_SALARY_CYCLE_BY_ID:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id',
+    RECALCULATE_SALARY_CYCLE:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id/recalculate',
+    HOLD_SALARY_CYCLE:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id/hold',
+    RELEASE_SALARY_CYCLE:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id/release',
+    FORCE_PAYOUT_SALARY_CYCLE:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id/force-payout',
+    REVERSE_SALARY_PAYMENT:
+      VersionConstant.v1 + '/admin/salary/salary-cycles/:id/reverse',
+    GET_AGENCY_COMMISSIONS:
+      VersionConstant.v1 + '/admin/salary/agency-commissions',
+    GET_AGENCY_COMMISSION_STATS:
+      VersionConstant.v1 + '/admin/salary/agency-commissions/stats',
+    GET_AGENCY_COMMISSION_BY_ID:
+      VersionConstant.v1 + '/admin/salary/agency-commissions/:id',
+    UNLOCK_FUNDS: VersionConstant.v1 + '/admin/salary/transactions/:id/unlock',
+    RELOCK_FUNDS: VersionConstant.v1 + '/admin/salary/transactions/:id/relock',
+    GET_WALLET_LOCK_STATUS:
+      VersionConstant.v1 + '/admin/salary/wallet-lock-status/:userId',
+  };
+
+  public static kpi = {
+    GET_DASHBOARD_SUMMARY: VersionConstant.v1 + '/admin/kpi/dashboard',
+    GET_SYSTEM_HEALTH: VersionConstant.v1 + '/admin/kpi/system-health',
+    GET_WALLET_HEALTH: VersionConstant.v1 + '/admin/kpi/wallet-health',
+    GET_SALARY_CYCLE_HEALTH:
+      VersionConstant.v1 + '/admin/kpi/salary-cycle-health',
+    GET_GIFT_ANOMALIES: VersionConstant.v1 + '/admin/kpi/gift-anomalies',
+  };
+
+  public static policy = {
+    GET_ALL_POLICIES: VersionConstant.v1 + '/admin/policies',
+    CREATE_HOST_SALARY_POLICY: VersionConstant.v1 + '/admin/policies/salary',
+    UPDATE_HOST_SALARY_POLICY:
+      VersionConstant.v1 + '/admin/policies/salary/:id',
+    DELETE_SALARY_POLICY: VersionConstant.v1 + '/admin/policies/salary/:id',
+    CREATE_COMMISSION_POLICY: VersionConstant.v1 + '/admin/policies/commission',
+    UPDATE_COMMISSION_POLICY:
+      VersionConstant.v1 + '/admin/policies/commission/:id',
+    PROCESS_SALARY_CYCLES:
+      VersionConstant.v1 + '/admin/policies/salary/process-cycles',
+    PAY_ALL_SALARIES: VersionConstant.v1 + '/admin/policies/salary/pay-all',
+    CALCULATE_COMMISSIONS:
+      VersionConstant.v1 + '/admin/policies/commission/calculate',
+    PAY_ALL_COMMISSIONS:
+      VersionConstant.v1 + '/admin/policies/commission/pay-all',
+    GET_SALARY_STATS: VersionConstant.v1 + '/admin/policies/salary/stats',
+    GET_COMMISSION_STATS:
+      VersionConstant.v1 + '/admin/policies/commission/stats',
+  };
+
+  public static fraud = {
+    LIST_FRAUD_ACTIONS: VersionConstant.v1 + '/admin/fraud/actions',
+    GET_FRAUD_ACTION: VersionConstant.v1 + '/admin/fraud/actions/:id',
+    GET_TARGET_FRAUD_ACTIONS:
+      VersionConstant.v1 + '/admin/fraud/target/:targetType/:targetRef',
+    GET_FRAUD_STATS: VersionConstant.v1 + '/admin/fraud/stats',
+    CREATE_FRAUD_ACTION: VersionConstant.v1 + '/admin/fraud/actions',
+    RELEASE_FRAUD_ACTION:
+      VersionConstant.v1 + '/admin/fraud/actions/:id/release',
+    EXTEND_FRAUD_ACTION: VersionConstant.v1 + '/admin/fraud/actions/:id/extend',
+    CONVERT_TO_PERMANENT:
+      VersionConstant.v1 + '/admin/fraud/actions/:id/convert-permanent',
+  };
+
+  public static dispute = {
+    LIST_DISPUTES: VersionConstant.v1 + '/admin/disputes',
+    GET_DISPUTE: VersionConstant.v1 + '/admin/disputes/:id',
+    RAISE_DISPUTE: VersionConstant.v1 + '/disputes',
+    GET_MY_DISPUTES: VersionConstant.v1 + '/disputes/my',
+    REVIEW_DISPUTE: VersionConstant.v1 + '/admin/disputes/:id/review',
+    SIMULATE_RECALCULATION:
+      VersionConstant.v1 + '/admin/disputes/:id/recalculate',
+    RESOLVE_DISPUTE: VersionConstant.v1 + '/admin/disputes/:id/resolution',
+    REJECT_DISPUTE: VersionConstant.v1 + '/admin/disputes/:id/reject',
+    APPROVE_ADJUSTMENT: VersionConstant.v1 + '/admin/disputes/:id/approve',
+  };
+
+  public static alert = {
+    LIST_ALERTS: VersionConstant.v1 + '/admin/alerts',
+    GET_ALERT: VersionConstant.v1 + '/admin/alerts/:id',
+    GET_ALERT_STATS: VersionConstant.v1 + '/admin/alerts/stats',
+    GET_ENTITY_ALERTS:
+      VersionConstant.v1 + '/admin/alerts/entity/:referenceType/:referenceId',
+    ACKNOWLEDGE_ALERT: VersionConstant.v1 + '/admin/alerts/:id/acknowledge',
+    RESOLVE_ALERT: VersionConstant.v1 + '/admin/alerts/:id/resolve',
+    ESCALATE_ALERT: VersionConstant.v1 + '/admin/alerts/:id/escalate',
+    BULK_ACKNOWLEDGE: VersionConstant.v1 + '/admin/alerts/bulk/acknowledge',
+    BULK_RESOLVE: VersionConstant.v1 + '/admin/alerts/bulk/resolve',
   };
 }

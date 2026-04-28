@@ -31,14 +31,21 @@
                 item.icon === 'gift' ||
                 item.icon === 'gear' ||
                 item.icon === 'q' ||
-                item.icon === 'user-tie'
+                item.icon === 'wallet' ||
+                item.icon === 'chart-line' ||
+                item.icon === 'user-tie' ||
+                item.icon === 'coins' ||
+                item.icon === 'shield-halved' ||
+                item.icon === 'scale-balanced' ||
+                item.icon === 'bell' ||
+                item.icon === 'file-contract'
                   ? ['fas', item.icon]
                   : ['far', item.icon]
               "
             ></fa-icon>
             <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
             <span matListItemMeta *ngIf="item.subItems?.length && !collapsed()">
-              @if (!nestedMenuOpen()) {
+              @if (nestedMenuOpen() !== item.label) {
               <fa-icon matListItemIcon icon="chevron-down"></fa-icon>
               } @else {
               <fa-icon matListItemIcon icon="chevron-up"></fa-icon>
@@ -66,7 +73,8 @@
             ></fa-icon>
             <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
           </a>
-          @if (item.subItems?.length && nestedMenuOpen() && !collapsed()) {
+          @if (item.subItems?.length && nestedMenuOpen() === item.label &&
+          !collapsed()) {
           <div class="submenu-items" @expandSubMenu>
             <a
               *ngFor="let subItem of item.subItems"
@@ -80,7 +88,10 @@
                 [icon]="
                   subItem.icon === 'crop-simple' ||
                   subItem.icon === 'code' ||
-                  subItem.icon === 'user-tie'
+                  subItem.icon === 'headset' ||
+                  subItem.icon === 'user-tie' ||
+                  subItem.icon === 'money-bill-wave' ||
+                  subItem.icon === 'coins'
                     ? ['fas', subItem.icon]
                     : ['far', subItem.icon]
                 "

@@ -1,0 +1,692 @@
+<div class="container-fluid">
+  <div
+    class="d-flex header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+  >
+    <h4 class="mb-0">KPI Dashboard</h4>
+    <button class="btn btn-primary btn-sm" (click)="refreshData()">
+      <fa-icon [icon]="['fas', 'sync-alt']"></fa-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'dashboard'"
+        (click)="switchTab('dashboard')"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="['fas', 'chart-line']"></fa-icon>
+
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'system'"
+        (click)="switchTab('system')"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="['fas', 'server']"></fa-icon> System Health
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'wallets'"
+        (click)="switchTab('wallets')"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="['fas', 'wallet']"></fa-icon> Wallet Health
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'salary'"
+        (click)="switchTab('salary')"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon> Salary Cycles
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'gifts'"
+        (click)="switchTab('gifts')"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="['fas', 'gift']"></fa-icon> Gift Anomalies
+      </a>
+    </li>
+  </ul>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Dashboard Summary Tab -->
+  <div *ngIf="activeTab === 'dashboard' && !isLoading">
+    <div class="row">
+      <!-- Active Users Card -->
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Active Users</h6>
+            <h3 class="mb-0">{{ dashboardSummary?.activeUsers || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Hosts Card -->
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Active Hosts</h6>
+            <h3 class="mb-0">{{ dashboardSummary?.activeHosts || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Agencies Card -->
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Active Agencies</h6>
+            <h3 class="mb-0">{{ dashboardSummary?.activeAgencies || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Disputes Card -->
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Open Disputes</h6>
+            <h3 class="mb-0">{{ dashboardSummary?.disputes?.open || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Overview -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Financial Overview</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <p class="text-muted mb-1">Paid Today</p>
+                <h4>{{ dashboardSummary?.financials?.totalPaidToday || 0 }}</h4>
+              </div>
+              <div class="col-md-3">
+                <p class="text-muted mb-1">Total Locked</p>
+                <h4>{{ dashboardSummary?.financials?.totalLocked || 0 }}</h4>
+              </div>
+              <div class="col-md-3">
+                <p class="text-muted mb-1">Total Withdrawable</p>
+                <h4>
+                  {{ dashboardSummary?.financials?.totalWithdrawable || 0 }}
+                </h4>
+              </div>
+              <div class="col-md-3">
+                <p class="text-muted mb-1">Paid Last 7 Days</p>
+                <h4>
+                  {{ dashboardSummary?.financials?.totalPaidLast7Days || 0 }}
+                </h4>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Paid Last 30 Days</p>
+                <h4>
+                  {{ dashboardSummary?.financials?.totalPaidLast30Days || 0 }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts & Disputes Row -->
+    <div class="row mt-4">
+      <!-- Alerts Card -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Alerts Summary</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <p class="text-muted mb-1">Open Alerts</p>
+                <h4>{{ dashboardSummary?.alerts?.open || 0 }}</h4>
+              </div>
+              <div class="col-6">
+                <p class="text-muted mb-1">Critical</p>
+                <h4 class="text-danger">
+                  {{ dashboardSummary?.alerts?.critical || 0 }}
+                </h4>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                <p class="text-muted mb-1">Last 24 Hours</p>
+                <h4>{{ dashboardSummary?.alerts?.last24h || 0 }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disputes Card -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Disputes Overview</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-4">
+                <p class="text-muted mb-1">Open</p>
+                <h4>{{ dashboardSummary?.disputes?.open || 0 }}</h4>
+              </div>
+              <div class="col-4">
+                <p class="text-muted mb-1">Pending</p>
+                <h4>{{ dashboardSummary?.disputes?.pending || 0 }}</h4>
+              </div>
+              <div class="col-4">
+                <p class="text-muted mb-1">Resolved</p>
+                <h4 class="text-success">
+                  {{ dashboardSummary?.disputes?.resolved || 0 }}
+                </h4>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                <p class="text-muted mb-1">Avg Resolution (hours)</p>
+                <h4>
+                  {{ dashboardSummary?.disputes?.avgResolutionHours || 0 }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gifts Statistics -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Gift Statistics</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Gifts Today</p>
+                <h4>{{ dashboardSummary?.gifts?.totalToday || 0 }}</h4>
+              </div>
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Diamonds Today</p>
+                <h4>{{ dashboardSummary?.gifts?.totalDiamondsToday || 0 }}</h4>
+              </div>
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Gifts Last 7 Days</p>
+                <h4>{{ dashboardSummary?.gifts?.totalLast7Days || 0 }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Health Tab -->
+  <div *ngIf="activeTab === 'system' && !isLoading">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">System Health Score</h5>
+          </div>
+          <div class="card-body">
+            <div class="health-score-container">
+              <div
+                class="health-score"
+                [ngClass]="{
+                  'health-good': systemHealth?.healthScore >= 80,
+                  'health-warning':
+                    systemHealth?.healthScore >= 60 &&
+                    systemHealth?.healthScore < 80,
+                  'health-critical': systemHealth?.healthScore < 60
+                }"
+              >
+                {{ systemHealth?.healthScore || 0 }}%
+              </div>
+            </div>
+
+            <!-- Critical Alerts Summary -->
+            <div class="mt-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6>Cron Health</h6>
+                  <p class="text-muted mb-1">
+                    Failed Last 24h:
+                    <strong>{{
+                      systemHealth?.cronHealth?.failedLast24h || 0
+                    }}</strong>
+                  </p>
+                  <p class="text-muted mb-1">
+                    Failed Last 7 Days:
+                    <strong>{{
+                      systemHealth?.cronHealth?.failedLast7Days || 0
+                    }}</strong>
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <h6>System Alerts</h6>
+                  <p class="text-muted mb-1">
+                    Critical (Last 24h):
+                    <strong class="text-danger">{{
+                      systemHealth?.criticalAlerts?.last24h || 0
+                    }}</strong>
+                  </p>
+                  <p class="text-muted mb-1">
+                    Unresolved:
+                    <strong class="text-warning">{{
+                      systemHealth?.criticalAlerts?.unresolved || 0
+                    }}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="mt-4">
+              <h6>System Status</h6>
+              <div class="row">
+                <div class="col-md-4">
+                  <p class="text-muted mb-1">Database Status</p>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': systemHealth?.dbStatus === 'healthy',
+                      'bg-danger': systemHealth?.dbStatus !== 'healthy'
+                    }"
+                  >
+                    {{ systemHealth?.dbStatus || "unknown" }}
+                  </span>
+                </div>
+                <div class="col-md-4">
+                  <p class="text-muted mb-1">Stuck Cycles</p>
+                  <h4
+                    [ngClass]="{
+                      'text-success': systemHealth?.stuckCycles?.total === 0,
+                      'text-danger': systemHealth?.stuckCycles?.total > 0
+                    }"
+                  >
+                    {{ systemHealth?.stuckCycles?.total || 0 }}
+                  </h4>
+                </div>
+                <div class="col-md-4">
+                  <p class="text-muted mb-1">Wallet Mismatches</p>
+                  <h4
+                    [ngClass]="{
+                      'text-success':
+                        systemHealth?.walletMismatches?.total === 0,
+                      'text-danger': systemHealth?.walletMismatches?.total > 0
+                    }"
+                  >
+                    {{ systemHealth?.walletMismatches?.total || 0 }}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wallet Health Tab -->
+  <div *ngIf="activeTab === 'wallets' && !isLoading">
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Total Wallets</h6>
+            <h3 class="mb-0">{{ walletHealth?.total || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Negative Balance</h6>
+            <h3 class="mb-0 text-danger">
+              {{ walletHealth?.negativeBalance || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">High Locked (>10k)</h6>
+            <h3 class="mb-0 text-warning">
+              {{ walletHealth?.highLocked || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Mismatches</h6>
+            <h3 class="mb-0 text-warning">
+              {{ walletHealth?.byStatus?.[0]?.mismatches?.[0]?.count || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Wallet Totals</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Total UCoins</p>
+                <h4>
+                  {{ walletHealth?.byStatus?.[0]?.totalUcoins?.[0]?.amount || 0 }}
+                </h4>
+              </div>
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Locked UCoins</p>
+                <h4>
+                  {{ walletHealth?.byStatus?.[0]?.lockedUcoins?.[0]?.amount || 0 }}
+                </h4>
+              </div>
+              <div class="col-md-4">
+                <p class="text-muted mb-1">Withdrawable UCoins</p>
+                <h4>
+                  {{ walletHealth?.byStatus?.[0]?.withdrawableUcoins?.[0]?.amount || 0 }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet Distribution -->
+    <div class="row mt-4" *ngIf="walletHealth?.distribution?.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Wallet Balance Distribution</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Range</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bucket of walletHealth?.distribution">
+                  <td>
+                    <span *ngIf="bucket._id !== 'high'"
+                      >{{ bucket._id }} -
+                      {{ getNextBoundary(bucket._id) }}</span
+                    >
+                    <span *ngIf="bucket._id === 'high'">100,000+</span>
+                  </td>
+                  <td>{{ bucket.count }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary Cycle Health Tab -->
+  <div *ngIf="activeTab === 'salary' && !isLoading">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Stuck Cycles</h6>
+            <h3 class="mb-0 text-danger">
+              {{ salaryCycleHealth?.stuckCycles || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Zero Salary Cycles</h6>
+            <h3 class="mb-0">{{ salaryCycleHealth?.zeroSalary || 0 }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Recent Cycles</h6>
+            <h3 class="mb-0">
+              {{ salaryCycleHealth?.recentCycles?.length || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Cycle Status Breakdown</h5>
+          </div>
+          <div class="card-body">
+            <table
+              class="table"
+              *ngIf="salaryCycleHealth?.byStatus?.length > 0; else noStatusData"
+            >
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Count</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let status of salaryCycleHealth?.byStatus">
+                  <td>{{ status._id || "N/A" }}</td>
+                  <td>{{ status.count || 0 }}</td>
+                  <td>{{ status.totalAmount || 0 }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #noStatusData>
+              <p class="text-muted mb-0">No cycle status data available</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gift Anomalies Tab -->
+  <div *ngIf="activeTab === 'gifts' && !isLoading">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">High Volume Senders</h6>
+            <h3 class="mb-0 text-warning">
+              {{ giftAnomalies?.highVolumeSenders?.length || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Gift Loops Detected</h6>
+            <h3 class="mb-0 text-danger">
+              {{ giftAnomalies?.giftLoops?.length || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">High Volume Receivers</h6>
+            <h3 class="mb-0 text-info">
+              {{ giftAnomalies?.highVolumReceivers?.length || 0 }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gift Loops -->
+    <div class="row mt-4" *ngIf="giftAnomalies?.giftLoops?.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Gift Loop Patterns</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th>Count</th>
+                  <th>Diamonds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loop of giftAnomalies?.giftLoops">
+                  <td>{{ loop._id | json }}</td>
+                  <td>{{ loop.count }}</td>
+                  <td>{{ loop.diamonds }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- High Volume Senders -->
+    <div class="row mt-4" *ngIf="giftAnomalies?.highVolumeSenders?.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">High Volume Senders</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Gift Count</th>
+                  <th>Total Diamonds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sender of giftAnomalies?.highVolumeSenders">
+                  <td>{{ sender._id }}</td>
+                  <td>{{ sender.count }}</td>
+                  <td>{{ sender.diamonds }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- High Volume Receivers -->
+    <div class="row mt-4" *ngIf="giftAnomalies?.highVolumReceivers?.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">High Volume Receivers</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Gift Count</th>
+                  <th>Total Diamonds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let receiver of giftAnomalies?.highVolumReceivers">
+                  <td>{{ receiver._id }}</td>
+                  <td>{{ receiver.count }}</td>
+                  <td>{{ receiver.diamonds }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gift Trend -->
+    <div class="row mt-4" *ngIf="giftAnomalies?.trend?.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Gift Trend (Last 7 Days)</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Count</th>
+                  <th>Diamonds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let trend of giftAnomalies?.trend">
+                  <td>{{ trend._id }}</td>
+                  <td>{{ trend.count }}</td>
+                  <td>{{ trend.diamonds }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

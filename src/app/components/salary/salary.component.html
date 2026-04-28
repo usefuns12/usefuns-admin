@@ -1,0 +1,168 @@
+<div
+  class="header-content d-flex justify-content-between align-items-center pt-4 pb-3"
+>
+  <h4>Salary Management</h4>
+</div>
+
+<div class="salary-container">
+  <!-- Stats Cards -->
+  <div class="stats-row" *ngIf="!isLoading">
+    <div class="stat-card">
+      <div class="stat-value">{{ cycleStats?.totalCycles || 0 }}</div>
+      <div class="stat-label">Total Cycles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ cycleStats?.activeCycles || 0 }}</div>
+      <div class="stat-label">Active Cycles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ commissionStats?.totalCommissions || 0 }}</div>
+      <div class="stat-label">Total Commissions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">
+        {{ commissionStats?.totalPaid || 0 | currency }}
+      </div>
+      <div class="stat-label">Total Paid</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'cycles'"
+      (click)="activeTab = 'cycles'"
+    >
+      Salary Cycles
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'commissions'"
+      (click)="activeTab = 'commissions'"
+    >
+      Agency Commissions
+    </button>
+  </div>
+
+  <!-- Salary Cycles Tab -->
+  <div *ngIf="activeTab === 'cycles'" class="tab-content">
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+
+    <div *ngIf="!isLoading && salaryCycles.length === 0" class="empty-state">
+      No salary cycles found.
+    </div>
+
+    <table *ngIf="!isLoading && salaryCycles.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>Cycle ID</th>
+          <th>Period</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Total Amount</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cycle of salaryCycles">
+          <td>{{ cycle._id }}</td>
+          <td>{{ cycle.period }}</td>
+          <td>{{ cycle.startDate | date : "short" }}</td>
+          <td>{{ cycle.endDate | date : "short" }}</td>
+          <td>{{ cycle.totalAmount | currency }}</td>
+          <td>
+            <span class="status" [ngClass]="cycle.status">
+              {{ cycle.status }}
+            </span>
+          </td>
+          <td>
+            <button
+              class="action-btn recalculate"
+              (click)="handleRecalculate(cycle)"
+              title="Recalculate"
+            >
+              Recalculate
+            </button>
+            <button
+              class="action-btn hold"
+              (click)="handleHold(cycle)"
+              title="Hold"
+            >
+              Hold
+            </button>
+            <button
+              class="action-btn release"
+              (click)="handleRelease(cycle)"
+              title="Release"
+            >
+              Release
+            </button>
+            <button
+              class="action-btn force-payout"
+              (click)="handleForcePayout(cycle)"
+              title="Force Payout"
+            >
+              Force Payout
+            </button>
+            <button
+              class="action-btn reverse"
+              (click)="handleReverse(cycle)"
+              title="Reverse"
+            >
+              Reverse
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Agency Commissions Tab -->
+  <div *ngIf="activeTab === 'commissions'" class="tab-content">
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+
+    <div
+      *ngIf="!isLoading && agencyCommissions.length === 0"
+      class="empty-state"
+    >
+      No agency commissions found.
+    </div>
+
+    <table *ngIf="!isLoading && agencyCommissions.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>Commission ID</th>
+          <th>Agency</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let commission of agencyCommissions">
+          <td>{{ commission._id }}</td>
+          <td>{{ commission.agencyName }}</td>
+          <td>{{ commission.amount | currency }}</td>
+          <td>{{ commission.date | date : "short" }}</td>
+          <td>
+            <span class="status" [ngClass]="commission.status">
+              {{ commission.status }}
+            </span>
+          </td>
+          <td>
+            <button
+              class="action-btn unlock"
+              (click)="handleUnlock(commission)"
+              title="Unlock Funds"
+            >
+              Unlock
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

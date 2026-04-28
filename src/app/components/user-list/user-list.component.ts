@@ -1,18 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
-import { UserFormComponent } from './user-form/user-form.component';
-import { MatTooltip } from '@angular/material/tooltip';
-import { UserService } from '../../services/user.service';
-import { CommonModule } from '@angular/common';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { BanUserDialogComponent } from './ban-user-dialog/ban-user-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
+import { SidebarComponent } from '../../navigation/sidebar/sidebar.component';
+import { UserService } from '../../services/user.service';
+import { BanUserDialogComponent } from './ban-user-dialog/ban-user-dialog.component';
+import { UserFormComponent } from './user-form/user-form.component';
 
 import {
   Subject,
@@ -51,7 +51,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     private sidebar: SidebarComponent,
     private apiService: UserService,
     private dialog: MatDialog,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
   ) {
     this.searchControl.valueChanges
       .pipe(
@@ -64,7 +64,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         }),
         filter((term) => term.length > 2), // Avoids duplicate consecutive values
         switchMap((term) => this.apiService.searchUsers(term)),
-        takeUntil(this.destroy$) // Unsubscribes when component is destroyed
+        takeUntil(this.destroy$), // Unsubscribes when component is destroyed
       )
       .subscribe((result) => {
         this.filteredUsers = result.data;
@@ -85,7 +85,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error(error);
-      }
+      },
     );
   }
 
@@ -112,7 +112,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         name: user.name,
         isActiveUser: user.isActiveUser,
         isActiveDevice: user.isActiveDevice,
-        isDevice
+        isDevice,
       },
     });
 
@@ -125,6 +125,30 @@ export class UserListComponent implements OnInit, OnDestroy {
           this.toastrService.error(result.message);
         }
       }
+    });
+  }
+
+  toggleMysteryMen(user: any) {
+    this.apiService.toggleMysteryMen(user._id).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.toastrService.success(
+            resp.data?.isMysteryMen
+              ? `${user.name} is now a Mystery Men`
+              : `${user.name} is no longer a Mystery Men`,
+          );
+          this.getUsers();
+        } else {
+          this.toastrService.error(
+            resp.message || 'Failed to toggle mystery men status',
+          );
+        }
+      },
+      error: (err) => {
+        this.toastrService.error(
+          err.error?.message || 'Failed to toggle mystery men status',
+        );
+      },
     });
   }
 

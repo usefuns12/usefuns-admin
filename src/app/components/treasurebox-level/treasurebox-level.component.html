@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h4>Treasure Box Levels</h4>
+  <button class="btn btn-primary" (click)="openDialog('add')">Add New</button>
+</div>
+
+<table class="table" *ngIf="levels.length; else noData">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Level</th>
+      <th>Person 1 Items</th>
+      <th>Person 2 Items</th>
+      <th>Person 3 Items</th>
+      <th>Other Items</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let level of levels; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ level.level }}</td>
+      <td>{{ level.person1Items?.length || 0 }}</td>
+      <td>{{ level.person2Items?.length || 0 }}</td>
+      <td>{{ level.person3Items?.length || 0 }}</td>
+      <td>{{ level.otherItems?.length || 0 }}</td>
+      <td>
+        <div class="action-btns d-flex">
+          <fa-icon
+            [icon]="['far', 'pen-to-square']"
+            class="flex-grow-1 edit-icon"
+            matTooltip="Edit"
+            (click)="openDialog('edit', level)"
+          ></fa-icon>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>No records found.</p>
+</ng-template>
