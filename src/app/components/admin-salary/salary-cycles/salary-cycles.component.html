@@ -137,7 +137,14 @@
           <tbody>
             <tr *ngFor="let cycle of cycles">
               <td>{{ cycle._id.substring(0, 8) }}...</td>
-              <td>{{ cycle.hostId?.hostName || "N/A" }}</td>
+              <td>
+                <ng-container *ngIf="cycle.hostId?.customerRef?.name">
+                  {{ cycle.hostId.customerRef.name }} ({{ cycle.hostId.hostId }})
+                </ng-container>
+                <ng-container *ngIf="!cycle.hostId?.customerRef?.name">
+                  N/A
+                </ng-container>
+              </td>
               <td>
                 {{ formatDate(cycle.cycleStart) }} -
                 {{ formatDate(cycle.cycleEnd) }}

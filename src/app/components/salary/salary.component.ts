@@ -161,6 +161,8 @@ export class SalaryComponent implements OnInit {
         title: 'Force Payout?',
         message:
           'Are you sure you want to force payout for this cycle? This action is critical!',
+        buttonText: 'Confirm',
+        buttonClass: 'btn-primary',
       },
     });
 
@@ -185,6 +187,8 @@ export class SalaryComponent implements OnInit {
         title: 'Reverse Payment?',
         message:
           'Are you sure you want to reverse payment for this cycle? This action cannot be undone!',
+        buttonText: 'Reverse',
+        buttonClass: 'btn-danger',
       },
     });
 
