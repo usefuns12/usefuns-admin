@@ -21,6 +21,7 @@ export class PolicyListComponent implements OnInit {
 
   // Salary Policy Form
   salaryPolicyForm: any = {
+    noDayLimits: false,
     minDays: 15,
     maxDays: 31,
     diamondTarget: 10000,

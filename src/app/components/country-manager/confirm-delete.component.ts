@@ -13,7 +13,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ConfirmDeleteComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDeleteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string }
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      title: string; 
+      message: string;
+      buttonText?: string;
+      buttonClass?: string;
+    }
   ) {}
 
   close(result: boolean): void {
