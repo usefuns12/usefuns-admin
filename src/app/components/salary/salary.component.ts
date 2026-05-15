@@ -23,7 +23,7 @@ export class SalaryComponent implements OnInit {
   constructor(
     private salaryService: SalaryService,
     private dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {

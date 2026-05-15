@@ -139,7 +139,9 @@
               <td>{{ cycle._id.substring(0, 8) }}...</td>
               <td>
                 <ng-container *ngIf="cycle.hostId?.customerRef?.name">
-                  {{ cycle.hostId.customerRef.name }} ({{ cycle.hostId.hostId }})
+                  {{ cycle.hostId.customerRef.name }} ({{
+                    cycle.hostId.hostId
+                  }})
                 </ng-container>
                 <ng-container *ngIf="!cycle.hostId?.customerRef?.name">
                   N/A

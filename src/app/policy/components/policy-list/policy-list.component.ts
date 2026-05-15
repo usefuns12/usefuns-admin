@@ -47,7 +47,7 @@ export class PolicyListComponent implements OnInit {
 
   constructor(
     private policyService: PolicyService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +71,7 @@ export class PolicyListComponent implements OnInit {
         }
 
         const commissionPolicy = this.policies.find(
-          (p) => p.type === 'agencyCommission'
+          (p) => p.type === 'agencyCommission',
         );
         if (commissionPolicy?.agencyCommission) {
           this.commissionPolicyForm.commissionSlabs =
@@ -150,7 +150,7 @@ export class PolicyListComponent implements OnInit {
   processSalaryCycles(): void {
     if (
       !confirm(
-        'Are you sure you want to process all salary cycles? This may take a while.'
+        'Are you sure you want to process all salary cycles? This may take a while.',
       )
     )
       return;
@@ -158,12 +158,12 @@ export class PolicyListComponent implements OnInit {
     this.policyService.processSalaryCycles().subscribe({
       next: (resp: any) => {
         this.toastr.success(
-          resp.message || 'Salary cycles processed successfully'
+          resp.message || 'Salary cycles processed successfully',
         );
       },
       error: (err: any) => {
         this.toastr.error(
-          err.error?.message || 'Failed to process salary cycles'
+          err.error?.message || 'Failed to process salary cycles',
         );
       },
     });
@@ -172,7 +172,7 @@ export class PolicyListComponent implements OnInit {
   payAllSalaries(): void {
     if (
       !confirm(
-        'Are you sure you want to pay all pending salaries? This cannot be undone.'
+        'Are you sure you want to pay all pending salaries? This cannot be undone.',
       )
     )
       return;
@@ -180,7 +180,7 @@ export class PolicyListComponent implements OnInit {
     this.policyService.payAllSalaries().subscribe({
       next: (resp: any) => {
         this.toastr.success(
-          `${resp.successful} salaries paid successfully, ${resp.failed} failed`
+          `${resp.successful} salaries paid successfully, ${resp.failed} failed`,
         );
       },
       error: (err: any) => {
@@ -196,12 +196,12 @@ export class PolicyListComponent implements OnInit {
     this.policyService.calculateCommissions().subscribe({
       next: (resp: any) => {
         this.toastr.success(
-          resp.message || 'Commissions calculated successfully'
+          resp.message || 'Commissions calculated successfully',
         );
       },
       error: (err: any) => {
         this.toastr.error(
-          err.error?.message || 'Failed to calculate commissions'
+          err.error?.message || 'Failed to calculate commissions',
         );
       },
     });
@@ -210,7 +210,7 @@ export class PolicyListComponent implements OnInit {
   payAllCommissions(): void {
     if (
       !confirm(
-        'Are you sure you want to pay all pending commissions? This cannot be undone.'
+        'Are you sure you want to pay all pending commissions? This cannot be undone.',
       )
     )
       return;
@@ -218,7 +218,7 @@ export class PolicyListComponent implements OnInit {
     this.policyService.payAllCommissions().subscribe({
       next: (resp: any) => {
         this.toastr.success(
-          `${resp.successful} commissions paid successfully, ${resp.failed} failed`
+          `${resp.successful} commissions paid successfully, ${resp.failed} failed`,
         );
       },
       error: (err: any) => {

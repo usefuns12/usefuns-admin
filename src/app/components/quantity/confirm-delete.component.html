@@ -3,10 +3,11 @@
   <p>{{ data.message }}</p>
   <div class="d-flex justify-content-end gap-3 mt-4">
     <button class="btn btn-secondary" (click)="close(false)">Cancel</button>
-    <button 
-      [class]="'btn ' + (data.buttonClass || 'btn-danger')" 
-      (click)="close(true)">
-      {{ data.buttonText || 'Delete' }}
+    <button
+      [class]="'btn ' + (data.buttonClass || 'btn-danger')"
+      (click)="close(true)"
+    >
+      {{ data.buttonText || "Delete" }}
     </button>
   </div>
 </div>
