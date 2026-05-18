@@ -25,7 +25,7 @@ export class AgencyCommissionsComponent implements OnInit {
     agencyId: '',
     startDate: '',
     endDate: '',
-    sortBy: 'cycleStartDate',
+    sortBy: 'cycleStart',
     sortOrder: 'desc',
   };
 
@@ -99,7 +99,7 @@ export class AgencyCommissionsComponent implements OnInit {
       agencyId: '',
       startDate: '',
       endDate: '',
-      sortBy: 'cycleStartDate',
+      sortBy: 'cycleStart',
       sortOrder: 'desc',
     };
     this.loadData();

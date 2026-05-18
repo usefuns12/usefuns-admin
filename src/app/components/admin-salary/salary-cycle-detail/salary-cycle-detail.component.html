@@ -40,12 +40,14 @@
             <p><strong>Cycle ID:</strong> {{ cycle._id }}</p>
             <p>
               <strong>Host:</strong>
-              {{ cycle.hostId?.hostName || "N/A" }}
+              {{ cycle.hostId?.customerRef?.name || "N/A" }}
             </p>
-            <p><strong>Host ID:</strong> {{ cycle.hostId?._id || "N/A" }}</p>
+            <p>
+              <strong>Host ID:</strong> {{ cycle.hostId?.hostId || "N/A" }}
+            </p>
             <p>
               <strong>Agency:</strong>
-              {{ cycle.hostId?.agencyRef?.agencyName || "No Agency" }}
+              {{ cycle.hostId?.agencyId?.agencyName || "No Agency" }}
             </p>
           </div>
           <div class="col-md-6">

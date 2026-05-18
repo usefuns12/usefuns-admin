@@ -26,7 +26,7 @@ export class SalaryCyclesComponent implements OnInit {
     hostId: '',
     startDate: '',
     endDate: '',
-    sortBy: 'cycleStartDate',
+    sortBy: 'cycleStart',
     sortOrder: 'desc',
   };
 
@@ -100,7 +100,7 @@ export class SalaryCyclesComponent implements OnInit {
       hostId: '',
       startDate: '',
       endDate: '',
-      sortBy: 'cycleStartDate',
+      sortBy: 'cycleStart',
       sortOrder: 'desc',
     };
     this.loadData();
