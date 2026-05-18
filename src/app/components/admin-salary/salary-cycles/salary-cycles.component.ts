@@ -156,7 +156,33 @@ export class SalaryCyclesComponent implements OnInit {
       : parsedDate.toLocaleDateString();
   }
 
+  getCycleIdValue(cycle: any): string {
+    if (!cycle?._id) return '';
+    if (typeof cycle._id === 'string') return cycle._id;
+    if (typeof cycle._id === 'object' && cycle._id.toString) {
+      return cycle._id.toString();
+    }
+    return '';
+  }
+
+  getShortCycleId(cycle: any): string {
+    const cycleId = this.getCycleIdValue(cycle);
+    return cycleId ? `${cycleId.substring(0, 8)}...` : '-';
+  }
+
+  getHostDisplay(cycle: any): string {
+    const hostName = cycle?.hostId?.customerRef?.name;
+    const hostCode = cycle?.hostId?.hostId;
+    if (hostName && hostCode) return `${hostName} (${hostCode})`;
+    if (hostName) return hostName;
+    return 'N/A';
+  }
+
+  hasValidCycleId(cycle: any): boolean {
+    return !!this.getCycleIdValue(cycle);
+  }
+
   trackByCycle(_index: number, cycle: any): string {
-    return cycle?._id || _index.toString();
+    return this.getCycleIdValue(cycle) || _index.toString();
   }
 }

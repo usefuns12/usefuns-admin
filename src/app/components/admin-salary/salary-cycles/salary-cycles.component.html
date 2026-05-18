@@ -136,17 +136,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let cycle of cycles; trackBy: trackByCycle">
-              <td>{{ cycle?._id ? cycle._id.substring(0, 8) + '...' : '-' }}</td>
-              <td>
-                <ng-container *ngIf="cycle.hostId?.customerRef?.name">
-                  {{ cycle.hostId.customerRef.name }} ({{
-                    cycle.hostId.hostId
-                  }})
-                </ng-container>
-                <ng-container *ngIf="!cycle.hostId?.customerRef?.name">
-                  N/A
-                </ng-container>
-              </td>
+              <td>{{ getShortCycleId(cycle) }}</td>
+              <td>{{ getHostDisplay(cycle) }}</td>
               <td>
                 {{ formatDate(cycle.cycleStart) }} -
                 {{ formatDate(cycle.cycleEnd) }}
@@ -162,7 +153,8 @@
               <td>
                 <button
                   class="btn btn-sm btn-primary"
-                  (click)="viewDetails(cycle._id)"
+                  [disabled]="!hasValidCycleId(cycle)"
+                  (click)="viewDetails(getCycleIdValue(cycle))"
                 >
                   <fa-icon [icon]="['fas', 'eye']"></fa-icon>
                   View
