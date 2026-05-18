@@ -135,8 +135,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cycle of cycles">
-              <td>{{ cycle._id.substring(0, 8) }}...</td>
+            <tr *ngFor="let cycle of cycles; trackBy: trackByCycle">
+              <td>{{ cycle?._id ? cycle._id.substring(0, 8) + '...' : '-' }}</td>
               <td>
                 <ng-container *ngIf="cycle.hostId?.customerRef?.name">
                   {{ cycle.hostId.customerRef.name }} ({{
@@ -151,9 +151,9 @@
                 {{ formatDate(cycle.cycleStart) }} -
                 {{ formatDate(cycle.cycleEnd) }}
               </td>
-              <td>{{ cycle.totalDiamonds || 0 }}</td>
-              <td>{{ (cycle.totalHostHours || 0).toFixed(2) }}</td>
-              <td>{{ cycle.salaryUcoins || 0 }}</td>
+              <td>{{ cycle?.totalDiamonds ?? 0 }}</td>
+              <td>{{ (cycle?.totalHostHours ?? 0).toFixed(2) }}</td>
+              <td>{{ cycle?.salaryUcoins ?? 0 }}</td>
               <td>
                 <span class="badge" [ngClass]="getStatusClass(cycle.status)">
                   {{ cycle.status }}

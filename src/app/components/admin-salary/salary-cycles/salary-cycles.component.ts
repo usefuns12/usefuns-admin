@@ -17,6 +17,7 @@ export class SalaryCyclesComponent implements OnInit {
   cycles: any[] = [];
   stats: any = {};
   isLoading = false;
+  private latestLoadRequestId = 0;
 
   // Filters
   filters = {
@@ -48,7 +49,7 @@ export class SalaryCyclesComponent implements OnInit {
   constructor(
     private adminSalaryService: AdminSalaryService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -57,14 +58,33 @@ export class SalaryCyclesComponent implements OnInit {
   }
 
   loadData(): void {
+    const requestId = ++this.latestLoadRequestId;
     this.isLoading = true;
     this.adminSalaryService.getSalaryCycles(this.filters).subscribe({
       next: (resp: any) => {
-        this.cycles = resp.data?.cycles || [];
+        if (requestId !== this.latestLoadRequestId) {
+          return;
+        }
+
+        const rawCycles = Array.isArray(resp.data?.cycles) ? resp.data.cycles : [];
+        this.cycles = rawCycles
+          .filter((cycle: any) => cycle && cycle._id)
+          .map((cycle: any) => ({
+            ...cycle,
+            totalDiamonds: cycle.totalDiamonds ?? 0,
+            totalHostHours: cycle.totalHostHours ?? 0,
+            salaryUcoins: cycle.salaryUcoins ?? 0,
+          }));
+
         this.pagination = resp.data?.pagination || this.pagination;
         this.isLoading = false;
+
+        console.log('Loaded salary cycles:', this.cycles);
       },
       error: (err: any) => {
+        if (requestId !== this.latestLoadRequestId) {
+          return;
+        }
         this.toastr.error(err.error?.message || 'Failed to load salary cycles');
         this.isLoading = false;
       },
@@ -129,6 +149,14 @@ export class SalaryCyclesComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString();
+    if (!date) return '-';
+    const parsedDate = new Date(date);
+    return Number.isNaN(parsedDate.getTime())
+      ? '-'
+      : parsedDate.toLocaleDateString();
+  }
+
+  trackByCycle(_index: number, cycle: any): string {
+    return cycle?._id || _index.toString();
   }
 }
