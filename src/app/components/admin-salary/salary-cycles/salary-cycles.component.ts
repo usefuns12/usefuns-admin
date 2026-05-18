@@ -66,9 +66,15 @@ export class SalaryCyclesComponent implements OnInit {
           return;
         }
 
-        const rawCycles = Array.isArray(resp.data?.cycles) ? resp.data.cycles : [];
+        const payloadCycles = resp?.data?.cycles;
+        const rawCycles = Array.isArray(payloadCycles)
+          ? payloadCycles
+          : payloadCycles && typeof payloadCycles === 'object'
+            ? Object.values(payloadCycles)
+            : [];
+
         this.cycles = rawCycles
-          .filter((cycle: any) => cycle && cycle._id)
+          .filter((cycle: any) => !!cycle)
           .map((cycle: any) => ({
             ...cycle,
             totalDiamonds: cycle.totalDiamonds ?? 0,
@@ -157,10 +163,11 @@ export class SalaryCyclesComponent implements OnInit {
   }
 
   getCycleIdValue(cycle: any): string {
-    if (!cycle?._id) return '';
-    if (typeof cycle._id === 'string') return cycle._id;
-    if (typeof cycle._id === 'object' && cycle._id.toString) {
-      return cycle._id.toString();
+    const idValue = cycle?._id ?? cycle?.id;
+    if (!idValue) return '';
+    if (typeof idValue === 'string') return idValue;
+    if (typeof idValue === 'object' && idValue.toString) {
+      return idValue.toString();
     }
     return '';
   }
